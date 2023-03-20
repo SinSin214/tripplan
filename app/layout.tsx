@@ -30,8 +30,8 @@ export default function RootLayout({
       <body>
         <ThemeProvider theme={theme}>
           <header>
-            <Navbar />
           </header>
+          <Navbar />
           <main className={styles.main}>
             {children}
           </main>

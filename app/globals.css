@@ -107,5 +107,9 @@ a {
 }
 
 .nav_item_active {
-  border-bottom: 2px solid white;
+  background-color: #626262;
+}
+
+.nav_items:hover {
+  background-color: #626262;
 }
