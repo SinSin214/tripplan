@@ -1,4 +1,19 @@
+'use client';
 import './globals.css'
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Navbar from './components/Navbar';
+import styles from './page.module.css'
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#000000',
+    },
+    secondary: {
+      main: '#ffffff',
+    },
+  },
+});
 
 export const metadata = {
   title: 'Create Next App',
@@ -12,7 +27,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <ThemeProvider theme={theme}>
+          <header>
+            <Navbar />
+          </header>
+          <main className={styles.main}>
+            {children}
+          </main>
+        </ThemeProvider>
+      </body>
     </html>
   )
 }
