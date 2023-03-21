@@ -2,7 +2,6 @@
 import "./output.css";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Navbar from './components/Navbar';
-import styles from './page.module.css'
 
 const theme = createTheme({
   palette: {
@@ -28,7 +27,7 @@ export default function RootLayout({
           <header>
           </header>
           <Navbar />
-          <main className={styles.main}>
+          <main className="main">
             {children}
           </main>
         </ThemeProvider>
