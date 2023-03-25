@@ -1,6 +1,7 @@
 'use client';
 import { Box } from '@mui/material';
 import Image from 'next/image';
+import { VerticalLine } from './components/SmallThings';
 
 export default function Home() {
 	return (
@@ -16,16 +17,18 @@ export default function Home() {
 				/>
 			</div>
 			<div className="limited-width-layout__content">
-				<Box sx={{ display: 'flex' }}>
-					<Box sx={{ display: 'flex', flexDirection: 'column', width: '33%' }}>
+				<Box className="flex justify-between">
+					<Box className="flex flex-col w-full ">
 						<label>INSPIRATION</label>
 						<text>Discover incredible destinations, exceptional accommodations, and exciting experiences</text>
 					</Box>
-					<Box sx={{ display: 'flex', flexDirection: 'column', width: '33%' }}>
+					<VerticalLine />
+					<Box className="flex flex-col w-full">
 						<label>INSPIRATION</label>
 						<text>Discover incredible destinations, exceptional accommodations, and exciting experiences</text>
 					</Box>
-					<Box sx={{ display: 'flex', flexDirection: 'column', width: '33%' }}>
+					<VerticalLine />
+					<Box className="flex flex-col w-full">
 						<label>INSPIRATION</label>
 						<text>Discover incredible destinations, exceptional accommodations, and exciting experiences</text>
 					</Box>

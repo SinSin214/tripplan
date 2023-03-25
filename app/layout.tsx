@@ -1,7 +1,8 @@
 'use client';
 import "./output.css";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Navbar from './components/Navbar';
+import Header from './components/Header';
+import Footer from "./components/Footer";
 
 const theme = createTheme({
   palette: {
@@ -26,10 +27,11 @@ export default function RootLayout({
         <ThemeProvider theme={theme}>
           <header>
           </header>
-          <Navbar />
+          <Header />
           <main className="main">
             {children}
           </main>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>
