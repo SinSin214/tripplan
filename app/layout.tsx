@@ -25,8 +25,6 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ThemeProvider theme={theme}>
-          <header>
-          </header>
           <Header />
           <main className="main">
             {children}

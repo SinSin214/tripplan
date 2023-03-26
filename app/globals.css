@@ -76,3 +76,7 @@ body {
     width: 1200px;
   }
 }
+
+.vertical-stack-layout {
+  margin-bottom: 40px;
+}
