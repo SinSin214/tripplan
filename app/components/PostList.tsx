@@ -1,8 +1,8 @@
 import { PostProps } from '@/utils/types';
 import { Card, CardContent, CardMedia, Typography, CardActionArea } from '@mui/material';
 
-
-export default function PostList({ posts }: { posts: PostProps[] }) {
+export default function PostList(posts : PostProps[]) {
+    console.log('aaa')
     return (
         <div>
             {posts.map((post) => (
