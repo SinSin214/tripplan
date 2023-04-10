@@ -1,29 +1,29 @@
 import { PostProps } from '@/utils/types';
-import { Card, CardContent, CardMedia, Typography, CardActionArea } from '@mui/material';
+import Image from 'next/image';
+import Link from "next/link";
 
-export default function PostList(posts : PostProps[]) {
-    console.log('aaa')
+interface Props {
+    post: PostProps;
+}
+
+export default function PostList({ post }: Props) {
     return (
-        <div>
-            {posts.map((post) => (
-                <Card sx={{ maxWidth: 345 }} key={post.id}>
-                    <CardActionArea>
-                        <CardMedia
-                            component="img"
-                            height="200"
-                            image={post.imageUrl}
-                        />
-                        <CardContent>
-                            <Typography gutterBottom variant="h5" component="div">
-                                {post.title}
-                            </Typography>
-                            <Typography variant="body2">
-                                {post.content}
-                            </Typography>
-                        </CardContent>
-                    </CardActionArea>
-                </Card>
-            ))}
+        <div className="w-2/6 h-72 m-4 rounded overflow-hidden border cursor-pointer hover:bg-slate-100">
+            <Link href={`/post/${post.id}`}>
+            <Image
+                src={post.imageUrl}
+                alt=""
+                className="w-full h-36"
+                width="0"
+                height="0"
+                sizes="100vw" />
+            <div className="p-1">
+                <h3 className="text-2xl mb-2">{post.title}</h3>
+                <div>
+                    {post.content}
+                </div>
+            </div>
+            </Link>
         </div>
     )
 }

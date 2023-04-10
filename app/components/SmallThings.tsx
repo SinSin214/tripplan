@@ -1,9 +1,6 @@
-import { Box } from "@mui/material";
-
-
 export function VerticalLine() {
     return (
-        <Box style={{
+        <div style={{
             backgroundColor: 'gray',
             width: '1px',
             height: 'auto',
@@ -11,6 +8,6 @@ export function VerticalLine() {
             marginRight: '25px',
             marginLeft: '25px'
         }}>
-        </Box>
+        </div>
     )
 }
