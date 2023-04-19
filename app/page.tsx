@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { VerticalLine } from './components/SmallThings';
 import { PostProps } from '@/utils/types';
 import PostList from './components/PostList';
-import * as API from '../api/api';
+import * as API from '../utils/apiHelper';
 
 export default async function Home() {
 	const posts = await getServerSideProps();
@@ -39,9 +39,9 @@ export default async function Home() {
 					<text className="text-xl">DISCOVERY NEW PLACES</text>
 				</div>
 				<div className="flex justify-between vertical-stack-layout">
-					{posts.map((post) => (
+					{posts ? posts.map((post) => (
 						<PostList post={post} key={post.id} />
-					))}
+					)) : ''}
 				</div>
 			</div>
 		</div>

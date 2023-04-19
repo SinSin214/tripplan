@@ -1,6 +1,6 @@
 export interface PostProps {
     id: string,
-    imageUrl: string,
+    image_path: string,
     content: string,
     title: string,
     createdBy: string,

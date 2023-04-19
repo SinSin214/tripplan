@@ -1,12 +1,12 @@
 import { Pool } from 'pg';
 
-export let dbPool = {};
+export let dbPool = new Pool();
 
 export async function provideDbPool() {
     let dbConfig = {
         max: 50,
         connectionTimeoutMillis: 10000,
-        connectionString: 'postgres://postgres:EHuMLFLypincqRTy@db.vvalxkadpkkajhgddlss.supabase.co:6543/postgres'
+        connectionString: process.env.DATABASE_CONNECTION
     };
     
     dbPool = new Pool(dbConfig);

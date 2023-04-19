@@ -1,35 +1,13 @@
-import * as database  from '../config/database';
+import * as helper from '../helper';
 
-export async function getPostDetail(id: string) {
-    // let dbPool = database.dbPool.query();
-    const posts = [
-        {
-            id: '1',
-            imageUrl: '/wallpaper.jpg',
-            content: 'Content 1',
-            title: 'Title 1',
-            createdAt: 2023,
-            createdBy: 'Kha'
-        },
-        {
-            id: '2',
-            imageUrl: '/wallpaper.jpg',
-            content: 'Content 2',
-            title: 'Title 2',
-            createdAt: 2023,
-            createdBy: 'Kha'
-        },
-        {
-            id: '3',
-            imageUrl: '/wallpaper.jpg',
-            content: 'Content 3',
-            title: 'Title 3',
-            createdAt: 2023,
-            createdBy: 'Kha'
-        }
-    ];
+export async function getDetail(id: string) {
+    let queryString = `SELECT pos.*, img.image_path FROM posts pos LEFT JOIN images img ON img.mapping_id = pos.id WHERE id = '` + id + "'";
 
-    await setTimeout(() => {}, 2000);
+    return helper.queryDatabase(queryString);
+}
 
-    return posts.filter(e => e.id === id);
+export async function getAll() {
+    let queryString = `SELECT po.*, im.image_path FROM posts po LEFT JOIN images im ON po.id = im.mapping_id`;
+
+    return helper.queryDatabase(queryString);
 }
