@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Button, Box, BottomNavigation, BottomNavigationAction, } from '@mui/material';
+import { BottomNavigation, BottomNavigationAction, } from '@mui/material';
 import { usePathname, useRouter } from "next/navigation";
 
 export default function Navbar() {

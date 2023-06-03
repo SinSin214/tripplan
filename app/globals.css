@@ -80,3 +80,7 @@ body {
 .vertical-stack-layout {
   margin-bottom: 40px;
 }
+
+.btn {
+  border: 1px red;
+}
