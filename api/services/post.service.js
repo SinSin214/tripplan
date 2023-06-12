@@ -1,6 +1,6 @@
-import * as helper from '../helper';
+import * as helper from '../helpers/database';
 
-export async function getDetail(id: string) {
+export async function getDetail(id) {
     let queryString = `SELECT pos.*, img.image_path FROM posts pos LEFT JOIN images img ON img.mapping_id = pos.id WHERE id = '` + id + "'";
 
     return helper.queryDatabase(queryString);
