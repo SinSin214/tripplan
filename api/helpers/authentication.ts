@@ -1,6 +1,7 @@
-import bcrypt from "bcrypt";
+import { user } from '@prisma/client';
+import bcrypt from 'bcrypt';
 
-export function checkUsername(username, users) {
+export function checkUsername(username: string, users: user[]) {
     const usernameRegexp = new RegExp(/^[a-zA-Z][a-zA-Z\d-_.]+$/);
 
     if(username.length < 12) {
@@ -14,7 +15,7 @@ export function checkUsername(username, users) {
     }
 }
 
-export function checkEmail(email, users) {
+export function checkEmail(email: string, users: user[]) {
     const emailRegexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
     if(emailRegexp.test(email)) {
@@ -25,7 +26,7 @@ export function checkEmail(email, users) {
     }
 }
 
-export function checkPassword(password, confirmPassword) {
+export function checkPassword(password: string, confirmPassword: string) {
     if(password.length < 8) {
         throw new Error('Password must contain at least 8 characters');
     }
@@ -34,8 +35,7 @@ export function checkPassword(password, confirmPassword) {
     }
 }
 
-export function encryptPassword(password) {
-    bcrypt.hash(password, 10, (err, hash) => {
-        return hash;
-    });
+export async function encryptPassword(password: string) {
+    let hash = await bcrypt.hash(password, 10);
+    return hash;
 }
