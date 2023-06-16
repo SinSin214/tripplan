@@ -1,7 +1,8 @@
 import { user } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
-export function checkUsername(username: string, users: user[]) {
+export function checkUsername(username: string, usernames: string[] ) {
     const usernameRegexp = new RegExp(/^[a-zA-Z][a-zA-Z\d-_.]+$/);
 
     if(username.length < 12) {
@@ -10,18 +11,21 @@ export function checkUsername(username: string, users: user[]) {
     else if(usernameRegexp.test(username)) {
         throw new Error('Username contains only characters, numbers and special characters (- _ .)')
     }
-    else if(users.some(user => user.username === username)) {
+    else if(usernames.some(item => item === username)) {
         throw new Error('Username existed');
     }
 }
 
-export function checkEmail(email: string, users: user[]) {
+export function checkEmail(email: string, emails: string[] ) {
     const emailRegexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
-    if(emailRegexp.test(email)) {
+    if(!email.length){
+        throw new Error('Email is empty')
+    }
+    else if(emailRegexp.test(email)) {
         throw new Error('Email is invalid')
     }
-    else if(users.some(user => user.email === email)) {
+    else if(emails.some(item => item === email)) {
         throw new Error('Email existed');
     }
 }
@@ -36,6 +40,32 @@ export function checkPassword(password: string, confirmPassword: string) {
 }
 
 export async function encryptPassword(password: string) {
-    let hash = await bcrypt.hash(password, 10);
-    return hash;
+    return await bcrypt.hash(password, 10);
+}
+
+export async function comparePassword(password: string, hashPassword: string) {
+    return await bcrypt.compare(password, hashPassword);
+}
+
+export async function generateToken(email: string) {
+    if(process.env.TOKEN_KEY) {
+        return jwt.sign({
+            exp: Math.floor(Date.now() / 1000) + 3600,  // 1 hour
+            data: email
+        }, process.env.TOKEN_KEY);
+    }
+    else {
+        throw new Error('No token key')
+    }
+}
+
+export async function verifyToken(token: string) {
+    try {
+        if(process.env.TOKEN_KEY) {
+            let decoded = jwt.verify(token, process.env.TOKEN_KEY);
+            return decoded;     // {exp, data}
+        }
+    } catch(err: any) {
+        throw new Error(err)
+    }
 }

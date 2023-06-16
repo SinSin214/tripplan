@@ -1,12 +1,15 @@
-import * as helper from '../helpers/database';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, user } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 export async function getAllUsernameAndEmail() {
-    let queryString = `SELECT username, email FROM users`;
-
-    return helper.queryDatabase(queryString);
+    let user = await prisma.user.findMany({
+        select: {
+            email: true,
+            username: true
+        }
+    });
+    return user;
 }
 
 export async function createUser(username: string, email: string, password: string) {
@@ -18,4 +21,24 @@ export async function createUser(username: string, email: string, password: stri
         },
     })
     return newUser;
+}
+
+export async function getUserByEmail(email: string) {
+    let user = await prisma.user.findUnique({
+        where: {
+            email: email
+        }
+    });
+    return user;
+}
+
+export async function activeUser(email: string) {
+    await prisma.user.update({
+        where: {
+          email: email,
+        },
+        data: {
+          is_active: true,
+        },
+      })
 }

@@ -7,23 +7,47 @@ datasource db {
   url      = env("DATABASE_CONNECTION")
 }
 
+model auth_user {
+    id               String      @id @default(uuid())
+    email            String      @unique
+    username         String      @unique
+    password         String
+    created_at       DateTime    @default(now())
+    is_active        Boolean     @default(false)
+    user             user?
+}
+
 model user {
-    id            String      @id @default(uuid())
-    email         String      @unique
-    username      String      @unique
-    password      String
-    createdAt     DateTime    @default(now())
+  id          String         @id @default(uuid())
+  user        auth_user      @relation(fields: [id], references: [id])
+  post        post[]         @relation("author")
+  comment     comment[]      @relation("comment")
 }
 
 model post {
     id                String        @id @default(uuid())
     title             String        @unique
-    description       String      
+    description       String        
     content           String      
     highlights        String[]
-    image_path        String[]    
-    main_image_path   String[]
-    createdBy         String
-    createdAt         DateTime      @default(now())
+    images            image[]       @relation("images")
+    main_image        image?        @relation("main_image")
+    user              user          @relation("author", fields: [user_id], references: [id])
+    user_id           String
+    created_at        DateTime      @default(now())
     rating            Int
+}
+model image {
+    id                    String      @id @default(uuid())
+    file_name             String      
+    images_post           post        @relation("images", fields: [images_post_id], references: [id])
+    images_post_id        String
+    main_image_post       post?       @relation("main_image",fields: [main_image_post_id], references: [id])
+    main_image_post_id    String?     @unique
+}
+
+model comment {
+  id          String          @id @default(uuid())
+  user        user            @relation("comment", fields: [user_id], references: [id])
+  user_id     String
 }
