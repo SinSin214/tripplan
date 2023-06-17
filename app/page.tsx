@@ -22,21 +22,21 @@ export default async function Home() {
 				<div className="flex justify-between vertical-stack-layout">
 					<div className="flex flex-col w-full ">
 						<label>INSPIRATION</label>
-						<text>Discover incredible destinations, exceptional accommodations, and exciting experiences</text>
+						<div>Discover incredible destinations, exceptional accommodations, and exciting experiences</div>
 					</div>
 					<VerticalLine />
 					<div className="flex flex-col w-full">
 						<label>INSPIRATION</label>
-						<text>Discover incredible destinations, exceptional accommodations, and exciting experiences</text>
+						<div>Discover incredible destinations, exceptional accommodations, and exciting experiences</div>
 					</div>
 					<VerticalLine />
 					<div className="flex flex-col w-full">
 						<label>INSPIRATION</label>
-						<text>Discover incredible destinations, exceptional accommodations, and exciting experiences</text>
+						<div>Discover incredible destinations, exceptional accommodations, and exciting experiences</div>
 					</div>
 				</div>
 				<div className="w-100 text-center vertical-stack-layout">
-					<text className="text-xl">DISCOVERY NEW PLACES</text>
+					<div className="text-xl">DISCOVERY NEW PLACES</div>
 				</div>
 				<div className="flex justify-between vertical-stack-layout">
 					{posts ? posts.map((post) => (

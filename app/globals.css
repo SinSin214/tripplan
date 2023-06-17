@@ -55,19 +55,19 @@ body {
 
 @media (min-width: 768px) {
   .limited-width-layout__content {
-    width: 750px;
+    width: 500px;
   }
 }
 
 @media (min-width: 992px) {
   .limited-width-layout__content {
-    width: 970px;
+    width: 630px;
   }
 }
 
 @media (min-width: 1200px) {
   .limited-width-layout__content {
-    width: 1170px;
+    width: 1000px;
   }
 }
 
@@ -83,4 +83,30 @@ body {
 
 .btn {
   border: 1px red;
+}
+
+.truncate-4{
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.clickable-post {
+  background-color: rgb(239, 239, 239);
+}
+
+.clickable-post:hover {
+  border: gray 1px solid;
+  cursor: pointer;
+}
+
+.authentication-popup{
+  width: 350px;
+  padding: 20px 30px;
+}
+
+.input{
+  border: gray 1px solid;
 }

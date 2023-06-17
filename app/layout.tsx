@@ -2,6 +2,7 @@
 import "./output.css";
 import Header from './components/Header';
 import Footer from "./components/Footer";
+import AuthenticationForm from "./components/AuthenticationForm";
 
 export default function RootLayout({
   children,
@@ -12,10 +13,12 @@ export default function RootLayout({
     <html lang="en">
       <body>
           <Header />
-          <main className="main">
+          <main className="main mt-14">
             {children}
           </main>
           <Footer />
+	  		<AuthenticationForm />
+
       </body>
     </html>
   )

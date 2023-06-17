@@ -4,16 +4,16 @@ export default function Footer() {
             <div className="flex limited-width-layout__content justify-between">
                 <div className="flex flex-col w-full" >
                     <label>CONTACT</label>
-                    <text>Email: tranhuynhkha21496@gmail.com</text>
-                    <text>Skype: live:tranhuynhkha21496</text>
-                    <text>Github: github.com/SinSin214</text>
+                    <div>Email: tranhuynhkha21496@gmail.com</div>
+                    <div>Skype: live:tranhuynhkha21496</div>
+                    <div>Github: github.com/SinSin214</div>
                 </div>
 
                 <div className="flex flex-col w-full" >
                     <label>CONTACT</label>
-                    <text>Email: tranhuynhkha21496@gmail.com</text>
-                    <text>Skype: live:tranhuynhkha21496</text>
-                    <text>Github: github.com/SinSin214</text>
+                    <div>Email: tranhuynhkha21496@gmail.com</div>
+                    <div>Skype: live:tranhuynhkha21496</div>
+                    <div>Github: github.com/SinSin214</div>
                 </div>
             </div>
         </div>

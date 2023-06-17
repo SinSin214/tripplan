@@ -8,7 +8,7 @@ export function Booking() {
     }
     return (
         <div>
-            <Button onClick={() => onBooking()}>BOOKING NOW</Button>
+            {/* <Button>BOOKING NOW</Button> */}
         </div>
     )
 }

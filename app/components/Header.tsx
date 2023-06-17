@@ -6,7 +6,7 @@ export default function Navbar() {
     const pathName = usePathname();
     return (
         <BottomNavigation
-            className="bg-stone-800"
+            className="bg-stone-800 fixed w-full z-10"
             sx={{ '.MuiBottomNavigationAction-label': {
                 fontSize: '1.25rem',
                 color: 'white'
@@ -27,6 +27,14 @@ export default function Navbar() {
                 className={`${pathName === '/planning' && "nav_item_active"} nav_items`}
                 label="Planning" 
                 value="/planning" />
+            <BottomNavigationAction 
+                className={`${pathName === '/user/register' && "nav_item_active"} nav_items`}
+                label="Register" 
+                value="/user/register" />
+            <BottomNavigationAction 
+                className={`${pathName === '/user/login' && "nav_item_active"} nav_items`}
+                label="Login" 
+                value="/user/login" />
         </BottomNavigation>
     )
 }

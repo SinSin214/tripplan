@@ -1,15 +1,15 @@
+
 import Image from 'next/image';
 import { PostProps } from "@/utils/types";
 import * as API from "../../../utils/apiHelper";
 import Rating from '@mui/material/Rating';
-import { Booking } from '../components/Booking';
+// import { Booking } from '../components/Booking';
 
 export default async function PostDetail({ params }: { params: { id: string } }) {
     const postDetail = await getPostDetail(params.id);
-
-    function myAction() {
-        alert('aaa');
-    }
+    // function myAction() {
+    //     alert('aaa');
+    // }
 
     return (
         <div className="limited-width-layout__content">
@@ -59,7 +59,7 @@ export default async function PostDetail({ params }: { params: { id: string } })
                     </div>
                 </div>
                 <div className='col-span-1 h-96 ml-8 rounded border border-slate-300 p-4 text-center'>
-                    <Booking />
+                    {/* <button>OK</button> */}
                 </div>
             </div>
         </div>

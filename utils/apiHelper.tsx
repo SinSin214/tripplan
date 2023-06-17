@@ -8,7 +8,7 @@ export async function getPosts(): Promise<any> {
     return result.data;
 }
 
-export async function getPostById(id: string): Promise<any> {
+export async function getPostById(id: string): Promise<PostProps> {
     let result = await axios.post(rootUrl + "/post/getDetail", { id: id });
     return result.data;
 }
