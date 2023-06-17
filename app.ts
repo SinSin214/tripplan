@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import express, { Request, Response } from 'express';
+import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import router from './api/routes/routes';
@@ -11,7 +11,7 @@ initApp();
 async function initApp() {
 	// init a database pool whenever start app
 	await database.provideDbPool();
-    const app = express();
+  const app = express();
 	const port = process.env.PORT || 3001;
 
 	// apply middlewares
@@ -22,7 +22,7 @@ async function initApp() {
     app.use('/post', router);
 
     
-    app.get('/', (req: Request, res: Response) => {
+    app.get('/', (req, res) => {
       res.send('Hello World From the Typescript Server!')
     });
 

@@ -6,6 +6,13 @@ export interface PostProps {
     highlights: string[],
     title: string,
     createdBy: string,
-    createdAt: number,
+    createdAt: Date,
     rating: number
-  }
+}
+export interface UserProps {
+  id: string,
+  username: string,
+  email: string,
+  password: string,
+  createdAt: Date
+}

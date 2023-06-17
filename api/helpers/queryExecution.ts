@@ -1,4 +1,4 @@
-import * as db  from './config/database';
+import * as db  from '../config/database';
 
 export async function queryDatabase(queryString: string) {
     try {
