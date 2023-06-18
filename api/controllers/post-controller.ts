@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import * as postService from '../services/post.service';
+import * as postService from '../services/post-service';
 
 export async function getDetail(req: Request, res: Response, next: NextFunction) {
     let id = req.body.id;

@@ -1,40 +1,25 @@
-import { BottomNavigation, BottomNavigationAction, } from '@mui/material';
 import { usePathname, useRouter } from "next/navigation";
+import { useContext } from 'react';
+import { AppContext } from '../context';
 
 export default function Navbar() {
     const router = useRouter();
     const pathName = usePathname();
+    const { isSigned , setIsOpenAuthForm } = useContext(AppContext);
     return (
-        <BottomNavigation
-            className="bg-stone-800 fixed w-full z-10"
-            sx={{ '.MuiBottomNavigationAction-label': {
-                fontSize: '1.25rem',
-                color: 'white'
-            }}}
-            showLabels
-            onChange={(event, value) => {
-                router.push(value);
-            }}>
-            <BottomNavigationAction 
-                className={`${pathName === '/' && "nav_item_active"} nav_items `}
-                label="Home" 
-                value="/" />
-            <BottomNavigationAction 
-                className={`${pathName === '/destination' && "nav_item_active"} nav_items`}
-                label="Destination" 
-                value="/destination" />
-            <BottomNavigationAction 
-                className={`${pathName === '/planning' && "nav_item_active"} nav_items`}
-                label="Planning" 
-                value="/planning" />
-            <BottomNavigationAction 
-                className={`${pathName === '/user/register' && "nav_item_active"} nav_items`}
-                label="Register" 
-                value="/user/register" />
-            <BottomNavigationAction 
-                className={`${pathName === '/user/login' && "nav_item_active"} nav_items`}
-                label="Login" 
-                value="/user/login" />
-        </BottomNavigation>
+        <div className="bg-stone-800 fixed w-full h-14 z-10">
+            <button 
+                className={`${pathName === '/' ? 'button-navbar-active' : 'button-navbar-inactive'} button-navbar`}
+                onClick={() => router.push('/')}>Home</button>
+            <button 
+                className={`${pathName.includes('/destination') ? 'button-navbar-active' : 'button-navbar-inactive'} button-navbar`}
+                onClick={() => router.push('/destination')}>Destination</button>
+            <button 
+                className={`${pathName.includes('/planning') ? 'button-navbar-active' : 'button-navbar-inactive'} button-navbar`}
+                onClick={() => router.push('/planning')}>Planning</button>
+            <button 
+                className="float-right"
+                onClick={() => setIsOpenAuthForm(true)}>Sign In</button>
+        </div>
     )
 }

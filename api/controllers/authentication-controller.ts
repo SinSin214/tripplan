@@ -1,6 +1,6 @@
-import * as userService from '../services/user.service';
+import * as userService from '../services/user-service';
 import * as authHelper from '../helpers/authentication';
-import { sendVerificationMail } from '../helpers/mailTransporter';
+import { sendVerificationMail } from '../helpers/mail-transporter';
 import { NextFunction, Request, Response } from 'express';
 
 export async function signUp(req: Request, res: Response) {
@@ -15,8 +15,8 @@ export async function signUp(req: Request, res: Response) {
 
 export async function signIn(req: Request, res: Response) {
     let { email, password } = req.body;
-    let user: any = userService.getUserByEmail(email);
-    if(user) {
+    let user: any = await userService.getUserByEmail(email);
+        if(user) {
         let hashPassword = user.password;
         let validPassword = await authHelper.comparePassword(password, hashPassword)
         if(validPassword) {

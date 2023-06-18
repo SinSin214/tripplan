@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_CONNECTION")
+}
+
+model user {
+  id         String   @id @default(uuid())
+  email      String   @unique
+  username   String   @unique
+  password   String
+  created_at DateTime @default(now())
+  is_active  Boolean  @default(false)
+}
+
+model post {
+  id          String   @id @default(uuid())
+  title       String   @unique
+  description String
+  content     String
+  highlights  String[]
+  author      String
+  created_at  DateTime @default(now())
+  rating      Int
+  images      image[]  @relation("images")
+  main_image  image?   @relation("main_image")
+}
+
+model image {
+  id                 String  @id @default(uuid())
+  file_name          String
+  images_post_id     String
+  main_image_post_id String? @unique
+  images_post        post    @relation("images", fields: [images_post_id], references: [id])
+  main_image_post    post?   @relation("main_image", fields: [main_image_post_id], references: [id])
+}

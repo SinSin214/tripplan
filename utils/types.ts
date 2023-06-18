@@ -9,10 +9,7 @@ export interface PostProps {
     createdAt: Date,
     rating: number
 }
-export interface UserProps {
-  id: string,
+export interface IUser {
   username: string,
-  email: string,
-  password: string,
-  createdAt: Date
+  email: string
 }

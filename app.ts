@@ -2,7 +2,8 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import router from './api/routes/routes';
+import postRouter from './api/routes/post-route';
+import authRouter from './api/routes/auth-route';
 import * as database from './api/config/database';
 dotenv.config();
 
@@ -19,7 +20,8 @@ async function initApp() {
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
 
-    app.use('/post', router);
+    app.use('/post', postRouter);
+    app.use('/auth', authRouter);
 
     
     app.get('/', (req, res) => {

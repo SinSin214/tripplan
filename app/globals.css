@@ -24,14 +24,6 @@ body {
 
 /* what I write */
 
-.nav_item_active {
-  background-color: #626262;
-}
-
-.nav_items:hover {
-  background-color: #626262;
-}
-
 .main {
   display: flex;
   flex-direction: column;
@@ -109,4 +101,19 @@ body {
 
 .input{
   border: gray 1px solid;
+}
+
+.button-navbar {
+  height: 100%;
+  width: 10%;
+  color: white;
+}
+
+.button-navbar-inactive:hover {
+  background-color: rgb(235 236 237 / 10%);
+}
+
+.button-navbar-active {
+  background-color: white;
+  color: black;
 }
