@@ -6,6 +6,6 @@ export async function queryDatabase(queryString: string) {
         return result.rows;
     }
     catch(err: any) {
-        throw new Error(err)
+        throw Error(err)
     }
 }

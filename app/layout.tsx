@@ -5,7 +5,6 @@ import Footer from "./components/Footer";
 import AuthenticationForm from "./components/AuthenticationForm";
 import AppProvider, { AppContext } from "./context";
 import { useContext, useEffect } from "react";
-import { IUser } from "@/utils/types";
 
 
 export default function RootLayout({
@@ -13,11 +12,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+    let { setIsSigned, setUser } = useContext(AppContext);
+
     useEffect(() => {
         let userInfo = localStorage.getItem("user");
         if(userInfo) {
             let {username, email} = JSON.parse(userInfo);
-            let { setIsSigned, setUser } = useContext(AppContext);
             setIsSigned(true);
             setUser({
                 username: username,
@@ -30,12 +30,14 @@ export default function RootLayout({
         <html lang="en">
         <body>
             <AppProvider>
+                <div className="screen-view">
                 <Header />
                 <main className="main mt-14">
                     {children}
                 </main>
                 <Footer />
                 <AuthenticationForm />
+                </div>
             </AppProvider>
         </body>
     </html>

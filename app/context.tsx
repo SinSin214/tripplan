@@ -8,20 +8,25 @@ export const AppContext = createContext({
   setIsSigned: (state: boolean) => {},
   user: {},
   setUser: (user: IUser) => {},
-  isOpenAuthForm: false,
-  setIsOpenAuthForm: (state: boolean) => {}
+  isOpenSignInForm: false,
+  setIsOpenSignInForm: (state: boolean) => {},
+  isOpenSignUpForm: false,
+  setIsOpenSignUpForm: (state: boolean) => {}
 })
  
 export default function AppProvider({ children }: any) {
     const [isSigned, setIsSigned] = useState(false);
     const [user, setUser] = useState({});
-    const [isOpenAuthForm, setIsOpenAuthForm] = useState(false);
+    const [isOpenSignInForm, setIsOpenSignInForm] = useState(false);
+    const [isOpenSignUpForm, setIsOpenSignUpForm] = useState(false);
+
   return (
     <AppContext.Provider 
         value={{
             isSigned, setIsSigned,
             user, setUser,
-            isOpenAuthForm, setIsOpenAuthForm
+            isOpenSignInForm, setIsOpenSignInForm,
+            isOpenSignUpForm, setIsOpenSignUpForm
         }}>
         {children}
     </AppContext.Provider>

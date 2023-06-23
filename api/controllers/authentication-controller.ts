@@ -2,33 +2,41 @@ import * as userService from '../services/user-service';
 import * as authHelper from '../helpers/authentication';
 import { sendVerificationMail } from '../helpers/mail-transporter';
 import { NextFunction, Request, Response } from 'express';
+import { user } from '@prisma/client';
 
-export async function signUp(req: Request, res: Response) {
-    let { username, email, password, confirmPassword } = req.body;
-    await signUpValidation(username, email, password, confirmPassword);
-    let encryptedPassword = await authHelper.encryptPassword(password);
+export async function signUp(req: Request, res: Response, next: NextFunction) {
+    try {
+        let { username, email, password, confirmPassword } = req.body;
+        await signUpValidation(username, email, password, confirmPassword);
+        let encryptedPassword = await authHelper.encryptPassword(password);
 
-    let createdUser = await userService.createUser(username, email, encryptedPassword);
-    sendVerificationMail(email);
-    return res.status(200).json(createdUser);
+        let createdUser = await userService.createUser(username, email, encryptedPassword);
+        sendVerificationMail(email);
+        return res.status(200).json(createdUser);
+    }
+    catch (err) {
+        next(err);
+    }
 }
 
-export async function signIn(req: Request, res: Response) {
-    let { email, password } = req.body;
-    let user: any = await userService.getUserByEmail(email);
-        if(user) {
-        let hashPassword = user.password;
-        let validPassword = await authHelper.comparePassword(password, hashPassword)
-        if(validPassword) {
-            if(user.is_active) {
-                let token = authHelper.generateToken(email);
-                // login success
-                return token;
-            }
-            else throw new Error('Unactive user');
-        }
+export async function signIn(req: Request, res: Response, next: NextFunction) {
+    try {
+        let { email, password } = req.body;
+
+        let user: any = await userService.getUserByEmail(email);
+        if(!user) throw Error('Username does not exist');
+        if(user.is_inactive) throw Error('Inactive user');
+
+        let validPassword = await authHelper.comparePassword(password, user.password);
+        if(!validPassword) throw Error('Incorrect password');
+        
+        let token = authHelper.generateToken(email);
+        // login success
+        return token;
     }
-    // fail
+    catch (err) {
+        next(err);
+    }
 }
 
 export async function checkAuthRequest(req: Request, res: Response, next: NextFunction) {
