@@ -32,10 +32,10 @@ export async function getUserByEmail(email: string) {
     return user;
 }
 
-export async function activeUser(email: string) {
+export async function activeUser(userId: string) {
     await prisma.user.update({
         where: {
-          email: email,
+          id: userId,
         },
         data: {
           is_active: true,

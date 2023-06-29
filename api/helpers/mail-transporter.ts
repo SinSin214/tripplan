@@ -1,27 +1,26 @@
 import nodemailer from 'nodemailer';
+import { Request } from 'express';
 
-let testAccount = {
-    user: '',
-    pass: ''
-}
-let transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: testAccount.user, // generated ethereal user
-      pass: testAccount.pass, // generated ethereal password
-    },
-})
-
-export async function sendVerificationMail(email: string) {
-    testAccount = await nodemailer.createTestAccount();
-
+export async function sendVerificationMail(email: string, userId: string, hostname: string | undefined) {
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        host: 'smtp.gmail.com',
+        auth: {
+            user: 'tranhuynhkha21496@gmail.com', // generated ethereal user
+            pass: 'zhaottmzemwaqesb', // generated ethereal password
+        },
+    });
+    let linkURL = `http://${hostname}/auth/activeUse?userId=${userId}`;
+    let html = `<html>
+    <body>
+    <a href="`+ linkURL +`">Click to active</a>
+    </body>
+</html>`
     await transporter.sendMail({
         from: 'Trip Plan', // sender address
         to: [email], // list of receivers
         subject: "Email verification", // Subject line
         text: "Hello world?", // plain text body
-        html: "<b>Hello world?</b>", // html body
+        html: html, // html body
     });
 }

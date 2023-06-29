@@ -2,16 +2,16 @@ import * as userService from '../services/user-service';
 import * as authHelper from '../helpers/authentication';
 import { sendVerificationMail } from '../helpers/mail-transporter';
 import { NextFunction, Request, Response } from 'express';
-import { user } from '@prisma/client';
 
 export async function signUp(req: Request, res: Response, next: NextFunction) {
     try {
         let { username, email, password, confirmPassword } = req.body;
+        let hostname = req.headers.host;
         await signUpValidation(username, email, password, confirmPassword);
         let encryptedPassword = await authHelper.encryptPassword(password);
 
         let createdUser = await userService.createUser(username, email, encryptedPassword);
-        sendVerificationMail(email);
+        await sendVerificationMail(email, createdUser.id, hostname);
         return res.status(200).json(createdUser);
     }
     catch (err) {
@@ -45,10 +45,13 @@ export async function checkAuthRequest(req: Request, res: Response, next: NextFu
     next();
 }
 
-export async function confirmEmail(req: Request, res: Response, next: NextFunction) {
-    let { email } = req.body;
-    userService.activeUser(email);
+export async function activeUser(req: Request, res: Response, next: NextFunction) {
+    let { userId } = req.params;
+    if(userId) {
+        userService.activeUser(userId);
+    }
 }
+
 
 async function signUpValidation(username: string, email: string, password: string, confirmPassword: string) {
     let users = await userService.getAllUsernameAndEmail();
