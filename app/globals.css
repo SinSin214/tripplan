@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+@color: #4D926F;
 
 * {
   box-sizing: border-box;
@@ -22,6 +23,7 @@ body {
     position: fixed;
     overflow: auto;
     height: 100%;
+    width: 100%;
 }
 
 .main {
@@ -29,7 +31,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  min-height: calc(100vh - 64px);
+  min-height: calc(100% - 12.5rem);
   background-color: white;
   color: black;
 }
@@ -95,12 +97,8 @@ body {
 }
 
 .authentication-popup{
-  width: 350px;
+  width: 400px;
   padding: 20px 30px;
-}
-
-.input{
-  border: gray 1px solid;
 }
 
 .btn-navbar {
@@ -123,16 +121,18 @@ body {
   color: black;
 }
 
-
 .btn-auth{
   margin-left: 10px;
   margin-right: 10px;
-  color: white
+  color: white;
+  justify-content: center;
+  align-items: center;
 }
 .btn-auth:hover{
   color: gray;
 }
 
-.btn-sign{
-  background-color: #1565c0;
+.container-navbar-part{
+  display: flex;
+  align-items: center;
 }
