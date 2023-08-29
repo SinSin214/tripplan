@@ -7,9 +7,9 @@ import CreateIcon from '@mui/icons-material/Create';
 export default function Navbar() {
     const router = useRouter();
     const pathName = usePathname();
-    const { isSigned , setIsOpenSignInForm, setIsOpenSignUpForm } = useContext(AppContext);
+    const { isSigned, setIsOpenSignInForm, setIsOpenSignUpForm } = useContext(AppContext);
     return (
-        <div className="bg-stone-800 fixed w-full h-14 z-10 flex">
+        <div className="background-color fixed w-full h-14 z-10 flex">
             <div className="container-navbar-part w-full">
                 <Button 
                     className={`${pathName === '/' ? 'btn-navbar-active' : 'btn-navbar-inactive'} btn-navbar`}
@@ -22,8 +22,7 @@ export default function Navbar() {
                     onClick={() => router.push('/planning')}>Planning</Button>
             </div>
             <div className="container-navbar-part">
-                <Button variant="outlined"
-                    className="min-width-max"
+                <Button className="btn-write-post min-w-max"
                     startIcon={<CreateIcon />}>
                     Write post
                 </Button>
