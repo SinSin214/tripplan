@@ -2,13 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  --primary-color: rgb(41 37 36);
+  --primary-text-color: rgb(255 255 255);
+  --primary-hover-color: rgb(235 236 237 / 20%);
+  --primary-border-color: rgb(255 255 255 / 50%)
 }
-
 
 body {
     color: rgb(var(--foreground-rgb));
@@ -16,12 +18,16 @@ body {
     overflow: hidden;
 }
 
-/* what I write */
+.background-color{
+  background-color: var(--primary-color);
+  color: var(--primary-text-color);
+}
 
 .screen-view{
     position: fixed;
     overflow: auto;
     height: 100%;
+    width: 100%;
 }
 
 .main {
@@ -29,7 +35,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  min-height: calc(100vh - 64px);
+  min-height: calc(100% - 12.5rem);
   background-color: white;
   color: black;
 }
@@ -95,12 +101,8 @@ body {
 }
 
 .authentication-popup{
-  width: 350px;
+  width: 400px;
   padding: 20px 30px;
-}
-
-.input{
-  border: gray 1px solid;
 }
 
 .btn-navbar {
@@ -123,16 +125,27 @@ body {
   color: black;
 }
 
-
 .btn-auth{
   margin-left: 10px;
   margin-right: 10px;
-  color: white
+  color: white;
+  justify-content: center;
+  align-items: center;
+  min-width: max-content;
 }
 .btn-auth:hover{
   color: gray;
 }
 
-.btn-sign{
-  background-color: #1565c0;
+.container-navbar-part{
+  display: flex;
+  align-items: center;
+}
+
+.btn-write-post{
+  color: var(--primary-text-color);
+  border: 1px solid var(--primary-border-color)
+}
+.btn-write-post:hover{
+  background-color: var(--primary-hover-color);
 }

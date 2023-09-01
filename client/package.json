@@ -10,9 +10,10 @@
     "next": "next dev"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.6",
-    "@emotion/styled": "^11.10.6",
-    "@mui/material": "^5.11.13",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/material": "^5.13.6",
     "@prisma/client": "^4.15.0",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
@@ -36,8 +37,8 @@
     "react-loader-spinner": "^5.3.4",
     "sequelize": "^6.31.0",
     "sqlite3": "^5.1.6",
-    "ts-node": "^10.9.1",
-    "supabase": "^1.68.6"
+    "supabase": "^1.68.6",
+    "ts-node": "^10.9.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

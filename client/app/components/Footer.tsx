@@ -1,6 +1,6 @@
 export default function Footer() {
     return (
-        <div className="bg-stone-800 text-white py-10">
+        <div className="background-color text-white py-8 h-36">
             <div className="flex limited-width-layout__content justify-between">
                 <div className="flex flex-col w-full" >
                     <label>CONTACT</label>

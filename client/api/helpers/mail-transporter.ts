@@ -6,9 +6,9 @@ export async function sendVerificationMail(email: string, userId: string, hostna
         service: 'gmail',
         host: 'smtp.gmail.com',
         auth: {
-            user: 'tranhuynhkha21496@gmail.com', // generated ethereal user
-            pass: 'zhaottmzemwaqesb', // generated ethereal password
-        },
+            user: 'tranhuynhkha21496@gmail.com',
+            pass: 'zhaottmzemwaqesb'
+        }
     });
     let linkURL = `http://${hostname}/auth/activeUse?userId=${userId}`;
     let html = `<html>
