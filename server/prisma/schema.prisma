@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model user {
+model User {
   id         String   @id @default(uuid())
   email      String   @unique
   username   String   @unique
@@ -19,7 +19,7 @@ model user {
   is_active  Boolean  @default(false)
 }
 
-model post {
+model Post {
   id          String   @id @default(uuid())
   title       String   @unique
   description String
@@ -28,15 +28,6 @@ model post {
   author      String
   created_at  DateTime @default(now())
   rating      Int
-  images      image[]  @relation("images")
-  main_image  image?   @relation("main_image")
-}
-
-model image {
-  id                 String  @id @default(uuid())
-  file_name          String
-  images_post_id     String
-  main_image_post_id String? @unique
-  images_post        post    @relation("images", fields: [images_post_id], references: [id])
-  main_image_post    post?   @relation("main_image", fields: [main_image_post_id], references: [id])
+  images      String[]
+  main_image  String?
 }
