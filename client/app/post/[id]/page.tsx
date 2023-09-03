@@ -6,7 +6,7 @@ import Rating from '@mui/material/Rating';
 // import { Booking } from '../components/Booking';
 
 export default async function PostDetail({ params }: { params: { id: string } }) {
-    const postDetail = await getPostDetail(params.id);
+    const oPostDetail = await getPostDetail(params.id);
     // function myAction() {
     //     alert('aaa');
     // }
@@ -14,13 +14,13 @@ export default async function PostDetail({ params }: { params: { id: string } })
     return (
         <div className="limited-width-layout__content">
             {/* Title */}
-            <div className="text-4xl mt-4">{postDetail.title}</div>
+            <div className="text-4xl mt-4">{oPostDetail.title}</div>
             <div className="grid grid-cols-4 mt-4">
                 <div className="col-span-3">
                     {/* Image */}
                     <div className="h-96">
                         <Image
-                            src={postDetail.image_path}
+                            src={oPostDetail.image_path}
                             alt=""
                             className="w-full h-full"
                             width="0"
@@ -33,7 +33,7 @@ export default async function PostDetail({ params }: { params: { id: string } })
                         <div className="grid grid-cols-4 mt-3">
                             <div className="col-span-1 text-xl">Rating</div>
                             <div className="col-span-3">
-                                {/* <Rating value={postDetail.rating} readOnly={true} /> */}
+                                {/* <Rating value={oPostDetail.rating} readOnly={true} /> */}
                             </div>
                         </div>
                         <div className="grid grid-cols-4 mt-3">
@@ -45,7 +45,7 @@ export default async function PostDetail({ params }: { params: { id: string } })
                         <div className="grid grid-cols-4 mt-3">
                             <div className="col-span-1 text-xl">Highlights</div>
                             <div className="col-span-3">
-                                {postDetail.highlights ? postDetail.highlights.map((item, index) => (
+                                {oPostDetail.highlights ? oPostDetail.highlights.map((item, index) => (
                                     <div key={index}>- {item}</div>
                                 )) : ''}
                             </div>
@@ -53,7 +53,7 @@ export default async function PostDetail({ params }: { params: { id: string } })
                         <div className="grid grid-cols-4 mt-3">
                             <div className="col-span-1 text-xl">Description</div>
                             <div className="col-span-3">
-                                <div>{postDetail.description}</div>
+                                <div>{oPostDetail.description}</div>
                             </div>
                         </div>
                     </div>
@@ -67,6 +67,6 @@ export default async function PostDetail({ params }: { params: { id: string } })
 }
 
 const getPostDetail = async (id: string) => {
-    const postDetail: PostProps = await API.getPostById(id);
-    return postDetail;
+    const oPostDetail: PostProps = await API.getPostById(id);
+    return oPostDetail;
 }

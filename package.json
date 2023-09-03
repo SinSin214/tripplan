@@ -1,0 +1,12 @@
+{
+    "name": "tripplan",
+    "version": "1.0.0",
+    "description": "",
+    "scripts": {
+      "start:server": "npm --prefix server start",
+      "start:client": "npm --prefix client start"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+  }

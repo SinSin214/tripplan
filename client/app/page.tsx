@@ -5,7 +5,7 @@ import PostList from './components/PostList';
 import * as API from '../utils/apiHelper';
 
 export default async function Home() {
-	const posts = await getServerSideProps();
+	const aPosts = await getServerSideProps();
 
 	return (
 		<div>
@@ -39,7 +39,7 @@ export default async function Home() {
 					<div className="text-xl">DISCOVERY NEW PLACES</div>
 				</div>
 				<div className="flex justify-between vertical-stack-layout">
-					{posts ? posts.map((post) => (
+					{aPosts ? aPosts.map((post) => (
 						<PostList post={post} key={post.id} />
 					)) : ''}
 				</div>
@@ -49,6 +49,6 @@ export default async function Home() {
 }
 
 async function getServerSideProps() {
-	const posts: PostProps[] = await API.getPosts();
-	return posts;
+	const aPosts: PostProps[] = await API.getPosts();
+	return aPosts;
 }
