@@ -4,3 +4,4 @@ next-env.d.ts
 tsconfig.tsbuildinfo
 package-lock.json
 output.css
+server/dist/
