@@ -17,9 +17,6 @@ export class CreatePostDto {
     highlights: string[]
 
     @ApiProperty()
-    author: string
-
-    @ApiProperty()
     images: string[]
 
     @ApiProperty()

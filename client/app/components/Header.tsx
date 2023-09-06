@@ -23,7 +23,8 @@ export default function Navbar() {
             </div>
             <div className="container-navbar-part">
                 <Button className="btn-write-post min-w-max"
-                    startIcon={<CreateIcon />}>
+                    startIcon={<CreateIcon />}
+                    onClick={() => writePost()}>
                     Write post
                 </Button>
             </div>

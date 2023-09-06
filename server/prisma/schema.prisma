@@ -27,7 +27,7 @@ model Post {
   highlights  String[]
   author      String
   created_at  DateTime @default(now())
-  rating      Int
+  rating      Int?
   images      String[]
   main_image  String?
 }
