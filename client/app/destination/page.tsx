@@ -7,7 +7,7 @@ export default async function Destination () {
     return (
         <div className="limited-width-layout__content">
             {aPosts.length ? aPosts.map((item: any) =>
-                <PostItem post={item} />
+                <PostItem key={item.id} post={item} />
             ) : ''}
         </div>
     )

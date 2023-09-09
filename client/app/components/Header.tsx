@@ -8,6 +8,10 @@ export default function Navbar() {
     const router = useRouter();
     const pathName = usePathname();
     const { isSigned, setIsOpenSignInForm, setIsOpenSignUpForm } = useContext(AppContext);
+    
+    function writePost() {
+        router.push('/post/write');
+    }
     return (
         <div className="background-color fixed w-full h-14 z-10 flex">
             <div className="container-navbar-part w-full">

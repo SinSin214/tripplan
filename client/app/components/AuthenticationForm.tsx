@@ -14,30 +14,29 @@ export default function AuthenticationForm() {
     const { isOpenSignInForm, setIsOpenSignInForm, isOpenSignUpForm, setIsOpenSignUpForm, setIsSigned } = useContext(AppContext);
     
     async function handleSignIn() {
-        let res = await axios.post('http://localhost:3001/auth/signIn', {
-            email: formData.email,
-            password: formData.password
-        });
-        if(res.status === 200) {
-            setIsSigned(true);
-        } else {
-            // fail
-        }
-        
+        // let res = await axios.post('http://localhost:3001/auth/signIn', {
+        //     email: formData.email,
+        //     password: formData.password
+        // });
+        // if(res.status === 200) {
+        //     setIsSigned(true);
+        // } else {
+        //     // fail
+        // }
     }
 
     async function handleSignUp() {
-        let res = await axios.post('http://localhost:3001/auth/signUp', {
-            email: formData.email,
-            username: formData.username,
-            password: formData.password,
-            confirmPassword: formData.confirmPassword
-        });
-        if(res.status === 200) {
+        // let res = await axios.post('http://localhost:3001/auth/signUp', {
+        //     email: formData.email,
+        //     username: formData.username,
+        //     password: formData.password,
+        //     confirmPassword: formData.confirmPassword
+        // });
+        // if(res.status === 200) {
             
-        } else {
-            // fail
-        }
+        // } else {
+        //     // fail
+        // }
     }
 
     function handleForgetPassword(e: any) {
@@ -68,7 +67,6 @@ export default function AuthenticationForm() {
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
                     autoComplete="email"
                     fullWidth />
-                <div>
                 <TextField 
                     className="my-2" 
                     label="Password" 
@@ -79,7 +77,6 @@ export default function AuthenticationForm() {
                     onChange={(e) => setFormData({...formData, password: e.target.value})}
                     autoComplete="current-password"
                     fullWidth />
-                </div>
                 <div style={{
                     width: '80%',
                     height: '1px',
