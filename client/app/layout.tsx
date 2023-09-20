@@ -4,7 +4,8 @@ import Header from './components/Header';
 import Footer from "./components/Footer";
 import AuthenticationForm from "./components/AuthenticationForm";
 import AppProvider, { AppContext } from "./context";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 
 export default function RootLayout({
@@ -12,7 +13,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-    let { setIsSigned, setUser } = useContext(AppContext);
+    const pathName = usePathname();
+    const { setIsSigned, setUser } = useContext(AppContext);
+    const [isShowFooter, setIsShowFooter] = useState(true);
 
     useEffect(() => {
         let userInfo = localStorage.getItem("user");
@@ -25,6 +28,12 @@ export default function RootLayout({
             })
         }
     }, []);
+    useEffect(() => {
+        if(pathName === '/post/write') {
+            setIsShowFooter(false);
+        } else setIsShowFooter(true);
+    })
+
 
     return (
         <html lang="en">
@@ -32,10 +41,11 @@ export default function RootLayout({
             <AppProvider>
                 <div className="screen-view">
                 <Header />
-                <main className="main mt-14">
+                <div className="h-14"></div>
+                <main className="main">
                     {children}
+                    {isShowFooter ? <Footer /> : ''}
                 </main>
-                <Footer />
                 <AuthenticationForm />
                 </div>
             </AppProvider>

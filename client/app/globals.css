@@ -25,7 +25,6 @@ body {
 
 .screen-view{
     position: fixed;
-    overflow: auto;
     height: 100%;
     width: 100%;
 }
@@ -38,6 +37,8 @@ body {
   min-height: calc(100% - 12.5rem);
   background-color: white;
   color: black;
+  overflow: auto;
+  height: calc(100% - 3.5rem);
 }
 
 /* responsive layout */
@@ -148,4 +149,8 @@ body {
 }
 .btn-write-post:hover{
   background-color: var(--primary-hover-color);
+}
+
+.ck-editor__editable{
+  min-height: 60vh;
 }
