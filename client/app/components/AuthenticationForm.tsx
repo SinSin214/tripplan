@@ -47,6 +47,13 @@ export default function AuthenticationForm() {
         setFormData(initialValueFormData);
     }
 
+    function handleOnChange(e: any) {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        })
+    }
+
     return (
         <Fragment>
             <Dialog open={isOpenSignInForm} 
@@ -63,8 +70,9 @@ export default function AuthenticationForm() {
                     variant="outlined" 
                     type="email" 
                     size="small" 
+                    name="email"
                     value={formData.email} 
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    onChange={(e) => handleOnChange(e)}
                     autoComplete="email"
                     fullWidth />
                 <TextField 
@@ -72,9 +80,10 @@ export default function AuthenticationForm() {
                     label="Password" 
                     variant="outlined" 
                     type="password" 
-                    size="small" 
+                    size="small"
+                    name="password" 
                     value={formData.password}
-                    onChange={(e) => setFormData({...formData, password: e.target.value})}
+                    onChange={(e) => handleOnChange(e)}
                     autoComplete="current-password"
                     fullWidth />
                 <div style={{
@@ -108,8 +117,9 @@ export default function AuthenticationForm() {
                         variant="outlined" 
                         type="email" 
                         size="small" 
+                        name="email"
                         value={formData.email} 
-                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                        onChange={(e) => handleOnChange(e)}
                         autoComplete="email"
                         fullWidth />
                     <TextField
@@ -117,8 +127,9 @@ export default function AuthenticationForm() {
                         label="Username" 
                         variant="outlined" 
                         size="small" 
+                        name="username"
                         value={formData.username} 
-                        onChange={(e) => setFormData({...formData, username: e.target.value})}
+                        onChange={(e) => handleOnChange(e)}
                         autoComplete="username"
                         fullWidth />
                     <TextField 
@@ -127,8 +138,9 @@ export default function AuthenticationForm() {
                         variant="outlined" 
                         type="password" 
                         size="small" 
+                        name="password"
                         value={formData.password}
-                        onChange={(e) => setFormData({...formData, password: e.target.value})}
+                        onChange={(e) => handleOnChange(e)}
                         autoComplete="new-password"
                         fullWidth />
                     <TextField 
@@ -137,8 +149,9 @@ export default function AuthenticationForm() {
                         variant="outlined" 
                         type="password" 
                         size="small" 
+                        name="confirmPassword"
                         value={formData.confirmPassword}
-                        onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                        onChange={(e) => handleOnChange(e)}
                         autoComplete="new-password"
                         fullWidth />
                     <div style={{

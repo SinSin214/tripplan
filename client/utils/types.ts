@@ -13,3 +13,9 @@ export interface IUser {
   username: string,
   email: string
 }
+
+export interface WritePostType {
+  title: string,
+  content: string,
+  images: string[]
+}
