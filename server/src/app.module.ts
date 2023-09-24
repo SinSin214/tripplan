@@ -6,10 +6,13 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ImageController } from './image/image.controller';
 import { ImageService } from './image/image.service';
 import { ImageModule } from './image/image.module';
+import { UserController } from './user/user.controller';
+import { UserModule } from './user/user.module';
+import { UserService } from './user/user.service';
 
 @Module({
-  imports: [PostModule, PrismaModule, ImageModule],
-  controllers: [AppController, ImageController],
-  providers: [AppService, ImageService],
+  imports: [PostModule, PrismaModule, ImageModule, UserModule],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

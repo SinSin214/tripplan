@@ -11,7 +11,7 @@ import { Essentials } from '@ckeditor/ckeditor5-essentials';
 import { FontSize } from '@ckeditor/ckeditor5-font';
 import { Heading } from '@ckeditor/ckeditor5-heading';
 import { HorizontalLine } from '@ckeditor/ckeditor5-horizontal-line';
-import { Image, ImageCaption, ImageUpload } from '@ckeditor/ckeditor5-image';
+import { Image, ImageCaption, ImageUpload, ImageResizeButtons, ImageResize, ImageResizeEditing, ImageToolbar } from '@ckeditor/ckeditor5-image';
 import { Link } from '@ckeditor/ckeditor5-link';
 import { List, ListProperties } from '@ckeditor/ckeditor5-list';
 import { Paragraph } from '@ckeditor/ckeditor5-paragraph';
@@ -30,6 +30,10 @@ class Editor extends ClassicEditor {
 		Image,
 		ImageCaption,
 		ImageUpload,
+		ImageResize,
+		ImageResizeButtons, 
+		ImageResizeEditing, 
+		ImageToolbar,
 		Italic,
 		Link,
 		List,

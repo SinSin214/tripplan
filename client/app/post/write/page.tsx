@@ -1,7 +1,9 @@
 'use client';
 import { Button, inputClasses, styled, TextField } from "@mui/material";
+import axios from "axios";
 import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useRef, useState } from "react";
+import { API_HOST } from '@/utils/constants'
 
 const TitleField = styled(TextField)(`
     .${inputClasses.root} {
@@ -25,8 +27,17 @@ export default function WritePost() {
         })
     }
 
-    function onHandlePost() {
-        console.log(writePost);
+    async function onHandlePost() {
+        const response = await axios.request({
+            method: "POST",
+            url: `${API_HOST}/post`,
+            data: {
+                post: writePost
+            },
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
     }
 
     return (

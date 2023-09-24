@@ -1,6 +1,6 @@
-import { Controller, FileTypeValidator, Get, MaxFileSizeValidator, ParseFilePipe, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Param, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ImageService } from './image.service';
-import { FileInterceptor, MulterModule } from '@nestjs/platform-express';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 
@@ -11,21 +11,25 @@ export class ImageController {
     @Post('upload')
     @UseInterceptors(FileInterceptor('file', {
         storage: diskStorage({
-            destination: '../../upload',
-            filename: (req, file, cb) => {
-                // Generating a 32 random chars long string
-                const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
-                // Calling the callback passing the random name generated with the original extension name
-                cb(null, `${randomName}_${extname(file.originalname)}`)
-              }
+            destination: './uploads',
+            filename: (req, file, callback) => {
+                const uniquePrefix = Date.now();
+                const extension = extname(file.originalname);
+                // Generating a 16 random chars long string
+                const randomName = Array(16).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
+                const fileName = `${randomName}_${uniquePrefix}${extension}`;
+                callback(null, fileName);
+            }
         })
-    }))
-    async uploadImage(@UploadedFile(new ParseFilePipe({
-        validators: [
-            new MaxFileSizeValidator({ maxSize: 1000 }),
-            new FileTypeValidator({ fileType: '.(png|jpeg|jpg)' })
-        ],
-      })) file) {
-        console.log(file);
+    })
+    )
+    uploadImage(@UploadedFile() file: Express.Multer.File, @Res() res) {
+        // return file.filename;
+        res.send({filename: file.filename})
+    }
+
+    @Get(':id')
+    getImageById(@Param('id') fileId, @Res() res) {
+        res.sendFile(fileId, { root: './uploads'})
     }
 }
