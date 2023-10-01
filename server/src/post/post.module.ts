@@ -4,9 +4,9 @@ import { PostService } from './post.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
+  imports: [PrismaModule],
   controllers: [PostController],
-  providers: [PostService],
-  imports: [PrismaModule]
+  providers: [PostService]
 })
 export class PostModule {
   public configure(consumer: MiddlewareConsumer) {

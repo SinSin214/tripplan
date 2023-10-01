@@ -1,12 +1,12 @@
 import { Controller, Get, Param, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { ImageService } from './image.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { Response } from 'express';
 
 @Controller('image')
 export class ImageController {
-    constructor(private imageService: ImageService) {}
+    constructor() {}
 
     @Post('upload')
     @UseInterceptors(FileInterceptor('file', {
@@ -23,13 +23,13 @@ export class ImageController {
         })
     })
     )
-    uploadImage(@UploadedFile() file: Express.Multer.File, @Res() res) {
+    uploadImage(@UploadedFile() file: Express.Multer.File, @Res() res: Response) {
         // return file.filename;
-        res.send({filename: file.filename})
+        res.status(200).send({filename: file.filename})
     }
 
     @Get(':id')
-    getImageById(@Param('id') fileId, @Res() res) {
-        res.sendFile(fileId, { root: './uploads'})
+    getImageById(@Param('id') fileId, @Res() res: Response) {
+        res.status(200).sendFile(fileId, { root: './uploads'});
     }
 }

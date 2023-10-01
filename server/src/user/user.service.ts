@@ -1,29 +1,64 @@
 import { Injectable } from '@nestjs/common';
+import { User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UserService {
-    constructor(private prisma: PrismaService) {};
-    
-    async getEmail(email: string): Promise<{email: string}[]> {
-        return await this.prisma.user.findMany({
-            select: {
-                email: true
-            },
+    constructor(private prisma: PrismaService) {}
+
+    async getUserByEmail(email: string): Promise<User> {
+        let result = await this.prisma.user.findUnique({
             where: {
                 email: email
             }
         });
+        return result;
     }
 
-    async getUsername(username: string): Promise<{username: string}[]> {
-        return await this.prisma.user.findMany({
-            select: {
-                username: true
+    async getUserByUsername(username: string): Promise<User> {
+        let result = await this.prisma.user.findUnique({
+            where: {
+                username: username
+            }
+        });
+        return result;
+    }
+
+    async getUserByEmailOrUsername(username: string, email: string): Promise<User> {
+        let result = await this.prisma.user.findFirst({
+            where: {OR: [{username},{email}]}
+        })
+        return result;
+    }
+
+    async createUser(user: User): Promise<User> {
+        let result = await this.prisma.user.create({
+            data: user
+        });
+        return result;
+    }
+
+    async updateRefreshToken(username: string, refresh_token: string): Promise<User> {
+        let user = await this.prisma.user.update({
+            data: {
+                refresh_token: refresh_token
             },
             where: {
                 username: username
             }
         });
+        return user;
+    }
+
+    async activateUser(email: string): Promise<void> {
+        await this.prisma.user.update({
+            data: {
+                is_active: true
+            },
+            where: {
+                email: email
+            }
+        })
     }
 }

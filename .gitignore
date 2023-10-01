@@ -5,3 +5,4 @@ tsconfig.tsbuildinfo
 package-lock.json
 output.css
 server/dist/
+*.env
