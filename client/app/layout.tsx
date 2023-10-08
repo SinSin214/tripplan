@@ -2,25 +2,22 @@
 import "./output.css";
 import Header from './components/Header';
 import Footer from "./components/Footer";
-import AuthenticationForm from "./components/AuthenticationForm";
 import AppProvider, { AppContext } from "./context";
 import { useContext, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
     const pathName = usePathname();
     const { setIsSigned, setUser } = useContext(AppContext);
+    const [isShowHeader, setIsShowHeader] = useState(true);
     const [isShowFooter, setIsShowFooter] = useState(true);
-
+    const routeHideHeader = ['/auth/'];
+    const routeHideFooter = ['/auth/', '/post/write'];
     useEffect(() => {
         let userInfo = localStorage.getItem("user");
-        if(userInfo) {
-            let {username, email} = JSON.parse(userInfo);
+        if (userInfo) {
+            let { username, email } = JSON.parse(userInfo);
             setIsSigned(true);
             setUser({
                 username: username,
@@ -29,27 +26,26 @@ export default function RootLayout({
         }
     }, []);
     useEffect(() => {
-        if(pathName === '/post/write') {
-            setIsShowFooter(false);
-        } else setIsShowFooter(true);
+        if (routeHideHeader.some(item => pathName.includes(item))) setIsShowHeader(false);
+        else setIsShowHeader(true);
+        if (routeHideFooter.some(item => pathName.includes(item))) setIsShowFooter(false);
+        else setIsShowFooter(true);
     })
 
 
     return (
         <html lang="en">
-        <body>
-            <AppProvider>
-                <div className="screen-view">
-                <Header />
-                <div className="h-14"></div>
-                <main className="main">
-                    {children}
-                    {isShowFooter ? <Footer /> : ''}
-                </main>
-                <AuthenticationForm />
-                </div>
-            </AppProvider>
-        </body>
-    </html>
-  )
+            <body>
+                <AppProvider>
+                    <div className="screen-view">
+                        {isShowHeader ? <Header /> : ''}
+                        <main className="main">
+                            {children}
+                            {isShowFooter ? <Footer /> : ''}
+                        </main>
+                    </div>
+                </AppProvider>
+            </body>
+        </html>
+    )
 }

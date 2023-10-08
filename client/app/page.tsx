@@ -3,12 +3,13 @@ import { VerticalLine } from './components/SmallThings';
 import { PostProps } from '@/utils/types';
 import PostList from './components/PostList';
 import * as API from '../utils/apiHelper';
+import { Fragment } from 'react';
 
 export default async function Home() {
 	const aPosts = await getServerSideProps();
 
 	return (
-		<div>
+		<Fragment>
 			<Image
 				src="/wallpaper.jpg"
 				alt="Picture of the author"
@@ -44,7 +45,7 @@ export default async function Home() {
 					)) : ''}
 				</div>
 			</div>
-		</div>
+		</Fragment>
 	)
 }
 

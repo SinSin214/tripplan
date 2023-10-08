@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import bcrypt from "bcrypt";
+import * as bcrypt from 'bcrypt';
 import { User as UserModel } from 'prisma/prisma-client';
 import jwt from 'jsonwebtoken';
 import { Response } from 'express';
@@ -12,7 +12,7 @@ interface JwtPayloadExtend {
     email: string
 }
 
-@Controller('user')
+@Controller('auth')
 export class UserController {
     constructor(private userService: UserService) { };
 
@@ -50,6 +50,7 @@ export class UserController {
         try {
             const { username, password } = signInUserDto;
             let user = await this.userService.getUserByUsername(username);
+            if(!user) throw new Error('Username does not exist');
             let matched = await bcrypt.compare(password, user.password);
             if (!matched) throw new Error('Incorrect password');
             if (!user.is_active) throw new Error('Inactive user');
@@ -62,7 +63,7 @@ export class UserController {
             });
 
             let result = await this.userService.updateRefreshToken(username, refreshToken);
-            res.status(200).send({
+            return res.status(200).send({
                 username: username,
                 displayName: result.display_name,
                 accessToken: accessToken,
@@ -70,7 +71,9 @@ export class UserController {
             });
         }
         catch (err) {
-            throw new Error(err);
+            return res.status(500).send({
+                error: err.message
+            });
         }
     }
 

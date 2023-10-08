@@ -13,9 +13,9 @@ export class UserModule {
     consumer
         .apply()
         .forRoutes(
-            { path: 'user/signIn', method: RequestMethod.POST },
-            { path: 'user/signUp', method: RequestMethod.POST },
-            { path: 'user/forgotPassword', method: RequestMethod.POST },
+            { path: 'auth/signIn', method: RequestMethod.POST },
+            { path: 'auth/signUp', method: RequestMethod.POST },
+            { path: 'auth/forgotPassword', method: RequestMethod.POST },
         )
 }
 }
