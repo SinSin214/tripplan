@@ -3,9 +3,6 @@ export class CreateUserDto {
     @MinLength(10)
     username: string
 
-    @IsNotEmpty()
-    display_name: string
-
     @MinLength(10)
     password: string
 

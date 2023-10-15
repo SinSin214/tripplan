@@ -39,8 +39,16 @@ export class UserService {
         return result;
     }
 
-    async updateRefreshToken(username: string, refresh_token: string): Promise<User> {
-        let user = await this.prisma.user.update({
+    async deleteUserByEmail(email: string): Promise<void> {
+        await this.prisma.user.delete({
+            where: {
+                email: email
+            }
+        });
+    }
+
+    async updateRefreshToken(username: string, refresh_token: string): Promise<void> {
+        await this.prisma.user.update({
             data: {
                 refresh_token: refresh_token
             },
@@ -48,7 +56,6 @@ export class UserService {
                 username: username
             }
         });
-        return user;
     }
 
     async activateUser(email: string): Promise<void> {

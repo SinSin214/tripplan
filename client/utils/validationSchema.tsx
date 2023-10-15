@@ -5,7 +5,6 @@ const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
 export const signUpSchema = yup.object().shape({
   username: yup.string().min(8, 'At least 8 characters').required("Required"),
-  displayName: yup.string().required("Required"),
   email: yup.string().email("Invalid email").required("Required"),
   password: yup
     .string()

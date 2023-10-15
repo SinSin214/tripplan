@@ -1,0 +1,3 @@
+Run in folder server to migrate database
+npx prisma migrate dev
+

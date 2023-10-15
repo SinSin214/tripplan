@@ -4,6 +4,7 @@
     "description": "",
     "scripts": {
       "start:server": "npm --prefix server start",
+      "start:serverdebug": "npm --prefix server start debug",
       "start:client": "npm --prefix client start"
     },
     "keywords": [],

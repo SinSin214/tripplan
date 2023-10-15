@@ -16,7 +16,6 @@ export default function SignUpForm(props: Props) {
         initialValues: {
             username: "",
             email: "",
-            displayName: "",
             password: "",
             confirmPassword: ""
         },
@@ -27,7 +26,8 @@ export default function SignUpForm(props: Props) {
     async function handleSignUp() {
         let res = await axios.post('http://localhost:3001/auth/signUp', {
             username: formik.values.username,
-            password: formik.values.password
+            password: formik.values.password,
+            email: formik.values.email
         });
         if (res.status === 200) {
 
@@ -64,19 +64,6 @@ export default function SignUpForm(props: Props) {
                 fullWidth
                 error={formik.touched.email && Boolean(formik.errors.email)}
                 helperText={formik.touched.email && formik.errors.email} />
-            <TextField
-                className="my-2"
-                label="Display name"
-                variant="outlined"
-                type="text"
-                size="small"
-                name="displayName"
-                value={formik.values.displayName}
-                onChange={formik.handleChange}
-                required
-                fullWidth
-                error={formik.touched.displayName && Boolean(formik.errors.displayName)}
-                helperText={formik.touched.displayName && formik.errors.displayName} />
             <TextField
                 className="my-2"
                 label="Password"

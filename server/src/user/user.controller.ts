@@ -3,45 +3,54 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { User as UserModel } from 'prisma/prisma-client';
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 import { Response } from 'express';
 import { SignInUserDto } from './dto/signin-user.dto';
 import * as utils from '../utilities/authentication-utils';
 
 interface JwtPayloadExtend {
-    email: string
-}
+    email: string,
+    username: string
+};
+
 
 @Controller('auth')
 export class UserController {
-    constructor(private userService: UserService) { };
+    accessTokenExpire: number;
+    refreshTokenExpire: number;
+    constructor(private userService: UserService) {
+        this.accessTokenExpire = 86400;
+        this.refreshTokenExpire = 864000;
+    };
 
     @Post('signUp')
     async signUp(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
+        const { email, username, password } = createUserDto;
         try {
-            const { email, username, password, display_name } = createUserDto;
             let user = await this.userService.getUserByEmailOrUsername(username, email);
             if (user && user.username === username) throw new Error('Username existed');
             if (user && user.email === email) throw new Error('Email existed');
             let hashedPassword = await bcrypt.hash(password, 10);
-            let activateToken = jwt.sign({ email: email }, process.env.SECRECT_GENERATE_ACTIVATE_USER_TOKEN);
             let createUser: UserModel = {
                 username: username,
                 password: hashedPassword,
                 email: email,
-                display_name: display_name,
-                created_at: null,
+                created_at: new Date(),
                 is_active: false,
                 refresh_token: null
             }
             await this.userService.createUser(createUser);
+            let activateToken = jwt.sign({ email: email, username: username }, process.env.SECRECT_GENERATE_ACTIVATE_USER_TOKEN);
             await utils.sendActiveEmail(createUser, activateToken);
             res.status(200).send({
                 message: 'A verification mail has been sent to your email. Please check'
             });
         }
         catch (err) {
-            throw new Error(err);
+            this.userService.deleteUserByEmail(email);
+            res.status(500).send({
+                error: err.message
+            });
         }
     }
 
@@ -55,17 +64,16 @@ export class UserController {
             if (!matched) throw new Error('Incorrect password');
             if (!user.is_active) throw new Error('Inactive user');
 
-            let accessToken = jwt.sign({ username: username, password: password }, process.env.SECRECT_GENERATE_ACCESS_TOKEN, {
-                expiresIn: 86400 // 1 day
+            let accessToken = jwt.sign({ username: username, email: user.email }, process.env.SECRECT_GENERATE_ACCESS_TOKEN, {
+                expiresIn: this.accessTokenExpire
             });
-            let refreshToken = jwt.sign({ username: username, password: password }, process.env.SECRECT_GENERATE_REFRESH_TOKEN, {
-                expiresIn: 864000 // 10 days
+            let refreshToken = jwt.sign({ username: username, email: user.email }, process.env.SECRECT_GENERATE_REFRESH_TOKEN, {
+                expiresIn: this.refreshTokenExpire
             });
 
-            let result = await this.userService.updateRefreshToken(username, refreshToken);
+            await this.userService.updateRefreshToken(username, refreshToken);
             return res.status(200).send({
                 username: username,
-                displayName: result.display_name,
                 accessToken: accessToken,
                 refreshToken: refreshToken
             });
@@ -77,15 +85,25 @@ export class UserController {
         }
     }
 
-    @Get('active/:activateToken')
+    @Get('activate/:activateToken')
     async activeUser(@Param('activateToken') activateToken: string, @Res() res: Response) {
         try {
             let decoded = jwt.verify(activateToken, process.env.SECRECT_GENERATE_ACTIVATE_USER_TOKEN) as JwtPayloadExtend;
-            if (decoded && decoded.email) this.userService.activateUser(decoded.email);
-            else throw new Error('Invalid informations');
-            res.status(200);
+            if (decoded && decoded.email) {
+                this.userService.activateUser(decoded.email);
+                let refreshToken = jwt.sign({ username: decoded.username, email: decoded.email }, process.env.SECRECT_GENERATE_REFRESH_TOKEN, {
+                    expiresIn: this.refreshTokenExpire 
+                });
+                this.userService.updateRefreshToken(decoded.username, refreshToken);
+            }
+            else throw new Error('Invalid token');
+            res.status(200).send({
+                success: true
+            });
         } catch (err) {
-            throw new Error(err);
+            res.status(500).send({
+                error: err.message
+            })
         }
     }
 }

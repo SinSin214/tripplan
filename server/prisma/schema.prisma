@@ -11,13 +11,12 @@ datasource db {
 }
 
 model User {
-  email             String      @unique
-  username          String      @unique
-  display_name      String      @unique
+  email             String        @id
+  username          String        @unique
   password          String
-  created_at        DateTime    @default(now())
-  is_active         Boolean     @default(false)
-  refresh_token     String      @unique
+  created_at        DateTime?     @default(now())
+  is_active         Boolean       @default(false)
+  refresh_token     String?       @unique
 }
 
 model Post {
@@ -27,7 +26,7 @@ model Post {
   content     String
   highlights  String[]
   author      String
-  created_at  DateTime @default(now())
+  created_at  DateTime? @default(now())
   rating      Int?
   images      String[]
   main_image  String?

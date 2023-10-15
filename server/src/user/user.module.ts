@@ -11,11 +11,12 @@ import { UserService } from './user.service';
 export class UserModule {
   public configure(consumer: MiddlewareConsumer) {
     consumer
-        .apply()
-        .forRoutes(
-            { path: 'auth/signIn', method: RequestMethod.POST },
-            { path: 'auth/signUp', method: RequestMethod.POST },
-            { path: 'auth/forgotPassword', method: RequestMethod.POST },
-        )
-}
+      .apply()
+      .forRoutes(
+        { path: 'auth/signIn', method: RequestMethod.POST },
+        { path: 'auth/signUp', method: RequestMethod.POST },
+        { path: 'auth/forgotPassword', method: RequestMethod.POST },
+        { path: 'auth/activate/:activeToken', method: RequestMethod.GET },
+      )
+  }
 }
