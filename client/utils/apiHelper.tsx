@@ -1,15 +1,31 @@
 import axios from 'axios';
-import { PostProps } from "@/utils/types";
+import { useContext } from 'react';
+import { ErrorContext } from '@/app/context';
 
-let rootUrl = "http://localhost:3001";
 
-export async function getPosts(): Promise<any> {
-    // let result = await axios.get(rootUrl + "/post/all");
-    // return result.data;
-
+export async function request(path: string, method: string, data?: Object): Promise<any> {
+    try {
+        console.log(`${process.env.API_ROUTE}${path}`)
+        let res = await axios({
+            method: method,
+            url: `${process.env.NEXT_PUBLIC_API_ROUTE}${path}`,
+            headers: { 'Authorization': 'Bearer ' + getToken() },
+            data: data
+        });
+        return res.data;
+    } catch(err: any) {
+        // showErrorDialog(true, err.data.message);
+    }
 }
 
-export async function getPostById(id: string): Promise<any> {
-    let result = await axios.get(rootUrl + "/post/" + id);
-    return result.data;
+function getToken() {
+    return 'aaa';
+}
+
+function showErrorDialog(state: boolean, error: string) {
+    const { setErrorDlg } = useContext(ErrorContext);
+    setErrorDlg({
+        show: true,
+        error: error
+    })
 }

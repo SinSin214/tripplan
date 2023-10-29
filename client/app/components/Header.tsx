@@ -1,13 +1,13 @@
 import { usePathname, useRouter } from "next/navigation";
 import { Fragment, useContext } from 'react';
-import { AppContext } from '../context';
+import { SignInContext } from '../context';
 import { Button } from "@mui/material";
 import CreateIcon from '@mui/icons-material/Create';
 
 export default function Navbar() {
     const router = useRouter();
     const pathName = usePathname();
-    const { isSigned } = useContext(AppContext);
+    const { isSigned } = useContext(SignInContext);
     
     function writePost() {
         router.push('/post/write');

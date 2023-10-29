@@ -40,7 +40,9 @@ export class UserController {
                 refresh_token: null
             }
             await this.userService.createUser(createUser);
-            let activateToken = jwt.sign({ email: email, username: username }, process.env.SECRECT_GENERATE_ACTIVATE_USER_TOKEN);
+            let activateToken = jwt.sign({ email: email, username: username }, process.env.SECRECT_ACTIVATE_USER_TOKEN,{
+                expiresIn: this.accessTokenExpire
+            });
             await utils.sendActiveEmail(createUser, activateToken);
             res.status(200).send({
                 message: 'A verification mail has been sent to your email. Please check'
@@ -64,10 +66,10 @@ export class UserController {
             if (!matched) throw new Error('Incorrect password');
             if (!user.is_active) throw new Error('Inactive user');
 
-            let accessToken = jwt.sign({ username: username, email: user.email }, process.env.SECRECT_GENERATE_ACCESS_TOKEN, {
+            let accessToken = jwt.sign({ username: username, email: user.email }, process.env.SECRECT_ACCESS_TOKEN, {
                 expiresIn: this.accessTokenExpire
             });
-            let refreshToken = jwt.sign({ username: username, email: user.email }, process.env.SECRECT_GENERATE_REFRESH_TOKEN, {
+            let refreshToken = jwt.sign({ username: username, email: user.email }, process.env.SECRECT_REFRESH_TOKEN, {
                 expiresIn: this.refreshTokenExpire
             });
 
@@ -88,10 +90,10 @@ export class UserController {
     @Get('activate/:activateToken')
     async activeUser(@Param('activateToken') activateToken: string, @Res() res: Response) {
         try {
-            let decoded = jwt.verify(activateToken, process.env.SECRECT_GENERATE_ACTIVATE_USER_TOKEN) as JwtPayloadExtend;
+            let decoded = jwt.verify(activateToken, process.env.SECRECT_ACTIVATE_USER_TOKEN) as JwtPayloadExtend;
             if (decoded && decoded.email) {
                 this.userService.activateUser(decoded.email);
-                let refreshToken = jwt.sign({ username: decoded.username, email: decoded.email }, process.env.SECRECT_GENERATE_REFRESH_TOKEN, {
+                let refreshToken = jwt.sign({ username: decoded.username, email: decoded.email }, process.env.SECRECT_REFRESH_TOKEN, {
                     expiresIn: this.refreshTokenExpire 
                 });
                 this.userService.updateRefreshToken(decoded.username, refreshToken);

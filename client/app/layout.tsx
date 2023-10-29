@@ -2,14 +2,16 @@
 import "./output.css";
 import Header from './components/Header';
 import Footer from "./components/Footer";
-import AppProvider, { AppContext } from "./context";
+import AppProvider, { ProfileContext, SignInContext } from "./context";
 import { useContext, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import ErrorDlg from "./components/ErrorDlg";
 
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     const pathName = usePathname();
-    const { setIsSigned, setUser } = useContext(AppContext);
+    const { setIsSigned } = useContext(SignInContext);
+    const { setProfile } = useContext(ProfileContext);
     const [isShowHeader, setIsShowHeader] = useState(true);
     const [isShowFooter, setIsShowFooter] = useState(true);
     const routeHideHeader = ['/auth/'];
@@ -19,9 +21,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         if (userInfo) {
             let { username, email } = JSON.parse(userInfo);
             setIsSigned(true);
-            setUser({
+            setProfile({
                 username: username,
-                email: email
             })
         }
     }, []);
@@ -30,7 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         else setIsShowHeader(true);
         if (routeHideFooter.some(item => pathName.includes(item))) setIsShowFooter(false);
         else setIsShowFooter(true);
-    })
+    }, [])
 
 
     return (
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <AppProvider>
                     <div className="screen-view">
                         {isShowHeader ? <Header /> : ''}
+                        <ErrorDlg />
                         <main className="main">
                             {children}
                             {isShowFooter ? <Footer /> : ''}

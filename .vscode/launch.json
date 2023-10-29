@@ -1,0 +1,34 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Next.js: debug full stack",
+        "type": "node-terminal",
+        "request": "launch",
+        "command": "npm run start",
+        "cwd": "${workspaceFolder}/client",
+        "serverReadyAction": {
+          "pattern": "- Local:.+(https?://.+)",
+          "uriFormat": "%s",
+          "action": "debugWithChrome"
+        }
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Debug Nest Framework",
+        "runtimeExecutable": "npm",
+        "runtimeArgs": [
+          "run",
+          "start:serverdebug",
+          "--",
+          "--inspect-brk"
+        ],
+        "autoAttachChildProcesses": true,
+        "restart": true,
+        "sourceMaps": true,
+        "stopOnEntry": false,
+        "console": "integratedTerminal",
+      }
+    ]
+}

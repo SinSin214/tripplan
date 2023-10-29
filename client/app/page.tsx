@@ -1,3 +1,4 @@
+'use client';
 import Image from 'next/image';
 import { VerticalLine } from './components/SmallThings';
 import { PostProps } from '@/utils/types';
@@ -6,7 +7,7 @@ import * as API from '../utils/apiHelper';
 import { Fragment } from 'react';
 
 export default async function Home() {
-	const aPosts = await getServerSideProps();
+	const aPosts = await API.request('/post/all', 'GET');
 
 	return (
 		<Fragment>
@@ -40,16 +41,11 @@ export default async function Home() {
 					<div className="text-xl">DISCOVERY NEW PLACES</div>
 				</div>
 				<div className="flex justify-between vertical-stack-layout">
-					{aPosts ? aPosts.map((post) => (
+					{aPosts ? aPosts.map((post: PostProps) => (
 						<PostList post={post} key={post.id} />
 					)) : ''}
 				</div>
 			</div>
 		</Fragment>
 	)
-}
-
-async function getServerSideProps() {
-	const aPosts: PostProps[] = await API.getPosts();
-	return aPosts;
 }

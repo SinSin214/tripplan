@@ -6,4 +6,4 @@ package-lock.json
 output.css
 server/dist/
 *.env
-launch.json
+# launch.json

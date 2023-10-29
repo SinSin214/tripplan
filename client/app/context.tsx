@@ -1,34 +1,49 @@
 'use client'
- 
+
 import { IUser } from '@/utils/types';
 import { createContext, useState } from 'react'
- 
-export const AppContext = createContext({
+
+interface IProfile {
+  username: string
+}
+
+interface IError {
+  show: boolean,
+  error: string
+}
+
+const defaultSignIn = {
   isSigned: false,
-  setIsSigned: (state: boolean) => {},
-  user: {},
-  setUser: (user: IUser) => {},
-  isOpenSignInForm: false,
-  setIsOpenSignInForm: (state: boolean) => {},
-  isOpenSignUpForm: false,
-  setIsOpenSignUpForm: (state: boolean) => {}
-})
- 
+  setIsSigned: (value: boolean) => {}
+}
+
+const defaultProfile = {
+  profile: { username: ''},
+  setProfile: (value: IProfile) => {}
+}
+
+const defaultErrorDlg = {
+  errorDlg: { show: false, error: '' },
+  setErrorDlg: (value: IError) => {}
+}
+
+export const SignInContext = createContext(defaultSignIn);
+export const ProfileContext = createContext(defaultProfile);
+export const ErrorContext = createContext(defaultErrorDlg);
+
+
 export default function AppProvider({ children }: any) {
-    const [isSigned, setIsSigned] = useState(false);
-    const [user, setUser] = useState({});
-    const [isOpenSignInForm, setIsOpenSignInForm] = useState(false);
-    const [isOpenSignUpForm, setIsOpenSignUpForm] = useState(false);
+  const [isSigned, setIsSigned] = useState(defaultSignIn.isSigned);
+  const [errorDlg, setErrorDlg] = useState(defaultErrorDlg.errorDlg);
+  const [profile, setProfile] = useState(defaultProfile.profile);
 
   return (
-    <AppContext.Provider 
-        value={{
-            isSigned, setIsSigned,
-            user, setUser,
-            isOpenSignInForm, setIsOpenSignInForm,
-            isOpenSignUpForm, setIsOpenSignUpForm
-        }}>
-        {children}
-    </AppContext.Provider>
+    <SignInContext.Provider value={{ isSigned, setIsSigned }}>
+      <ProfileContext.Provider value={{ profile, setProfile }}>
+        <ErrorContext.Provider value={{ errorDlg, setErrorDlg }}>
+          {children}
+        </ErrorContext.Provider>
+      </ProfileContext.Provider>
+    </SignInContext.Provider>
   )
 }

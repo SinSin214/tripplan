@@ -6,10 +6,7 @@ import Rating from '@mui/material/Rating';
 // import { Booking } from '../components/Booking';
 
 export default async function PostDetail({ params }: { params: { id: string } }) {
-    const oPostDetail = await getPostDetail(params.id);
-    // function myAction() {
-    //     alert('aaa');
-    // }
+    const oPostDetail = await API.request(`/post/${params.id}`, 'GET');
 
     return (
         <div className="limited-width-layout__content">
@@ -45,7 +42,7 @@ export default async function PostDetail({ params }: { params: { id: string } })
                         <div className="grid grid-cols-4 mt-3">
                             <div className="col-span-1 text-xl">Highlights</div>
                             <div className="col-span-3">
-                                {oPostDetail.highlights ? oPostDetail.highlights.map((item, index) => (
+                                {oPostDetail.highlights ? oPostDetail.highlights.map((item: any, index: number) => (
                                     <div key={index}>- {item}</div>
                                 )) : ''}
                             </div>
@@ -64,9 +61,4 @@ export default async function PostDetail({ params }: { params: { id: string } })
             </div>
         </div>
     )
-}
-
-const getPostDetail = async (id: string) => {
-    const oPostDetail: PostProps = await API.getPostById(id);
-    return oPostDetail;
 }

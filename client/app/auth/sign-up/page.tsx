@@ -5,12 +5,12 @@ import axios from 'axios';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 
-interface Props {
-    navigateForgetPassword: Function,
-    navigateSignUp: Function
-}
+// interface Props {
+//     navigateForgetPassword: Function,
+//     navigateSignUp: Function
+// }
 
-export default function SignUpForm(props: Props) {
+export default function SignUpForm() {
     const router = useRouter();
     const formik = useFormik({
         initialValues: {
