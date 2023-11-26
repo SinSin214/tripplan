@@ -1,17 +1,17 @@
 'use client';
 import { signUpSchema } from '@/utils/validationSchema';
 import { Button, Link, TextField } from '@mui/material';
-import axios from 'axios';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
-
-// interface Props {
-//     navigateForgetPassword: Function,
-//     navigateSignUp: Function
-// }
+import { useContext } from 'react';
+import { AppContext } from '@/app/context/appContext';
+import { toast } from 'react-toastify';
+import { IResponse } from '@/utils/types';
+import Loading from '@/app/components/Loading';
 
 export default function SignUpForm() {
     const router = useRouter();
+    const { isLoading, requestAPI } = useContext(AppContext);
     const formik = useFormik({
         initialValues: {
             username: "",
@@ -24,18 +24,15 @@ export default function SignUpForm() {
     });
 
     async function handleSignUp() {
-        let res = await axios.post('http://localhost:3001/auth/signUp', {
-            username: formik.values.username,
-            password: formik.values.password,
-            email: formik.values.email
-        });
-        if (res.status === 200) {
-
-        } else {
-            // fail
-        }
+            const data = {
+                username: formik.values.username,
+                password: formik.values.password,
+                email: formik.values.email
+            }
+            let res: IResponse = await requestAPI('/auth/signUp', 'POST', data);
+            toast.success(res.message);
     }
-
+    
     return (
         <form className="authentication-popup" onSubmit={formik.handleSubmit}>
             <TextField
@@ -45,6 +42,7 @@ export default function SignUpForm() {
                 type="text"
                 size="small"
                 name="username"
+                disabled={isLoading}
                 value={formik.values.username}
                 onChange={formik.handleChange}
                 required
@@ -58,6 +56,7 @@ export default function SignUpForm() {
                 type="email"
                 size="small"
                 name="email"
+                disabled={isLoading}
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 required
@@ -71,13 +70,14 @@ export default function SignUpForm() {
                 type="password"
                 size="small"
                 name="password"
+                disabled={isLoading}
                 value={formik.values.password}
                 onChange={formik.handleChange}
                 required
                 fullWidth
                 error={formik.touched.password && Boolean(formik.errors.password)}
                 helperText={formik.touched.password && formik.errors.password}
-                />
+            />
             <TextField
                 className="my-2"
                 label="Confirm password"
@@ -85,17 +85,23 @@ export default function SignUpForm() {
                 type="password"
                 size="small"
                 name="confirmPassword"
+                disabled={isLoading}
                 value={formik.values.confirmPassword}
                 onChange={formik.handleChange}
                 required
                 fullWidth
                 error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
                 helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
-                />
+            />
+
+            {isLoading ? <Loading /> : ''}
+            
             <Button
-                className="w-full mt-2"
+                className="w-full mt-2 btn-custom"
                 variant="contained"
-                type="submit">Sign up</Button>
+                type="submit">Sign up
+            </Button>
+            
             <div style={{
                 width: '80%',
                 height: '1px',
@@ -108,7 +114,7 @@ export default function SignUpForm() {
                     onClick={(e) => router.push('/auth/sign-in')}>Already have account ?</Link>
                 <Link href="#"
                     underline="hover"
-                    onClick={(e) => router.push('/auth/forget-password')}>Forgot password ?</Link>
+                    onClick={(e) => router.push('/auth/forgot-password')}>Forgot password ?</Link>
             </div>
         </form>
     )

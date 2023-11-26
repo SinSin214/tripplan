@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
       {
-        "name": "Next.js: debug full stack",
+        "name": "NextJS",
         "type": "node-terminal",
         "request": "launch",
         "command": "npm run start",
@@ -16,7 +16,7 @@
       {
         "type": "node",
         "request": "launch",
-        "name": "Debug Nest Framework",
+        "name": "NestJS",
         "runtimeExecutable": "npm",
         "runtimeArgs": [
           "run",

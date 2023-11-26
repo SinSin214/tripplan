@@ -14,6 +14,7 @@ export class PostModule {
       .apply()
       .forRoutes(
         {path: 'post/all', method: RequestMethod.GET},
+        {path: 'post/highlights', method: RequestMethod.GET},
         {path: 'post/:id', method: RequestMethod.GET},
         {path: 'post', method: RequestMethod.POST}
       )

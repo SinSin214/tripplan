@@ -1,12 +1,14 @@
 
 import Image from 'next/image';
 import { PostProps } from "@/utils/types";
-import * as API from "../../../utils/apiHelper";
+import { AppContext } from '@/app/context/appContext';
 import Rating from '@mui/material/Rating';
+import { useContext } from 'react';
 // import { Booking } from '../components/Booking';
 
 export default async function PostDetail({ params }: { params: { id: string } }) {
-    const oPostDetail = await API.request(`/post/${params.id}`, 'GET');
+    const { requestAPI } = useContext(AppContext);
+    const oPostDetail = await requestAPI(`/post/${params.id}`, 'GET');
 
     return (
         <div className="limited-width-layout__content">

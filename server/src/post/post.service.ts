@@ -8,21 +8,24 @@ export class PostService {
     constructor(private prisma: PrismaService) {}
 
     async getAll(): Promise<Post[]> {
-        let result = await this.prisma.post.findMany();
-        return result;
+        return await this.prisma.post.findMany();
     }
 
     async getDetail(id: string): Promise<Object> {
-        let result = await this.prisma.post.findUnique({
+        return await this.prisma.post.findUnique({
             where: {
                 id: id
             }
         });
-        return result;
     }
 
     async createPost(post: CreatePostDto): Promise<any> {
-        await this.prisma.post.create({data: post});
-        return ;
+        return await this.prisma.post.create({data: post});
+    }
+
+    async getHighlights() {
+        return await this.prisma.post.findMany({
+            take: 10
+        });
     }
 }

@@ -2,49 +2,43 @@
 import "./output.css";
 import Header from './components/Header';
 import Footer from "./components/Footer";
-import AppProvider, { ProfileContext, SignInContext } from "./context";
-import { useContext, useEffect, useState } from "react";
+import AppProvider from './context/appContext';
+import { Suspense, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import ErrorDlg from "./components/ErrorDlg";
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Loading from "./Loading";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     const pathName = usePathname();
-    const { setIsSigned } = useContext(SignInContext);
-    const { setProfile } = useContext(ProfileContext);
-    const [isShowHeader, setIsShowHeader] = useState(true);
-    const [isShowFooter, setIsShowFooter] = useState(true);
-    const routeHideHeader = ['/auth/'];
-    const routeHideFooter = ['/auth/', '/post/write'];
-    useEffect(() => {
-        let userInfo = localStorage.getItem("user");
-        if (userInfo) {
-            let { username, email } = JSON.parse(userInfo);
-            setIsSigned(true);
-            setProfile({
-                username: username,
-            })
-        }
-    }, []);
-    useEffect(() => {
-        if (routeHideHeader.some(item => pathName.includes(item))) setIsShowHeader(false);
-        else setIsShowHeader(true);
-        if (routeHideFooter.some(item => pathName.includes(item))) setIsShowFooter(false);
-        else setIsShowFooter(true);
-    }, [])
+    const [layout, setLayout] = useState({
+        header: true,
+        footer: true
+    })
+    const routeHideHeader: string[] = [];
+    const routeHideFooter: string[] = ['/auth/', '/post/write'];
 
+    useEffect(() => {
+        setLayout({
+            ...layout,
+            header: !routeHideHeader.some(item => pathName.includes(item)),
+            footer: !routeHideFooter.some(item => pathName.includes(item))
+        })
+    }, [pathName])
 
     return (
         <html lang="en">
             <body>
                 <AppProvider>
                     <div className="screen-view">
-                        {isShowHeader ? <Header /> : ''}
-                        <ErrorDlg />
+                        {layout.header ? <Header /> : ''}
+                        <Suspense fallback={<Loading />}>
                         <main className="main">
                             {children}
-                            {isShowFooter ? <Footer /> : ''}
+                            {layout.footer ? <Footer /> : ''}
                         </main>
+                        </Suspense>
+                        <ToastContainer />
                     </div>
                 </AppProvider>
             </body>

@@ -19,3 +19,8 @@ export interface WritePostType {
   content: string,
   images: string[]
 }
+
+export interface IResponse {
+  data?: any[] | Object,
+  message?: string | undefined
+}

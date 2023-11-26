@@ -17,6 +17,7 @@ export class UserModule {
         { path: 'auth/signUp', method: RequestMethod.POST },
         { path: 'auth/forgotPassword', method: RequestMethod.POST },
         { path: 'auth/activate/:activeToken', method: RequestMethod.GET },
+        { path: 'auth/changePassword/:token', method: RequestMethod.POST },
       )
   }
 }

@@ -8,7 +8,7 @@ export const signUpSchema = yup.object().shape({
   email: yup.string().email("Invalid email").required("Required"),
   password: yup
     .string()
-    .min(5)
+    .min(8)
     .matches(passwordRules, { message: "Please create a stronger password" })
     .required("Required"),
   confirmPassword: yup
@@ -24,6 +24,18 @@ export const signInSchema = yup.object().shape({
     .required("Required")
 });
 
-export const forgetPasswordSchema = yup.object().shape({
-  email: yup.string().email("Invalid email").required("Required"),
+export const forgotPasswordSchema = yup.object().shape({
+  username: yup.string().min(8, 'At least 8 characters').required("Required"),
+})
+
+export const changePasswordSchema = yup.object().shape({
+  password: yup
+    .string()
+    .min(8)
+    .matches(passwordRules, { message: "Please create a stronger password" })
+    .required("Required"),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("password"), undefined], "Passwords must match")
+    .required("Required")
 })

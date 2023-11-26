@@ -1,14 +1,9 @@
-'use client';
 import Image from 'next/image';
+import HighlightPosts from './components/Homepage/HighlightPosts';
+import { Fragment, Suspense } from 'react';
 import { VerticalLine } from './components/SmallThings';
-import { PostProps } from '@/utils/types';
-import PostList from './components/PostList';
-import * as API from '../utils/apiHelper';
-import { Fragment } from 'react';
 
-export default async function Home() {
-	const aPosts = await API.request('/post/all', 'GET');
-
+export default function Home() {
 	return (
 		<Fragment>
 			<Image
@@ -41,9 +36,7 @@ export default async function Home() {
 					<div className="text-xl">DISCOVERY NEW PLACES</div>
 				</div>
 				<div className="flex justify-between vertical-stack-layout">
-					{aPosts ? aPosts.map((post: PostProps) => (
-						<PostList post={post} key={post.id} />
-					)) : ''}
+					<HighlightPosts />
 				</div>
 			</div>
 		</Fragment>

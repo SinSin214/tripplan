@@ -1,6 +1,7 @@
+import { IsEmail, MinLength, IsNotEmpty } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { MinLength, IsNotEmpty } from 'class-validator';
-export class SignInUserDto {
+
+export class SignUpUserDto {
     @IsNotEmpty()
     @MinLength(8)
     @Transform(({ value }) => value.toLowerCase())
@@ -9,4 +10,9 @@ export class SignInUserDto {
     @IsNotEmpty()
     @MinLength(8)
     password: string
+
+    @IsNotEmpty()
+    @IsEmail()
+    @Transform(({ value }) => value.toLowerCase())
+    email: string
 }

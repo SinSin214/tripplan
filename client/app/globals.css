@@ -8,8 +8,8 @@
   margin: 0;
   --primary-color: rgb(41 37 36);
   --primary-text-color: rgb(255 255 255);
-  --primary-hover-color: rgb(235 236 237 / 20%);
-  --primary-border-color: rgb(255 255 255 / 50%)
+  --primary-hover-color: rgb(100 100 100);
+  --primary-border-color: rgb(255 255 255)
 }
 
 body {
@@ -32,7 +32,6 @@ body {
 .main {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   min-height: calc(100% - 12.5rem);
   background-color: white;
@@ -44,7 +43,16 @@ body {
 /* responsive layout */
 
 .limited-width-layout__content {
-  width: 100%;
+  /* width: 100%; */
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+  box-sizing: border-box;
+}
+
+.md-limited-width-layout__content {
+  width: 400px;
   margin-right: auto;
   margin-left: auto;
   padding-left: 15px;
@@ -80,10 +88,6 @@ body {
   margin-bottom: 40px;
 }
 
-.btn {
-  border: 1px red;
-}
-
 .truncate-4{
   display: -webkit-box;
   -webkit-line-clamp: 4;
@@ -104,17 +108,29 @@ body {
 .authentication-popup{
   width: 400px;
   padding: 20px 30px;
+  margin: auto;
 }
 
 .btn-navbar {
   height: 100%;
   width: 10%;
   color: white;
+  background-color: var(--primary-color);
   border-radius: 0;
 }
 
-.btn-navbar-inactive:hover {
-  background-color: rgb(235 236 237 / 10%);
+.btn-navbar:hover {
+  background-color: var(--primary-hover-color);
+}
+
+.btn-custom {
+  min-width: max-content;
+  box-shadow: none;
+  background-color: var(--primary-color);
+}
+
+.btn-custom:hover {
+  background-color: var(--primary-hover-color);
 }
 
 .btn-navbar-active {
@@ -126,29 +142,9 @@ body {
   color: black;
 }
 
-.btn-auth{
-  margin-left: 10px;
-  margin-right: 10px;
-  color: white;
-  justify-content: center;
-  align-items: center;
-  min-width: max-content;
-}
-.btn-auth:hover{
-  color: gray;
-}
-
 .container-navbar-part{
   display: flex;
   align-items: center;
-}
-
-.btn-write-post{
-  color: var(--primary-text-color);
-  border: 1px solid var(--primary-border-color)
-}
-.btn-write-post:hover{
-  background-color: var(--primary-hover-color);
 }
 
 .ck-editor__editable{
