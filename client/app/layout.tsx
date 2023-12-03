@@ -7,7 +7,7 @@ import { Suspense, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Loading from "./Loading";
+import Loading from "./loading";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     const pathName = usePathname();
@@ -32,12 +32,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <AppProvider>
                     <div className="screen-view">
                         {layout.header ? <Header /> : ''}
-                        <Suspense fallback={<Loading />}>
+                        {/* <Suspense fallback={<Loading />}> */}
                         <main className="main">
                             {children}
                             {layout.footer ? <Footer /> : ''}
                         </main>
-                        </Suspense>
+                        {/* </Suspense> */}
                         <ToastContainer />
                     </div>
                 </AppProvider>

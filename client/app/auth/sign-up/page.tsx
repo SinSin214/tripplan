@@ -20,10 +20,13 @@ export default function SignUpForm() {
             confirmPassword: ""
         },
         validationSchema: signUpSchema,
-        onSubmit: handleSignUp
+        onSubmit: async (values, {resetForm}) => {
+            await handleSignUp(resetForm);
+        }
     });
 
-    async function handleSignUp() {
+    async function handleSignUp(resetForm: Function) {
+        try {
             const data = {
                 username: formik.values.username,
                 password: formik.values.password,
@@ -31,6 +34,13 @@ export default function SignUpForm() {
             }
             let res: IResponse = await requestAPI('/auth/signUp', 'POST', data);
             toast.success(res.message);
+            resetForm();
+        }
+        catch(err: any) {
+            err.cause.detail.forEach((detail: any) => {
+                formik.setFieldError(detail.field, detail.message);
+            })
+        }
     }
     
     return (
@@ -99,7 +109,8 @@ export default function SignUpForm() {
             <Button
                 className="w-full mt-2 btn-custom"
                 variant="contained"
-                type="submit">Sign up
+                type="submit"
+                disabled={isLoading}>Sign up
             </Button>
             
             <div style={{

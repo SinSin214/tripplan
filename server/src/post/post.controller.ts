@@ -14,12 +14,19 @@ export class PostController {
 
     @Get('highlights')
     async getHighlights(@Res() res: Response) {
-        let result = await this.postService.getHighlights();
-        setTimeout(async () => {
-            return res.status(200).send({
-                data: []
-            });
-        }, 3000)
+        try {
+            let result = await this.postService.getHighlights();
+            setTimeout(async () => {
+                return res.status(500).send({
+                    data: []
+                });
+            }, 3000)
+        } catch(err) {
+            return res.status(500).send({
+                message: err.message
+            })
+        }
+        
     }
 
     // always put at bottom

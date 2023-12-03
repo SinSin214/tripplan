@@ -22,12 +22,9 @@ model User {
 model Post {
   id          String   @id @default(uuid())
   title       String   @unique
-  description String
   content     String
-  highlights  String[]
   author      String
   created_at  DateTime? @default(now())
   rating      Int?
   images      String[]
-  main_image  String?
 }

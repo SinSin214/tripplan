@@ -44,6 +44,7 @@ body {
 
 .limited-width-layout__content {
   /* width: 100%; */
+  height: 100%;
   margin-right: auto;
   margin-left: auto;
   padding-left: 15px;
@@ -53,6 +54,7 @@ body {
 
 .md-limited-width-layout__content {
   width: 400px;
+  height: 100%;
   margin-right: auto;
   margin-left: auto;
   padding-left: 15px;
@@ -153,4 +155,16 @@ body {
 
 .ck-editor__editable_inline {
   padding: 0 20px !important;
+}
+
+.ck-content .image img {
+  width: 50% !important;
+  max-width: unset !important;
+  min-width: unset !important;
+}
+
+.centralized-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

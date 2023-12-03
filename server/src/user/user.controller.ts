@@ -19,12 +19,28 @@ export class UserController {
 
     @Post('signUp')
     async signUp(@Body() signUpUserDto: SignUpUserDto, @Res() res: Response) {
+        let aErrorDetails = [];
         try {
             const { username, password, email} = signUpUserDto;
+            let bHasError = false;
 
             let user = await this.userService.getUserByEmailOrUsername(username, email);
-            if (user && user.username === username) throw new Error('Username existed');
-            if (user && user.email === email) throw new Error('Email existed');
+            if (user && user.username === username) {
+                aErrorDetails.push({
+                    field: 'username',
+                    message: 'Username already existed'
+                })
+                bHasError = true;
+            }
+            if (user && user.email === email) {
+                aErrorDetails.push({
+                    field: 'email',
+                    message: 'Email already existed'
+                })
+                bHasError = true;
+            }
+            if(bHasError) throw new Error('Create user failed');
+
             let hashedPassword = await bcrypt.hash(password, 10);
             let createUser: UserModel = {
                 username: username,
@@ -40,25 +56,38 @@ export class UserController {
             });
             await utils.sendActiveEmail(createUser, activateToken);
             return res.status(200).send({
-                message: 'A verification mail has been sent to your email. Please check'
+                message: 'A verification mail has been sent to your email. Please check.'
             });
         } catch (err) {
-            // this.userService.deleteUserByEmail(email);
             return res.status(500).send({
-                message: err.message
+                message: err.message,
+                detail: aErrorDetails
             });
         }
     }
 
     @Post('signIn')
     async signIn(@Body() body: SignInUserDto, @Res() res: Response) {
+        let aErrorDetails = [];
         try {
             const { username, password } = body;
-            let user = await this.userService.getUserByUsername(username);
-            if(!user) throw new Error('Username does not exist');
+            const user = await this.userService.getUserByUsername(username);
+            if(!user) {
+                aErrorDetails.push({
+                    field: 'username',
+                    message: 'Username does not exist'
+                })
+                throw new Error('Username does not exist');
+            }
             let matched = await bcrypt.compare(password, user.password);
-            if (!matched) throw new Error('Incorrect password');
-            if (!user.is_active) throw new Error('Inactive user');
+            if (!matched) {
+                aErrorDetails.push({
+                    field: 'password',
+                    message: 'Incorrect password'
+                })
+                throw new Error('Incorrect password');
+            }
+            if (!user.is_active) throw new Error('User has not been activated.');
 
             let accessToken = jwt.sign({ username: username, email: user.email }, process.env.SECRECT_ACCESS_TOKEN, {
                 expiresIn: this.accessTokenExpire
@@ -75,7 +104,8 @@ export class UserController {
             });
         } catch (err) {
             return res.status(500).send({
-                message: err.message
+                message: err.message,
+                detail: aErrorDetails
             });
         }
     }

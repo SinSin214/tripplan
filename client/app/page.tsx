@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import HighlightPosts from './components/Homepage/HighlightPosts';
-import { Fragment, Suspense } from 'react';
+import { Fragment } from 'react';
 import { VerticalLine } from './components/SmallThings';
 
 export default function Home() {

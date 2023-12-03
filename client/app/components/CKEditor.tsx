@@ -3,16 +3,21 @@ import axios from 'axios';
 import CustomCKEditor from 'ckeditor5-custom-build/build/ckeditor';
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import { API_HOST } from '@/utils/constants';
+import { AppContext } from '../context/appContext';
+import { useContext } from 'react';
+import { toast } from 'react-toastify';
 
 
-export default function MyCKEditor({ value, onChange }: { value: any, onChange: any }) {
+export default function MyCKEditor({ value, onChange, isDisabled }: { value: any, onChange: any, isDisabled: boolean }) {
+    const { requestAPI } = useContext(AppContext);
     function uploadAdapter(loader: any) {
         return {
-            upload: () => {
+            upload: async () => {
                 return new Promise(async (resolve, reject) => {
                     try {
                         const file = await loader.file;
-                        const response = await axios.request({
+                        // const res = await requestAPI('/image/upload', 'POST', {file: file});
+                        const res = await axios.request({
                             method: "POST",
                             url: `${API_HOST}/image/upload`,
                             data: {
@@ -23,10 +28,11 @@ export default function MyCKEditor({ value, onChange }: { value: any, onChange: 
                             }
                         });
                         resolve({
-                            default: `${API_HOST}/image/${response.data.filename}`
+                            default: `${API_HOST}/image/${res.data.filename}`
                         });
                     }
-                    catch (err) {
+                    catch (err: any) {
+                        toast.error(err.response.data.message);
                         reject(err);
                     }
                 });
@@ -47,6 +53,7 @@ export default function MyCKEditor({ value, onChange }: { value: any, onChange: 
                 extraPlugins: [uploadPlugin]
             }}
             data={value}
+            disabled={isDisabled}
             onChange={(event, editor) => {
                 const data = editor.getData();
                 onChange(data);

@@ -5,12 +5,13 @@ import { ProfileContext } from '@/app/context/profileContext';
 import { signInSchema } from '@/utils/validationSchema';
 import { Button, Link, TextField } from '@mui/material';
 import { useFormik } from 'formik';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { toast } from 'react-toastify';
 
 export default function SignInForm() {
-    const { isLoading, requestAPI, navigation } = useContext(AppContext);
+    const { requestAPI, navigation } = useContext(AppContext);
     const { setupUser } = useContext(ProfileContext);
+    const [isLoading, setIsLoading] = useState(false);
 
     const formik = useFormik({
         initialValues: {
@@ -22,14 +23,27 @@ export default function SignInForm() {
     });
 
     async function handleSignIn() {
-        const oParams = {
-            username: formik.values.username,
-            password: formik.values.password
+        try {
+            const oParams = {
+                username: formik.values.username,
+                password: formik.values.password
             }
-        const res = await requestAPI('/auth/signIn', 'POST', oParams);
-        toast.success(res.message);
-        setupUser(res.accessToken, res.username);
-        navigation('/');
+            setIsLoading(true);
+            const res = await requestAPI('/auth/signIn', 'POST', oParams);
+            setIsLoading(false);
+            toast.success(res.message);
+            setupUser(res.accessToken, res.username);
+            navigation('/');
+        } catch(err: any) {
+            setIsLoading(false);
+            toast.error(err.response.data.message);
+            if(err.response.data.cause) {
+                err.cause.detail.forEach((detail: any) => {
+                    formik.setFieldError(detail.field, detail.message);
+                })
+            }
+        }
+        
     }
 
     return (
@@ -43,6 +57,7 @@ export default function SignInForm() {
                 name="username"
                 value={formik.values.username}
                 onChange={formik.handleChange}
+                disabled={isLoading}
                 required
                 fullWidth
                 error={formik.touched.username && Boolean(formik.errors.username)}
@@ -56,6 +71,7 @@ export default function SignInForm() {
                 name="password"
                 value={formik.values.password}
                 onChange={formik.handleChange}
+                disabled={isLoading}
                 required
                 fullWidth
                 error={formik.touched.password && Boolean(formik.errors.password)}
@@ -67,7 +83,8 @@ export default function SignInForm() {
             <Button
                 className="w-full mt-2 btn-custom"
                 variant="contained"
-                type="submit">Sign in</Button>
+                type="submit"
+                disabled={isLoading}>Sign in</Button>
             
             <div className="flex justify-around mt-2">
                 <Link href="#"

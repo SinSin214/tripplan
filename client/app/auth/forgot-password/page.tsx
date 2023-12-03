@@ -4,11 +4,12 @@ import { AppContext } from '@/app/context/appContext';
 import { forgotPasswordSchema } from '@/utils/validationSchema';
 import { Button, Link, TextField } from '@mui/material';
 import { useFormik } from 'formik';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { toast } from 'react-toastify';
 
 export default function ForgotPasswordForm() {
-    const { isLoading, requestAPI, navigation } = useContext(AppContext);
+    const { requestAPI, navigation } = useContext(AppContext);
+    const [isLoading, setIsLoading] = useState(false);
     const formik = useFormik({
         initialValues: {
             username: ""
@@ -18,12 +19,17 @@ export default function ForgotPasswordForm() {
     });
 
     async function handleForgotPassword() {
-        const oParams = {
-            username: formik.values.username
+        try {
+            const oParams = { username: formik.values.username };
+            setIsLoading(true);
+            const res = await requestAPI('/auth/forgotPassword', 'POST', oParams);
+            setIsLoading(false);
+            toast.success(res.data.message);
+        } catch(err: any) {
+            setIsLoading(false)
+            toast.error(err.response.data.message);
         }
         
-        const res = await requestAPI('/auth/forgotPassword', 'POST', oParams);
-        toast.success(res.message);
     }
 
     return (
@@ -37,6 +43,7 @@ export default function ForgotPasswordForm() {
                 name="username"
                 value={formik.values.username}
                 onChange={formik.handleChange}
+                disabled={isLoading}
                 required
                 fullWidth
                 error={formik.touched.username && Boolean(formik.errors.username)}
@@ -47,7 +54,8 @@ export default function ForgotPasswordForm() {
             <Button
                 className="w-full mt-2 btn-custom"
                 variant="contained"
-                type="submit">Send email</Button>
+                type="submit"
+                disabled={isLoading}>Send email</Button>
             
             <div className="flex justify-around mt-2">
                 <Link href="#"

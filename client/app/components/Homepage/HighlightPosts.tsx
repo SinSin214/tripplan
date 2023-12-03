@@ -3,20 +3,29 @@ import { AppContext } from '@/app/context/appContext';
 import Loading from '@/app/components/Loading';
 import { IResponse, PostProps } from '@/utils/types';
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material';
-import { Fragment, useContext, useEffect } from 'react';
+import { Fragment, useContext, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 export default function HighlightPosts() {
-	const { requestAPI, isLoading } = useContext(AppContext);
+	const { requestAPI } = useContext(AppContext);
+	const [isLoading, setIsLoading] = useState(false);
 	let aHighlights: any = [];
 	useEffect(() => {
-		const getHighlights = async () => {
-			const res: IResponse = await requestAPI('/post/highlights', 'GET');
-			aHighlights = res.data;
-		};
+		async function getHighlights() {
+			try {
+				setIsLoading(true);
+				const res: IResponse = await requestAPI('/post/highlights', 'GET');
+				setIsLoading(false);
+				aHighlights = res.data;
+			} catch(err: any) {
+				setIsLoading(false);
+				toast.error(err.response.data.message);
+			}
+		}
 		getHighlights();
 	}, []);
 
-	if(isLoading) return (<Loading />)
+	if(isLoading) return (<Loading />);
 
 	return (
 		<Fragment>
