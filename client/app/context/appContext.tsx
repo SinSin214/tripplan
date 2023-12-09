@@ -12,20 +12,20 @@ export default function AppProvider({ children }: any) {
     const router = useRouter();
 
     async function requestAPI(path: string, method: string, data?: any): Promise<any>  {
-        const oject = {
+        const requestConfig = {
             method: method,
             url: `${process.env.NEXT_PUBLIC_API_ROUTE}${path}`,
             headers: { 'Authorization': 'Bearer ' + getToken() },
             data: data
         }
-        const res = await axios(oject);
+        const res = await axios(requestConfig);
         return res.data;
     }
 
     function getToken(): string {
         let token = '';
         let userInfo = localStorage.getItem("user");
-        if (userInfo) token = JSON.parse(userInfo).token;
+        if (userInfo) token = JSON.parse(userInfo).access_token;
         return token;
     }
 

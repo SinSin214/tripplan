@@ -1,18 +1,18 @@
+import { IsNotEmpty } from "class-validator"
 
 export class CreatePostDto {
-    id: string
-
+    @IsNotEmpty()
     title: string
 
-    description: string
-
+    @IsNotEmpty()
     content: string
 
-    highlights: string[]
-
+    @IsNotEmpty()
     author: string
 
+    @IsNotEmpty()
     images: string[]
 
-    main_image: string
+    @IsNotEmpty()
+    created_at: Date
 }

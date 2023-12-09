@@ -16,7 +16,7 @@ export default function HighlightPosts() {
 				setIsLoading(true);
 				const res: IResponse = await requestAPI('/post/highlights', 'GET');
 				setIsLoading(false);
-				aHighlights = res.data;
+				aHighlights = res;
 			} catch(err: any) {
 				setIsLoading(false);
 				toast.error(err.response.data.message);

@@ -16,7 +16,7 @@ export default function UserActivation({ params }: { params: { token: string } }
                 setIsLoading(true);
                 const res = await requestAPI(`/auth/activate/${params.token}`, 'GET');
                 setIsLoading(false);
-                toast.success(res.data.message);
+                toast.success(res.message);
                 setupUser(res.accessToken, res.username);
                 navigation('/');
             } catch(err: any) {

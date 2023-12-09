@@ -1,17 +1,19 @@
 'use client';
 import { signUpSchema } from '@/utils/validationSchema';
-import { Button, Link, TextField } from '@mui/material';
+import { Button, IconButton, InputAdornment, Link, TextField } from '@mui/material';
 import { useFormik } from 'formik';
-import { useRouter } from 'next/navigation';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { AppContext } from '@/app/context/appContext';
 import { toast } from 'react-toastify';
 import { IResponse } from '@/utils/types';
 import Loading from '@/app/components/Loading';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 export default function SignUpForm() {
-    const router = useRouter();
-    const { isLoading, requestAPI } = useContext(AppContext);
+    const { requestAPI, navigation } = useContext(AppContext);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isShowPassword, setIsShowPassword] = useState(false);
+
     const formik = useFormik({
         initialValues: {
             username: "",
@@ -20,29 +22,40 @@ export default function SignUpForm() {
             confirmPassword: ""
         },
         validationSchema: signUpSchema,
-        onSubmit: async (values, {resetForm}) => {
+        onSubmit: async (values, { resetForm }) => {
             await handleSignUp(resetForm);
         }
     });
 
     async function handleSignUp(resetForm: Function) {
         try {
+            setIsLoading(true);
             const data = {
                 username: formik.values.username,
                 password: formik.values.password,
                 email: formik.values.email
             }
             let res: IResponse = await requestAPI('/auth/signUp', 'POST', data);
+            setIsLoading(false);
             toast.success(res.message);
             resetForm();
         }
-        catch(err: any) {
-            err.cause.detail.forEach((detail: any) => {
-                formik.setFieldError(detail.field, detail.message);
-            })
+        catch (err: any) {
+            let oError = err.response.data;
+            setIsLoading(false);
+            if(oError.detail) {
+                oError.detail.forEach((detail: any) => {
+                    formik.setFieldError(detail.field, detail.message);
+                })
+            } else toast.error(oError.message);
         }
     }
-    
+
+    function showPassword(e: React.MouseEvent<HTMLOrSVGElement>) {
+        e.preventDefault()
+        setIsShowPassword(!isShowPassword);
+    }
+
     return (
         <form className="authentication-popup" onSubmit={formik.handleSubmit}>
             <TextField
@@ -73,26 +86,42 @@ export default function SignUpForm() {
                 fullWidth
                 error={formik.touched.email && Boolean(formik.errors.email)}
                 helperText={formik.touched.email && formik.errors.email} />
-            <TextField
-                className="my-2"
-                label="Password"
-                variant="outlined"
-                type="password"
-                size="small"
-                name="password"
-                disabled={isLoading}
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                required
-                fullWidth
-                error={formik.touched.password && Boolean(formik.errors.password)}
-                helperText={formik.touched.password && formik.errors.password}
-            />
+            <div className="inline">
+                <TextField
+                    className="my-2"
+                    label="Password"
+                    variant="outlined"
+                    type={isShowPassword ? 'text' : 'password'}
+                    size="small"
+                    name="password"
+                    disabled={isLoading}
+                    value={formik.values.password}
+                    onChange={formik.handleChange}
+                    required
+                    fullWidth
+                    error={formik.touched.password && Boolean(formik.errors.password)}
+                    helperText={formik.touched.password && formik.errors.password}
+                    InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={(e) => showPassword(e)}
+                                edge="end"
+                                >
+                                {isShowPassword ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                    }}
+                />
+            </div>
+
             <TextField
                 className="my-2"
                 label="Confirm password"
                 variant="outlined"
-                type="password"
+                type={isShowPassword ? 'text' : 'password'}
                 size="small"
                 name="confirmPassword"
                 disabled={isLoading}
@@ -105,14 +134,14 @@ export default function SignUpForm() {
             />
 
             {isLoading ? <Loading /> : ''}
-            
+
             <Button
                 className="w-full mt-2 btn-custom"
                 variant="contained"
                 type="submit"
                 disabled={isLoading}>Sign up
             </Button>
-            
+
             <div style={{
                 width: '80%',
                 height: '1px',
@@ -122,10 +151,10 @@ export default function SignUpForm() {
             <div className="flex justify-around mt-2">
                 <Link href="#"
                     underline="hover"
-                    onClick={(e) => router.push('/auth/sign-in')}>Already have account ?</Link>
+                    onClick={(e) => navigation('/auth/sign-in')}>Already have account ?</Link>
                 <Link href="#"
                     underline="hover"
-                    onClick={(e) => router.push('/auth/forgot-password')}>Forgot password ?</Link>
+                    onClick={(e) => navigation('/auth/forgot-password')}>Forgot password ?</Link>
             </div>
         </form>
     )

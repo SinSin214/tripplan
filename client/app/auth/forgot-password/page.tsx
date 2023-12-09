@@ -24,7 +24,7 @@ export default function ForgotPasswordForm() {
             setIsLoading(true);
             const res = await requestAPI('/auth/forgotPassword', 'POST', oParams);
             setIsLoading(false);
-            toast.success(res.data.message);
+            toast.success(res.message);
         } catch(err: any) {
             setIsLoading(false)
             toast.error(err.response.data.message);

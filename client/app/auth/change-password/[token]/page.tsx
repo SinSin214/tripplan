@@ -2,13 +2,17 @@
 import Loading from '@/app/components/Loading';
 import { AppContext } from '@/app/context/appContext';
 import { changePasswordSchema } from '@/utils/validationSchema';
-import { Button, TextField } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Button, IconButton, InputAdornment, TextField } from '@mui/material';
 import { useFormik } from 'formik';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { toast } from 'react-toastify';
 
 export default function ChangePasswordForm({ params }: { params: { token: string } }) {
-    const { isLoading, requestAPI, navigation } = useContext(AppContext);
+    const { requestAPI, navigation } = useContext(AppContext);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isShowPassword, setIsShowPassword] = useState(false);
+
     const formik = useFormik({
         initialValues: {
             password: '',
@@ -19,13 +23,28 @@ export default function ChangePasswordForm({ params }: { params: { token: string
     });
 
     async function handleChangePassword() {
-        const oParams = {
-            password: formik.values.password
+        try {
+            const oParams = {
+                password: formik.values.password
+            }
+            const res = await requestAPI(`/auth/changePassword/${params.token}`, 'POST', oParams);
+            toast.success(res.message);
+            navigation('/');
         }
-        
-        const res = await requestAPI(`/auth/changePassword/${params.token}`, 'POST', oParams);
-        toast.success(res.message);
-        navigation('/');
+        catch(err: any) {
+            let oError = err.response.data;
+            setIsLoading(false);
+            if(oError.detail) {
+                oError.detail.forEach((detail: any) => {
+                    formik.setFieldError(detail.field, detail.message);
+                })
+            } else toast.error(oError.message);
+        }
+    }
+
+    function showPassword(e: React.MouseEvent<HTMLOrSVGElement>) {
+        e.preventDefault()
+        setIsShowPassword(!isShowPassword);
     }
 
     return (
@@ -34,7 +53,7 @@ export default function ChangePasswordForm({ params }: { params: { token: string
                 className="my-2"
                 label="New password"
                 variant="outlined"
-                type="password"
+                type={isShowPassword ? 'text' : 'password'}
                 size="small"
                 name="password"
                 value={formik.values.password}
@@ -42,7 +61,20 @@ export default function ChangePasswordForm({ params }: { params: { token: string
                 required
                 fullWidth
                 error={formik.touched.password && Boolean(formik.errors.password)}
-                helperText={formik.touched.password && formik.errors.password} />
+                helperText={formik.touched.password && formik.errors.password}
+                InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={(e) => showPassword(e)}
+                            edge="end"
+                            >
+                            {isShowPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                }} />
 
             <TextField
                 className="my-2"

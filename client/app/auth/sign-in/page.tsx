@@ -3,7 +3,8 @@ import Loading from '@/app/components/Loading';
 import { AppContext } from '@/app/context/appContext';
 import { ProfileContext } from '@/app/context/profileContext';
 import { signInSchema } from '@/utils/validationSchema';
-import { Button, Link, TextField } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Button, IconButton, InputAdornment, Link, TextField } from '@mui/material';
 import { useFormik } from 'formik';
 import { useContext, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -12,6 +13,7 @@ export default function SignInForm() {
     const { requestAPI, navigation } = useContext(AppContext);
     const { setupUser } = useContext(ProfileContext);
     const [isLoading, setIsLoading] = useState(false);
+    const [isShowPassword, setIsShowPassword] = useState(false);
 
     const formik = useFormik({
         initialValues: {
@@ -35,15 +37,19 @@ export default function SignInForm() {
             setupUser(res.accessToken, res.username);
             navigation('/');
         } catch(err: any) {
+            let oError = err.response.data;
             setIsLoading(false);
-            toast.error(err.response.data.message);
-            if(err.response.data.cause) {
-                err.cause.detail.forEach((detail: any) => {
+            if(oError.detail) {
+                oError.detail.forEach((detail: any) => {
                     formik.setFieldError(detail.field, detail.message);
                 })
-            }
+            } else toast.error(oError.message);
         }
-        
+    }
+
+    function showPassword(e: React.MouseEvent<HTMLOrSVGElement>) {
+        e.preventDefault()
+        setIsShowPassword(!isShowPassword);
     }
 
     return (
@@ -66,7 +72,7 @@ export default function SignInForm() {
                 className="my-2"
                 label="Password"
                 variant="outlined"
-                type="password"
+                type={isShowPassword ? 'text' : 'password'}
                 size="small"
                 name="password"
                 value={formik.values.password}
@@ -76,6 +82,19 @@ export default function SignInForm() {
                 fullWidth
                 error={formik.touched.password && Boolean(formik.errors.password)}
                 helperText={formik.touched.password && formik.errors.password}
+                InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={(e) => showPassword(e)}
+                            edge="end"
+                            >
+                            {isShowPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                }}
                 />
 
             {isLoading ? <Loading /> : ''}
