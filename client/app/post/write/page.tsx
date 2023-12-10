@@ -14,8 +14,6 @@ const TitleField = styled(TextField)(`
       }
 `);
 
-const MyCKEditor = dynamic(() => import('../../components/CKEditor'), { ssr: false });
-
 export default function WritePost() {
     const { requestAPI } = useContext(AppContext);
     const [postObject, setPostObject] = useState({
@@ -58,10 +56,7 @@ export default function WritePost() {
                     fullWidth
                 />
                 <div className="mt-10">
-                    <MyCKEditor
-                        value={postObject.content}
-                        isDisabled={isLoading}
-                        onChange={(data: any) => setPostObject({ ...postObject, content: data })} />
+                   {/* EDITOR */}
                 </div>
                 {isLoading ? <Loading/> : ''}
                 <div className="flex justify-center mt-5">
