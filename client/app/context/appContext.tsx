@@ -1,31 +1,38 @@
 import React, { createContext } from "react";
-import ProfileProvider from "./profileContext";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
 export const AppContext = createContext({
-    requestAPI: async (path: string, method: string, data?: Object): Promise<any> => {},
+    requestAPI: async (path: string, method: string, data?: Object | null): Promise<any> => {},
     navigation: (path: string) => {}
 });
 
 export default function AppProvider({ children }: any) {
     const router = useRouter();
 
-    async function requestAPI(path: string, method: string, data?: any): Promise<any>  {
-        const requestConfig = {
-            method: method,
-            url: `${process.env.NEXT_PUBLIC_API_ROUTE}${path}`,
-            headers: { 'Authorization': 'Bearer ' + getToken() },
-            data: data
+    async function requestAPI(path: string, method: string, data?: Object | null): Promise<any>  {
+        try {
+            const requestConfig = {
+                method: method,
+                url: `${process.env.NEXT_PUBLIC_API_ROUTE}${path}`,
+                headers: { 'Authorization': 'Bearer ' + getToken() },
+                data: data
+            }
+            const res = await axios(requestConfig);
+            return res.data;
+        } catch(err: any) {
+            if(err.response.data.message === 'jwt expired') {
+                // Request login again
+            } else {
+                throw err;
+            }
         }
-        const res = await axios(requestConfig);
-        return res.data;
     }
 
     function getToken(): string {
         let token = '';
         let userInfo = localStorage.getItem("user");
-        if (userInfo) token = JSON.parse(userInfo).access_token;
+        if (userInfo) token = JSON.parse(userInfo).accessToken;
         return token;
     }
 
@@ -39,9 +46,7 @@ export default function AppProvider({ children }: any) {
                 requestAPI,
                 navigation
             }}>
-                <ProfileProvider>
-                    {children}
-                </ProfileProvider>
+                {children}
         </AppContext.Provider>
     )
 }

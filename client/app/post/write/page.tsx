@@ -1,12 +1,12 @@
 'use client';
 import { Button, inputClasses, styled, TextField } from "@mui/material";
-import axios from "axios";
-import dynamic from 'next/dynamic';
-import { useContext, useState } from "react";
-import { API_HOST } from '@/utils/constants'
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "@/app/context/appContext";
+import Loading from "@/app/components/AppLoading";
+import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
-import Loading from "@/app/components/Loading";
+
+const Editor = dynamic(() => import('@/app/components/Editor'), { ssr: false });
 
 const TitleField = styled(TextField)(`
     .${inputClasses.root} {
@@ -18,10 +18,25 @@ export default function WritePost() {
     const { requestAPI } = useContext(AppContext);
     const [postObject, setPostObject] = useState({
         title: '',
-        content: '',
+        content: [],
         images: []
-    })
+    });
     const [isLoading, setIsLoading] = useState(false);
+    const [editorInstance, setEditorInstance] = useState<any>();
+
+    useEffect(() => {
+        async function sendThread () {
+            try {
+                setIsLoading(true);
+                await requestAPI('/post', 'POST', postObject);
+            } catch(err: any) {
+                toast.error(err.response.data.message);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        if(postObject.content.length) sendThread();
+    }, [postObject.content]);
 
     function handleOnChange(e: any) {
         setPostObject({
@@ -33,46 +48,51 @@ export default function WritePost() {
     async function onHandlePost() {
         try {
             setIsLoading(true);
-            const res = await requestAPI('/post', 'POST', postObject);
-            setIsLoading(false);
-        } catch(err: any){
-            setIsLoading(false);
+            editorInstance.save().then((outputData: any) => {
+                setPostObject({
+                    ...postObject,
+                    content: outputData.blocks
+                });
+            });
+        } catch (err: any) {
             toast.error(err.response.data.message);
+        } finally {
+            setIsLoading(false);
         }
     }
 
     return (
-        <div className="limited-width-layout__content h-screen">
-            <div className="m-5">
-                <TitleField
-                    variant="standard"
-                    placeholder="Write title..."
-                    name="title"
-                    value={postObject.title}
-                    onChange={(e: any) => handleOnChange(e)}
-                    disabled={isLoading}
-                    maxRows={4}
-                    multiline
-                    fullWidth
-                />
-                <div className="mt-10">
-                   {/* EDITOR */}
-                </div>
-                {isLoading ? <Loading/> : ''}
-                <div className="flex justify-center mt-5">
-                    <Button 
-                        className="mx-2 w-24" 
-                        variant="outlined"
-                        disabled={isLoading}>
-                        Cancel
-                    </Button>
-                    <Button className="mx-2 w-24"
-                        variant="contained"
-                        onClick={() => onHandlePost()}
-                        disabled={isLoading}>
-                        Post
-                    </Button>
-                </div>
+        <div className="limited-width-layout__content" id="writePost">
+            <TitleField
+                variant="standard"
+                placeholder="Write title..."
+                name="title"
+                value={postObject.title}
+                onChange={(e: any) => handleOnChange(e)}
+                disabled={isLoading}
+                maxRows={4}
+                multiline
+                fullWidth
+            />
+            <div className="mt-10">
+                <Editor
+                    editorInstance={editorInstance}
+                    setEditorInstance={setEditorInstance} />
+            </div>
+            {isLoading ? <Loading /> : ''}
+            <div className="flex justify-center my-5">
+                <Button
+                    className="mx-2 w-24"
+                    variant="outlined"
+                    disabled={isLoading}>
+                    Cancel
+                </Button>
+                <Button className="mx-2 w-24"
+                    variant="contained"
+                    onClick={() => onHandlePost()}
+                    disabled={isLoading}>
+                    Post
+                </Button>
             </div>
         </div>
     )

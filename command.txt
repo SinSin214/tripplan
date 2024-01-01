@@ -1,3 +1,5 @@
-Run in folder server to migrate database
+// Run in folder server to migrate database
 npx prisma migrate dev
 
+// Pull change from db into Model
+npx prisma db pull

@@ -1,47 +1,62 @@
-import { createContext, useEffect, useState } from "react";
-
-interface IProfile {
-  username: string,
-  isSigned: boolean
-}
+import { createContext, useContext, useEffect, useState } from "react";
+import { IProfile, IUserInfo } from '@/utils/types';
+import { AppContext } from "./appContext";
 
 const initProfile = {
-  profile: { username: '', isSigned: false },
-  setProfile: (value: IProfile) => {},
-  setupUser: (token: string, username: string) => {}
+  profile: { username: '', email: '', isSigned: false },
+  setProfile: (value: IProfile) => { },
+  setupUserInfo: (userInfo: IUserInfo) => { },
+  clearUserInfo: () => { }
 };
 
 export const ProfileContext = createContext(initProfile);
 
 export default function ProfileProvider({ children }: any) {
+  const { requestAPI } = useContext(AppContext);
   const [profile, setProfile] = useState<IProfile>(initProfile.profile);
 
-  function setupUser(token: string, username: string) {
-    let user = {
-      access_token: token,
-      username: username
-    };
-
-    localStorage.setItem("user", JSON.stringify(user));
+  function setupUserInfo(userInfo: IUserInfo) {
+    localStorage.setItem("user", JSON.stringify(userInfo));
     setProfile({
-      username: username,
+      username: userInfo.username,
+      email: userInfo.email,
       isSigned: true
     })
   }
 
+  function clearUserInfo() {
+    localStorage.clear();
+    setProfile({
+      username: '',
+      email: '',
+      isSigned: false
+    })
+  }
+
+  // At the first time visit page, check if token available
   useEffect(() => {
-    let userInfo = localStorage.getItem("user");
-    if (userInfo) {
-        let { username } = JSON.parse(userInfo);
-        setProfile({
-            username: username,
-            isSigned: true
-        });
+    async function checkToken() {
+      let sUserInfo = localStorage.getItem("user");
+      if (sUserInfo) {
+        let oUserInfo = JSON.parse(sUserInfo);
+        try {
+          let res = await requestAPI('/auth/check_token_expiration', 'POST', oUserInfo);
+          // If access token expired and refresh token is not expired yet
+          // server return userInfo with new access token
+          if (res.user) oUserInfo = res.user;
+          // If access token is not expired yet
+          // server does not return anything then use old userInfo
+          setupUserInfo(res.user);
+        } catch (err: any) {
+          console.log(err.response.data.message);
+        }
+      }
     }
-}, []);
+    checkToken();
+  }, []);
 
   return (
-    <ProfileContext.Provider value={{ profile, setProfile, setupUser }}>
+    <ProfileContext.Provider value={{ profile, setProfile, setupUserInfo, clearUserInfo }}>
       {children}
     </ProfileContext.Provider>
   )

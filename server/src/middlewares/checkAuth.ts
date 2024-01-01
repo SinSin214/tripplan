@@ -8,12 +8,12 @@ export class CheckAuthMiddleware implements NestMiddleware {
     const { authorization } = req.headers;
     const token = authorization.split(' ')[1];
     try {
-        const user = jwt.verify(token, process.env.SECRECT_ACCESS_TOKEN);
-        req.user = user;
+        const decoded = jwt.verify(token, process.env.SECRECT_ACCESS_TOKEN);
+        req.user = decoded;
         next();
    } catch (error) {
         res.status(401).send({
-            message: "Unauthorized"
+            message: `Authorization: ${error.message}`
         });
    }
   }

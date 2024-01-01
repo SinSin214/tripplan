@@ -1,5 +1,6 @@
 import { User } from 'prisma/prisma-client';
 import * as nodemailer from 'nodemailer';
+import * as jwt from 'jsonwebtoken';
 
 const transporter =  nodemailer.createTransport({
     service: 'gmail',
@@ -31,4 +32,36 @@ export async function sendEmailChangePassword(email: string, token: string) {
     }
 
     await transporter.sendMail(mainOptions);
+}
+
+export function generateRefreshToken(username: string, email: string) {
+    let refreshTokenExpire = 864000;
+
+    return jwt.sign({ username: username, email: email }, process.env.SECRECT_REFRESH_TOKEN, {
+        expiresIn: refreshTokenExpire
+    });
+}
+
+export function generateAccessToken(username: string, email: string) {
+    let accessTokenExpire = 86400;
+    
+    return jwt.sign({ username: username, email: email }, process.env.SECRECT_ACCESS_TOKEN, {
+        expiresIn: accessTokenExpire
+    });
+}
+
+export function generateChangePasswordToken(username: string, email: string) {
+    let changePasswordExpire = 86400;
+    
+    return jwt.sign({ username: username, email: email }, process.env.SECRECT_CHANGE_PASSWORD_TOKEN, {
+        expiresIn: changePasswordExpire
+    });
+}
+
+export function generateActivateToken(username: string, email: string) {
+    let activateTokenExpire = 86400;
+    
+    return jwt.sign({ username: username, email: email }, process.env.SECRECT_ACTIVATE_USER_TOKEN, {
+        expiresIn: activateTokenExpire
+    });
 }

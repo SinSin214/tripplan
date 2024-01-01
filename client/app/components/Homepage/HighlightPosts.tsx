@@ -1,6 +1,6 @@
 'use client';
 import { AppContext } from '@/app/context/appContext';
-import Loading from '@/app/components/Loading';
+import ComponentLoading from '@/app/components/ComponentLoading';
 import { IResponse, PostProps } from '@/utils/types';
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material';
 import { Fragment, useContext, useEffect, useState } from 'react';
@@ -25,29 +25,31 @@ export default function HighlightPosts() {
 		getHighlights();
 	}, []);
 
-	if(isLoading) return (<Loading />);
-
 	return (
-		<Fragment>
-			{aHighlights.map((post: PostProps) => (
-				<Card sx={{ maxWidth: 345 }}>
-				<CardActionArea>
-				  <CardMedia
-					component="img"
-					height="140"
-					image="/static/images/cards/contemplative-reptile.jpg"
-				  />
-				  <CardContent>
-					<Typography gutterBottom variant="h5" component="div">
-					  {post.title}
-					</Typography>
-					<Typography variant="body2" color="text.secondary">
-					  {post.content}
-					</Typography>
-				  </CardContent>
-				</CardActionArea>
-			  </Card>
-			))}
-			</Fragment>
+		<div className='min-h-[50px] w-full'>
+			{isLoading ? <ComponentLoading /> :
+				<div>
+					{aHighlights.map((post: PostProps) => (
+						<Card sx={{ maxWidth: 345 }}>
+							<CardActionArea>
+								<CardMedia
+									component="img"
+									height="140"
+									image="/static/images/cards/contemplative-reptile.jpg"
+								/>
+								<CardContent>
+									<Typography gutterBottom variant="h5" component="div">
+										{post.title}
+									</Typography>
+									<Typography variant="body2" color="text.secondary">
+										{post.content}
+									</Typography>
+								</CardContent>
+							</CardActionArea>
+						</Card>
+					))}
+				</div>
+			}
+		</div>
 	)
 }

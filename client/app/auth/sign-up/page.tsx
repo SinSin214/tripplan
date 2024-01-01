@@ -6,12 +6,12 @@ import { useContext, useState } from 'react';
 import { AppContext } from '@/app/context/appContext';
 import { toast } from 'react-toastify';
 import { IResponse } from '@/utils/types';
-import Loading from '@/app/components/Loading';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { AppLoadingContext } from '@/app/context/loadingContext';
 
 export default function SignUpForm() {
-    const { requestAPI, navigation } = useContext(AppContext);
-    const [isLoading, setIsLoading] = useState(false);
+    const { requestAPI, navigation,  } = useContext(AppContext);
+    const { setIsAppLoading } = useContext(AppLoadingContext);
     const [isShowPassword, setIsShowPassword] = useState(false);
 
     const formik = useFormik({
@@ -29,20 +29,20 @@ export default function SignUpForm() {
 
     async function handleSignUp(resetForm: Function) {
         try {
-            setIsLoading(true);
+            setIsAppLoading(true);
             const data = {
                 username: formik.values.username,
                 password: formik.values.password,
                 email: formik.values.email
             }
             let res: IResponse = await requestAPI('/auth/signUp', 'POST', data);
-            setIsLoading(false);
+            setIsAppLoading(false);
             toast.success(res.message);
             resetForm();
         }
         catch (err: any) {
             let oError = err.response.data;
-            setIsLoading(false);
+            setIsAppLoading(false);
             if(oError.detail) {
                 oError.detail.forEach((detail: any) => {
                     formik.setFieldError(detail.field, detail.message);
@@ -65,7 +65,6 @@ export default function SignUpForm() {
                 type="text"
                 size="small"
                 name="username"
-                disabled={isLoading}
                 value={formik.values.username}
                 onChange={formik.handleChange}
                 required
@@ -79,7 +78,6 @@ export default function SignUpForm() {
                 type="email"
                 size="small"
                 name="email"
-                disabled={isLoading}
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 required
@@ -94,7 +92,6 @@ export default function SignUpForm() {
                     type={isShowPassword ? 'text' : 'password'}
                     size="small"
                     name="password"
-                    disabled={isLoading}
                     value={formik.values.password}
                     onChange={formik.handleChange}
                     required
@@ -124,7 +121,6 @@ export default function SignUpForm() {
                 type={isShowPassword ? 'text' : 'password'}
                 size="small"
                 name="confirmPassword"
-                disabled={isLoading}
                 value={formik.values.confirmPassword}
                 onChange={formik.handleChange}
                 required
@@ -133,13 +129,11 @@ export default function SignUpForm() {
                 helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
             />
 
-            {isLoading ? <Loading /> : ''}
 
             <Button
                 className="w-full mt-2 btn-custom"
                 variant="contained"
-                type="submit"
-                disabled={isLoading}>Sign up
+                type="submit">Sign up
             </Button>
 
             <div style={{

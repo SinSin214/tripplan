@@ -7,14 +7,16 @@ import { Suspense, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Loading from "./loading";
+import ProfileProvider from "./context/profileContext";
+import AppLoadingProvider from "./context/loadingContext";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     const pathName = usePathname();
     const [layout, setLayout] = useState({
         header: true,
         footer: true
-    })
+    });
+
     const routeHideHeader: string[] = [];
     const routeHideFooter: string[] = ['/auth/', '/post/write'];
 
@@ -30,16 +32,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <html lang="en">
             <body>
                 <AppProvider>
+                    <ProfileProvider>
                     <div className="screen-view">
                         {layout.header ? <Header /> : ''}
+                        <AppLoadingProvider>
                         {/* <Suspense fallback={<Loading />}> */}
-                        <main className="main">
+                        <main className="main" id="mainLayout">
                             {children}
                             {layout.footer ? <Footer /> : ''}
                         </main>
                         {/* </Suspense> */}
+                        </AppLoadingProvider>
                         <ToastContainer />
                     </div>
+                    </ProfileProvider>
                 </AppProvider>
             </body>
         </html>

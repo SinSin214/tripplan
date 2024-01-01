@@ -33,18 +33,17 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: calc(100% - 12.5rem);
   background-color: white;
   color: black;
   overflow: auto;
-  height: 100%;
+  height: calc(100% - 3.5rem);  /* 3.5rem is header height */
 }
 
 /* responsive layout */
 
 .limited-width-layout__content {
   /* width: 100%; */
-  height: 100%;
+  height: fit-content;
   margin-right: auto;
   margin-left: auto;
   padding-left: 15px;
@@ -54,7 +53,7 @@ body {
 
 .md-limited-width-layout__content {
   width: 400px;
-  height: 100%;
+  height: fit-content;
   margin-right: auto;
   margin-left: auto;
   padding-left: 15px;
@@ -115,7 +114,7 @@ body {
 
 .btn-navbar {
   height: 100%;
-  width: 100px;
+  width: 110px;
   color: white;
   background-color: var(--primary-color);
   border-radius: 0;
@@ -167,4 +166,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Editor custom CSS */
+.codex-editor__redactor {
+   min-height: 450px !important; 
+   padding-bottom: unset !important;
 }

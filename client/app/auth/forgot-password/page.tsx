@@ -1,5 +1,5 @@
 'use client';
-import Loading from '@/app/components/Loading';
+import Loading from '@/app/components/AppLoading';
 import { AppContext } from '@/app/context/appContext';
 import { forgotPasswordSchema } from '@/utils/validationSchema';
 import { Button, Link, TextField } from '@mui/material';

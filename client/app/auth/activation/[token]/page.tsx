@@ -1,27 +1,28 @@
 'use client';
-import Loading from "@/app/components/Loading";
+import Loading from "@/app/components/AppLoading";
 import { AppContext } from "@/app/context/appContext"
+import { AppLoadingContext } from "@/app/context/loadingContext";
 import { ProfileContext } from "@/app/context/profileContext";
 import { Fragment, useContext, useEffect, useState } from "react"
 import { toast } from "react-toastify";
 
 export default function UserActivation({ params }: { params: { token: string } }) {
     const { requestAPI, navigation } = useContext(AppContext);
-    const { setupUser } = useContext(ProfileContext);
-    const [isLoading, setIsLoading] = useState(false);
+    const { setupUserInfo } = useContext(ProfileContext);
+    const { setIsAppLoading } = useContext(AppLoadingContext);
 
     useEffect(() => {
         async function activateUser() {
             try {
-                setIsLoading(true);
+                setIsAppLoading(true);
                 const res = await requestAPI(`/auth/activate/${params.token}`, 'GET');
-                setIsLoading(false);
+                setupUserInfo(res.user);
                 toast.success(res.message);
-                setupUser(res.accessToken, res.username);
                 navigation('/');
             } catch(err: any) {
-                setIsLoading(false);
                 toast.error(err.response.data.message);
+            } finally {
+                setIsAppLoading(false);
             }
         };
         activateUser();
@@ -29,13 +30,8 @@ export default function UserActivation({ params }: { params: { token: string } }
 
     return (
         <div className="md-limited-width-layout__content">
-            <div className="top-[40%] relative">
-            { isLoading ?
-                <Fragment>
-                    <div className="text-center mb-8">Please wait for account activation</div>
-                    <Loading />
-                </Fragment>
-                : ''}
+            <div className="top-[40%] text-center relative">
+                Please wait for account activation
             </div>
         </div>
     )

@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
 import { PostService } from './post.service';
 import { Request, Response } from 'express';
-import { CreatePostDto } from './dto/create-post.dto';
+import { CreatePostDto } from './post.dto';
 
 @Controller('post')
 export class PostController {
@@ -40,12 +40,13 @@ export class PostController {
         try {
             const post = req.body;
             const username = req.user['username'];
-            let oPost: CreatePostDto = {
+            let transformedThread = {
                 ...post,
                 author: username,
-                created_at: new Date()
+                createdAt: new Date(),
+                content: JSON.stringify(post.content)
             }
-            await this.postService.createPost(oPost);
+            await this.postService.createPost(transformedThread);
             return res.status(200).send({
                 message: 'Created post',
                 success: true

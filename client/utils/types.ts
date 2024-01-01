@@ -1,6 +1,6 @@
 export interface PostProps {
     id: string,
-    image_path: string,
+    imagePath: string,
     content: string,
     description: string,
     highlights: string[],
@@ -23,4 +23,17 @@ export interface WritePostType {
 export interface IResponse {
   data?: any[] | Object,
   message?: string | undefined
+}
+
+export interface IUserInfo {
+  username: string,
+  email: string,
+  accessToken: string,
+  refreshToken: string
+}
+
+export interface IProfile {
+  username: string,
+  email: string,
+  isSigned: boolean
 }

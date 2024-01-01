@@ -4,19 +4,37 @@ import { ProfileContext } from '../context/profileContext';
 import { Button } from "@mui/material";
 import CreateIcon from '@mui/icons-material/Create';
 import { AppContext } from "../context/appContext";
+import { IUserInfo } from "@/utils/types";
+import { toast } from "react-toastify";
+import { AppLoadingContext } from "../context/loadingContext";
 
 export default function Navbar() {
     const pathName = usePathname();
-    const { profile, setProfile } = useContext(ProfileContext);
-    const { navigation } = useContext(AppContext);
+    const { profile, clearUserInfo } = useContext(ProfileContext);
+    const { navigation, requestAPI } = useContext(AppContext);
+    const { setIsAppLoading } = useContext(AppLoadingContext);
 
-    function signOut() {
-        localStorage.clear();
-        setProfile({
-            username: '',
-            isSigned: false
-        })
-        navigation('/');
+    async function signOut() {
+        try {
+            setIsAppLoading(true);
+            let sUserInfo = localStorage.getItem("user");
+            if (sUserInfo) {
+                let oUserInfo: IUserInfo = JSON.parse(sUserInfo);
+                let oParams = {
+                    username: oUserInfo.username,
+                    refreshToken: oUserInfo.refreshToken
+                };
+
+                const res = await requestAPI('/auth/signOut', 'POST', oParams);
+                clearUserInfo();
+                toast.success(res.message);
+                navigation('/');
+            }
+        } catch (err: any) {
+            toast.error(err.response.data.message);
+        } finally {
+            setIsAppLoading(false);
+        }
     }
 
     return (

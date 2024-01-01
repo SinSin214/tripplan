@@ -1,31 +1,43 @@
-import { Controller, Get, Param, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Param, Post, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { Response } from 'express';
+import { supabase } from '../main';
 
 @Controller('image')
 export class ImageController {
     constructor() {}
 
     @Post('upload')
-    @UseInterceptors(FileInterceptor('file', {
-        storage: diskStorage({
-            destination: './uploads',
-            filename: (req, file, callback) => {
-                const uniquePrefix = Date.now();
-                const extension = extname(file.originalname);
-                // Generating a 16 random chars long string
-                const randomName = Array(16).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
-                const fileName = `${randomName}_${uniquePrefix}${extension}`;
-                callback(null, fileName);
+    @UseInterceptors(FileInterceptor('file'))
+    async uploadImage(@UploadedFile() file: Express.Multer.File, @Res() res: Response) {
+        try {
+            const uploadedTime = (new Date()).getTime();
+            const fileName = `${uploadedTime}_${file.originalname}`;
+            const { data, error } = await supabase.storage
+                .from('ImageStorage')
+                .upload(`PostImage/${fileName}`, file.buffer);
+            if(error) {
+                return res.status(500).send({
+                    message: `Supabase: ${error.message}`,
+                    error: error['error']
+                });
+            } else {
+                const filePath = data.path;
+                const retriveResponse = supabase.storage
+                    .from('ImageStorage')
+                    .getPublicUrl(filePath);
+                return res.status(200).send({
+                    filePath: retriveResponse.data.publicUrl,
+                    fileName: fileName
+                });
             }
-        })
-    })
-    )
-    uploadImage(@UploadedFile() file: Express.Multer.File, @Res() res: Response) {
-        // return file.filename;
-        res.status(200).send({filename: file.filename})
+        } catch(err) {
+            return res.status(500).send({
+                message: err.message
+            })
+        }
     }
 
     @Get(':id')

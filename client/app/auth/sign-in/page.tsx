@@ -1,6 +1,6 @@
 'use client';
-import Loading from '@/app/components/Loading';
 import { AppContext } from '@/app/context/appContext';
+import { AppLoadingContext } from '@/app/context/loadingContext';
 import { ProfileContext } from '@/app/context/profileContext';
 import { signInSchema } from '@/utils/validationSchema';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -11,8 +11,8 @@ import { toast } from 'react-toastify';
 
 export default function SignInForm() {
     const { requestAPI, navigation } = useContext(AppContext);
-    const { setupUser } = useContext(ProfileContext);
-    const [isLoading, setIsLoading] = useState(false);
+    const { setIsAppLoading } = useContext(AppLoadingContext);
+    const { setupUserInfo } = useContext(ProfileContext);
     const [isShowPassword, setIsShowPassword] = useState(false);
 
     const formik = useFormik({
@@ -26,24 +26,24 @@ export default function SignInForm() {
 
     async function handleSignIn() {
         try {
+            setIsAppLoading(true);
             const oParams = {
                 username: formik.values.username,
                 password: formik.values.password
             }
-            setIsLoading(true);
             const res = await requestAPI('/auth/signIn', 'POST', oParams);
-            setIsLoading(false);
+            setupUserInfo(res.user);
             toast.success(res.message);
-            setupUser(res.accessToken, res.username);
             navigation('/');
         } catch(err: any) {
             let oError = err.response.data;
-            setIsLoading(false);
             if(oError.detail) {
                 oError.detail.forEach((detail: any) => {
                     formik.setFieldError(detail.field, detail.message);
                 })
             } else toast.error(oError.message);
+        } finally {
+            setIsAppLoading(false);
         }
     }
 
@@ -63,7 +63,6 @@ export default function SignInForm() {
                 name="username"
                 value={formik.values.username}
                 onChange={formik.handleChange}
-                disabled={isLoading}
                 required
                 fullWidth
                 error={formik.touched.username && Boolean(formik.errors.username)}
@@ -77,7 +76,6 @@ export default function SignInForm() {
                 name="password"
                 value={formik.values.password}
                 onChange={formik.handleChange}
-                disabled={isLoading}
                 required
                 fullWidth
                 error={formik.touched.password && Boolean(formik.errors.password)}
@@ -97,13 +95,10 @@ export default function SignInForm() {
                 }}
                 />
 
-            {isLoading ? <Loading /> : ''}
-
             <Button
                 className="w-full mt-2 btn-custom"
                 variant="contained"
-                type="submit"
-                disabled={isLoading}>Sign in</Button>
+                type="submit">Sign in</Button>
             
             <div className="flex justify-around mt-2">
                 <Link href="#"

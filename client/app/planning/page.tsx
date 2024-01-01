@@ -1,5 +1,7 @@
 export default function Planning () {
     return (
-        <h1>Planning</h1>
+        <div className="limited-width-layout__content">
+            PLANNING
+            </div>
     )
 }
