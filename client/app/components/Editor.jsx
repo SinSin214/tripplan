@@ -13,7 +13,6 @@ import { toast } from 'react-toastify';
 
 
 export default function Editor(props) {
-    const { requestAPI } = useContext(AppContext);
     useEffect(() => {
         function generateEditor() {
             return new EditorJS({
@@ -85,7 +84,7 @@ export default function Editor(props) {
     }, []);
         
     return (
-        <div id="editorjs" className="min-h-[450px] border-black border-solid border-2">
+        <div id="editorjs" className="min-h-[42rem] border-black border-solid border-2">
         </div>
     )
 }

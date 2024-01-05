@@ -43,7 +43,7 @@ export default function PostDetail({ params }: { params: { id: string } }) {
                     {/* Image */}
                     {/* <div className="h-96">
                         <Image
-                            src={postDetail.image_path}
+                            src={postDetail.imagePath}
                             alt=""
                             className="w-full h-full"
                             width="0"

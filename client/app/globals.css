@@ -43,7 +43,7 @@ body {
 
 .limited-width-layout__content {
   /* width: 100%; */
-  height: fit-content;
+  height: 100%;
   margin-right: auto;
   margin-left: auto;
   padding-left: 15px;
