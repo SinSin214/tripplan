@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import HighlightPosts from './components/Homepage/HighlightPosts';
+import HighlightThreads from './components/Homepage/HighlightThreads';
 import { Fragment } from 'react';
 import { VerticalLine } from './components/SmallThings';
 
@@ -15,7 +15,7 @@ export default function Home() {
 				className="w-full h-auto vertical-stack-layout"
 				priority
 			/>
-			<div className="limited-width-layout__content">
+			<div className="lg-limited-width-layout__content">
 				<div className="flex justify-between vertical-stack-layout">
 					<div className="flex flex-col w-full ">
 						<label>INSPIRATION</label>
@@ -36,7 +36,7 @@ export default function Home() {
 					<div className="text-xl">DISCOVERY NEW PLACES</div>
 				</div>
 				<div className="flex justify-between vertical-stack-layout">
-					<HighlightPosts />
+					<HighlightThreads />
 				</div>
 			</div>
 		</Fragment>

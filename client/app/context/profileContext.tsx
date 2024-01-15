@@ -48,7 +48,7 @@ export default function ProfileProvider({ children }: any) {
           // server does not return anything then use old userInfo
           setupUserInfo(res.user);
         } catch (err: any) {
-          console.log(err.response.data.message);
+          if(err) clearUserInfo();
         }
       }
     }

@@ -17,6 +17,7 @@ export default function Editor(props) {
         function generateEditor() {
             return new EditorJS({
                 holder: 'editorjs',     // Id of element that contains Editor
+                placeholder: 'Write thread content...',
                 tools: {                // List available tools
                     list: {
                         class: List,
@@ -84,7 +85,7 @@ export default function Editor(props) {
     }, []);
         
     return (
-        <div id="editorjs" className="min-h-[42rem] border-black border-solid border-2">
+        <div id="editorjs" className="border-slate-300 border-solid border rounded">
         </div>
     )
 }

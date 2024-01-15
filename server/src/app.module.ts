@@ -1,14 +1,14 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PostModule } from './post/post.module';
+import { ThreadModule } from './thread/thread.module';
 import { ImageModule } from './image/image.module';
 import { AuthModule } from './auth/auth.module';
 import { CheckAuthMiddleware } from './middlewares/checkAuth';
-import { PostController } from './post/post.controller';
+import { ThreadController } from './thread/thread.controller';
 
 @Module({
-  imports: [PostModule, ImageModule, AuthModule],
+  imports: [ThreadModule, ImageModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
@@ -16,7 +16,7 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(CheckAuthMiddleware)
-      .exclude('post/highlights')
-      .forRoutes(PostController);
+      .exclude('thread/highlights', 'thread/all', 'thread/:id')
+      .forRoutes(ThreadController);
   }
 }

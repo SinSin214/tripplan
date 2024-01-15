@@ -8,21 +8,22 @@ datasource db {
 }
 
 model User {
-  email         String    @id
-  username      String    @unique
-  password      String
+  email        String    @id
+  username     String    @unique
+  password     String
   createdAt    DateTime? @default(now())
   isActive     Boolean   @default(false)
   refreshToken String[]  @unique
 }
 
-model Post {
-  id          String    @id @default(uuid())
-  title       String    @unique
+model Thread {
+  id          String    @id(map: "Post_pkey") @default(uuid())
+  title       String    @unique(map: "Post_title_key")
   author      String
-  createdAt  DateTime? @default(now())
-  modifiedAt DateTime?
+  createdAt   DateTime? @default(now())
+  modifiedAt  DateTime?
   rating      Int?
   images      String[]
-  content     Json
+  content     Json      @db.Json
+  description String?
 }

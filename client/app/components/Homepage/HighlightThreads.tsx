@@ -1,7 +1,7 @@
 'use client';
 import { AppContext } from '@/app/context/appContext';
 import ComponentLoading from '@/app/components/ComponentLoading';
-import { IResponse, PostProps } from '@/utils/types';
+import { IResponse, ThreadProps } from '@/utils/types';
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material';
 import { Fragment, useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -14,7 +14,7 @@ export default function HighlightPosts() {
 		async function getHighlights() {
 			try {
 				setIsLoading(true);
-				const res: IResponse = await requestAPI('/post/highlights', 'GET');
+				const res: IResponse = await requestAPI('/thread/highlights', 'GET');
 				setIsLoading(false);
 				aHighlights = res;
 			} catch(err: any) {
@@ -29,7 +29,7 @@ export default function HighlightPosts() {
 		<div className='min-h-[50px] w-full'>
 			{isLoading ? <ComponentLoading /> :
 				<div>
-					{aHighlights.map((post: PostProps) => (
+					{aHighlights.map((thread: ThreadProps) => (
 						<Card sx={{ maxWidth: 345 }}>
 							<CardActionArea>
 								<CardMedia
@@ -39,10 +39,10 @@ export default function HighlightPosts() {
 								/>
 								<CardContent>
 									<Typography gutterBottom variant="h5" component="div">
-										{post.title}
+										{thread.title}
 									</Typography>
 									<Typography variant="body2" color="text.secondary">
-										{post.content}
+										{thread.content}
 									</Typography>
 								</CardContent>
 							</CardActionArea>

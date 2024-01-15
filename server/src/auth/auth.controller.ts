@@ -9,7 +9,7 @@ import * as utils from '../utilities/authentication-utils';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private authService: AuthService) {};
+    constructor(private authService: AuthService) { };
 
     @Post('signUp')
     async signUp(@Body() signUpUserDto: SignUpUserDto, @Res() res: Response) {
@@ -19,15 +19,15 @@ export class AuthController {
             let hasError = false;
             let user = await this.authService.getUserByEmailOrUsername(username, email);
 
-            if(user) {
-                if(user.username === username) {
+            if (user) {
+                if (user.username === username) {
                     errorDetails.push({
                         field: 'username',
                         message: 'Username already existed'
                     })
                     hasError = true;
                 }
-                if(user.email === email) {
+                if (user.email === email) {
                     errorDetails.push({
                         field: 'email',
                         message: 'Email already existed'
@@ -35,8 +35,8 @@ export class AuthController {
                     hasError = true;
                 }
             }
-           
-            if(hasError) throw new Error('Create user failed');
+
+            if (hasError) throw new Error('Create user failed');
 
             let hashedPassword = await bcrypt.hash(password, 10);
             let createUser: UserModel = {
@@ -70,7 +70,7 @@ export class AuthController {
             const { username, password } = body;
 
             const user = await this.authService.getUserByUsername(username);
-            if(!user) {
+            if (!user) {
                 errorDetails.push({
                     field: 'username',
                     message: 'Username does not exist'
@@ -140,9 +140,9 @@ export class AuthController {
     async forgotPassword(@Body() body: ForgotPasswordDto, @Res() res: Response) {
         try {
             const { username } = body;
-            
+
             const user = await this.authService.getUserByUsername(username);
-            if(!user) throw Error('Username does not exist');
+            if (!user) throw Error('Username does not exist');
 
             let token = utils.generateChangePasswordToken(user.username, user.email);
             await utils.sendEmailChangePassword(user.email, token);
@@ -151,7 +151,7 @@ export class AuthController {
                 message: 'An email to recovery your password has been sent to registered email of this account.',
                 success: true
             })
-        } catch(err) {
+        } catch (err) {
             return res.status(500).send({
                 message: err.message
             })
@@ -186,7 +186,7 @@ export class AuthController {
         try {
             const { username, refreshToken } = body;
             await this.authService.clearRefreshToken(username, refreshToken);
-            
+
             return res.status(200).send({
                 message: 'You have been signed out.'
             });
@@ -199,13 +199,13 @@ export class AuthController {
 
     @Post('check_token_expiration')
     async checkTokenExpiration(@Body() body: CheckTokenDto, @Res() res: Response) {
-        try {
-            const { accessToken, refreshToken } = body;
-            jwt.verify(accessToken, process.env.SECRECT_ACCESS_TOKEN, function(errAccessToken, decodedAccessToken) {
-                if(errAccessToken && errAccessToken.name === 'TokenExpiredError') {
-                    jwt.verify(refreshToken, process.env.SECRECT_REFRESH_TOKEN, function(errRefreshToken, decodedRefreshToken) {
+        const { accessToken, refreshToken } = body;
+        jwt.verify(accessToken, process.env.SECRECT_ACCESS_TOKEN, function (errAccessToken, decodedAccessToken) {
+            if (errAccessToken) {
+                if (errAccessToken.name === 'TokenExpiredError') {
+                    jwt.verify(refreshToken, process.env.SECRECT_REFRESH_TOKEN, function (errRefreshToken, decodedRefreshToken) {
                         // If both access and refresh token expored
-                        if(errRefreshToken && errRefreshToken.name === 'TokenExpiredError') {
+                        if (errRefreshToken && errRefreshToken.name === 'TokenExpiredError') {
                             throw Error('Token is expired, please login again');
                         } else {    // If only access token expired
                             let newAccessToken = utils.generateRefreshToken(decodedRefreshToken['username'], decodedRefreshToken['email']);
@@ -219,16 +219,16 @@ export class AuthController {
                             })
                         }
                     })
-                } else {    // If access token not expired, use old userInfo
-                    return res.status(200).send({
-                        user: body
-                    });
+                } else {
+                    return res.status(500).send({
+                        message: errAccessToken.name
+                    })
                 }
-            });
-        } catch(err) {
-            return res.status(500).send({
-                message: err.message
-            })
-        }
+            } else {    // If access token not expired, use old userInfo
+                return res.status(200).send({
+                    user: body
+                });
+            }
+        });
     }
 }

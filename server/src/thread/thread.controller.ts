@@ -1,21 +1,21 @@
 import { Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
-import { PostService } from './post.service';
+import { ThreadService } from './thread.service';
 import { Request, Response } from 'express';
-import { CreatePostDto } from './post.dto';
+import { CreateThreadDto } from './thread.dto';
 
-@Controller('post')
-export class PostController {
-    constructor(private postService: PostService) {}
+@Controller('thread')
+export class ThreadController {
+    constructor(private threadService: ThreadService) {}
 
-    @Get('all')
-    async getAll() {
-      return await this.postService.getAll();
+    @Post('all')
+    async getThreadAll(@Req() req: Request) {
+      return await this.threadService.getThreadAll();
     }
 
     @Get('highlights')
     async getHighlights(@Res() res: Response) {
-        try {
-            let result = await this.postService.getHighlights();
+        try { 
+            let result = await this.threadService.getHighlights();
             setTimeout(async () => {
                 return res.status(500).send({
                     data: []
@@ -31,24 +31,24 @@ export class PostController {
 
     // always put at bottom
     @Get(':id')
-    async getDetail(@Param('id') id: string) {
-        return await this.postService.getDetail(id);
+    async getThreadDetail(@Param('id') id: string) {
+        return await this.threadService.getDetail(id);
     }
 
     @Post('')
-    async createPost(@Req() req: Request, @Res() res: Response) {
+    async createThread(@Req() req: Request, @Res() res: Response) {
         try {
-            const post = req.body;
+            const thread = req.body;
             const username = req.user['username'];
             let transformedThread = {
-                ...post,
+                ...thread,
                 author: username,
                 createdAt: new Date(),
-                content: JSON.stringify(post.content)
+                content: JSON.stringify(thread.content)
             }
-            await this.postService.createPost(transformedThread);
+            await this.threadService.createThread(transformedThread);
             return res.status(200).send({
-                message: 'Created post',
+                message: 'Created thread',
                 success: true
             });
         } catch(err) {

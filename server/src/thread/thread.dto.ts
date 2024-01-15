@@ -1,6 +1,6 @@
 import { IsNotEmpty } from "class-validator"
 
-export class CreatePostDto {
+export class CreateThreadDto {
     @IsNotEmpty()
     title: string
 
@@ -18,7 +18,7 @@ export class CreatePostDto {
 }
 
 
-export class UpdatePostDto {
+export class UpdateThreadDto {
     id: string
 
     title: string

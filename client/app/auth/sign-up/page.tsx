@@ -136,13 +136,9 @@ export default function SignUpForm() {
                 type="submit">Sign up
             </Button>
 
-            <div style={{
-                width: '80%',
-                height: '1px',
-                background: 'gray',
-                margin: '15px auto'
-            }}></div>
-            <div className="flex justify-around mt-2">
+            <div className="separate-line"></div>
+
+            <div className="flex justify-around">
                 <Link href="#"
                     underline="hover"
                     onClick={(e) => navigation('/auth/sign-in')}>Already have account ?</Link>

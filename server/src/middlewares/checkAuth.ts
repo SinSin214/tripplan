@@ -12,7 +12,7 @@ export class CheckAuthMiddleware implements NestMiddleware {
         req.user = decoded;
         next();
    } catch (error) {
-        res.status(401).send({
+        return res.status(200).send({
             message: `Authorization: ${error.message}`
         });
    }

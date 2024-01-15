@@ -1,7 +1,6 @@
 import { Controller, Get, Param, Post, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { extname } from 'path';
 import { Response } from 'express';
 import { supabase } from '../main';
 
@@ -17,7 +16,7 @@ export class ImageController {
             const fileName = `${uploadedTime}_${file.originalname}`;
             const { data, error } = await supabase.storage
                 .from('ImageStorage')
-                .upload(`PostImage/${fileName}`, file.buffer);
+                .upload(`ThreadImage/${fileName}`, file.buffer);
             if(error) {
                 return res.status(500).send({
                     message: `Supabase: ${error.message}`,

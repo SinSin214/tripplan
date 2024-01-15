@@ -44,6 +44,9 @@ export default function Navbar() {
                     className={`${pathName === '/' ? 'btn-navbar-active' : ''} btn-navbar`}
                     onClick={() => navigation('/')}>Home</Button>
                 <Button
+                    className={`${pathName.includes('/thread') ? 'btn-navbar-active' : ''} btn-navbar`}
+                    onClick={() => navigation('/thread')}>Threads</Button>
+                <Button
                     className={`${pathName.includes('/destination') ? 'btn-navbar-active' : ''} btn-navbar`}
                     onClick={() => navigation('/destination')}>Destination</Button>
                 <Button
@@ -56,8 +59,8 @@ export default function Navbar() {
                         variant="contained"
                         startIcon={<CreateIcon />}
                         hidden
-                        onClick={() => navigation('/post/write')}>
-                        Write post
+                        onClick={() => navigation('/thread/write')}>
+                        Write thread
                     </Button>
                 </div>
                 : ''}

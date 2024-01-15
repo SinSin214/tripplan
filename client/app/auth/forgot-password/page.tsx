@@ -56,8 +56,10 @@ export default function ForgotPasswordForm() {
                 variant="contained"
                 type="submit"
                 disabled={isLoading}>Send email</Button>
+
+            <div className="separate-line"></div>
             
-            <div className="flex justify-around mt-2">
+            <div className="flex justify-around">
                 <Link href="#"
                     underline="hover"
                     onClick={() => navigation('/auth/sign-in')}>Already have account ?</Link>
