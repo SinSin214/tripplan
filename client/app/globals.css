@@ -181,6 +181,16 @@ body {
   display: block;
 }
 
+.cdx-input.image-tool__caption {
+  text-align: center;
+  border: none;
+  box-shadow: none;
+}
+
+.cdx-input.image-tool__caption::data-placeholder {
+  text-align: center;
+}
+    
 /* Thread Card */
 .threadcard-toolbar {
   border-bottom: 1px solid rgb(203 213 225);

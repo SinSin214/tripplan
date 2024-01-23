@@ -3,78 +3,60 @@ import { Card, CardContent, CardMedia, Typography, CardActionArea, IconButton } 
 import { IThreadOverviewType } from '@/utils/types';
 import { Bookmark } from '@mui/icons-material';
 import Image from 'next/image'
+import { ProfileContext } from '@/app/context/profileContext';
 
 export default function ThreadCard(props: { ThreadOverview: IThreadOverviewType, onCardClick: Function }) {
+  let thread = props.ThreadOverview;
+
   return (
-    <div className="grid grid-cols-3 h-[180px]">
+    <div className="grid grid-cols-3 h-[200px]">
       	<Image className="col-span-1 w-full h-full cursor-pointer"
           	src="/wallpaper.jpg"
-			width="0"
-			height="0"
-			sizes="100vw"
+            width={100}
+            height={100}
+            sizes="100vw"
+            style={{ 
+              objectFit: "cover"
+            }}
           	alt="green iguana"
-			onClick={() => props.onCardClick(props.ThreadOverview.id)}
+			onClick={() => props.onCardClick(thread.id)}
         	/>
-      	<div className="col-span-2 ml-5">
-			<div className="header flex justify-between items-center">
+      	<div className="col-span-2 grid grid-rows-5 ml-5">
+			<div className="header flex justify-between items-center row-span-1">
 				<div className="type">
 					Type
 				</div>
 				<div>
-				    <IconButton>
-						<Bookmark />
-					</IconButton>
+					<Bookmark
+                        style={{
+                            cursor: "pointer"
+                        }}
+                        onClick={() => { alert('aa')}} />
 				</div>
 			</div>
-			<div className="body">
+			<div className="body row-span-3">
 				<div className="title">
-				<Typography gutterBottom variant="h5" component="div">
-					{props.ThreadOverview.title}
+				<Typography 
+                    gutterBottom 
+                    variant="h5" 
+                    component="div" 
+                    style={{
+                        cursor: "pointer"
+                    }}
+                    onClick={() => { alert('aa')}}>
+					{thread.title}
 				</Typography>
 				</div>
 				<div className="description">
 				<Typography variant="body2" color="text.secondary">
-					{props.ThreadOverview.description}
+					{thread.description}
 				</Typography>
 				</div>
 			</div>
-			<div className="footer">
-
+			<div className="footer row-span-1">
+                <div>{thread.author}</div>
 			</div>
       	</div>
     </div>
-
-    // <Card className="w-full h-[200px] my-4 border-slate-300 border-solid border">
-    //   <div className="min-h-[40px] threadcard-toolbar">
-    //     <div>
-
-    //     </div>
-    //     <div className="float-right">
-    //       <IconButton>
-    //         <Bookmark />
-    //       </IconButton>
-    //       <IconButton>
-    //         <MoreHoriz />
-    //       </IconButton>
-    //       </div>
-    //   </div>
-    //   <CardActionArea 
-    //     className="grid grid-cols-3 min-h-[210px]"
-    //     onClick={() => props.onCardClick(props.ThreadOverview.id)}>
-    //     <CardMedia className="col-span-1 h-full"
-    //       component="img"
-    //       image="/wallpaper.jpg"
-    //       alt="green iguana"
-    //     />
-    //     <CardContent className="col-span-2 h-full px-6 py-4">
-    //       <Typography gutterBottom variant="h5" component="div">
-    //         {props.ThreadOverview.title}
-    //       </Typography>
-    //       <Typography variant="body2" color="text.secondary">
-    //         {props.ThreadOverview.description}
-    //       </Typography>
-    //     </CardContent>
-    //   </CardActionArea>
-    // </Card>
   );
 }
