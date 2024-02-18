@@ -19,21 +19,36 @@ export default function ThreadDetail({ params }: { params: { id: string } }) {
         title: '',
         content: ''
     });
-    const edjsParser = edjsHTML();
+    const edjsParser = edjsHTML({
+        image: imageParser,
+        paragraph: paragraphParser
+    });
     const [contentHTML, setContentHTML] = useState<any>();
+
+    function imageParser(block: any){
+        return `
+            <div className="h-fit">
+                <img src="${block.data.file.url}" />
+                <div className="image-caption">${block.data.caption}</div>
+            </div>
+        `;
+    }
+
+    function paragraphParser(block: any) {
+        return `
+            <div>${block.data.text}</div>
+        `
+    }
 
     useEffect(() => {
         async function getThread() {
             try {
                 setIsLoading(true);
-                const ThreadDetail = await requestAPI(`/thread/${params.id}`, 'GET');
-                setThreadDetail(ThreadDetail);
-                let contentParsed = JSON.parse(ThreadDetail.content);
-                let ab = {
-                    blocks: []
-                };
-                ab.blocks = contentParsed;
-                let parsed = edjsParser.parse(ab);
+                const res = await requestAPI(`/thread/${params.id}`, 'GET');
+                setThreadDetail(res.threadDetail);
+                let parsed = edjsParser.parse({
+                    blocks: res.threadDetail.content
+                });
                 setContentHTML(parsed);
 
             } catch(err: any) {
@@ -47,52 +62,37 @@ export default function ThreadDetail({ params }: { params: { id: string } }) {
     if(isLoading) return <Loading />
     return (
         <div className="md-limited-width-layout__content">
+            <div className="grid gap-8">
             {/* Title */}
-            <div className="text-4xl mt-4">{threadDetail.title}</div>
-            <div>
-                    {/* Image */}
-                    {/* <div className="h-96">
-                        <Image
-                            src={threadDetail.imagePath}
-                            alt=""
-                            className="w-full h-full"
-                            width="0"
-                            height="0"
-                            sizes="100vw" />
-                    </div> */}
-                    <div id="content-container">
-                        {contentHTML ? parse(contentHTML.join("")) : ''}
-                    </div>
+            <div className="thread-title">{threadDetail.title}</div>
+            <div className="thread-description">{threadDetail.description}</div>
+            <div className="thread-author">
+                <div className="author-name">
+                    {threadDetail.author}
+                </div>
+                <div>
+                    {threadDetail.createdAt}
+                </div>
+            </div>
+            <div className="thread-content grid gap-5" id="content-container">
+                {contentHTML ? parse(contentHTML.join("")) : ''}
+            </div>
 
-                    {/* General */}
-                    <div className="mt-4">
-                        <div className="grid grid-cols-4 mt-3">
-                            <div className="col-span-1 text-xl">Rating</div>
-                            <div className="col-span-3">
-                                {/* <Rating value={threadDetail.rating} readOnly={true} /> */}
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-4 mt-3">
-                            <div className="col-span-1 text-xl">Location</div>
-                            <div className="col-span-3">
-                                <div>- Good relaxed</div>
-                            </div>
-                        </div>
-                        {/* <div className="grid grid-cols-4 mt-3">
-                            <div className="col-span-1 text-xl">Highlights</div>
-                            <div className="col-span-3">
-                                {threadDetail.highlights ? threadDetail.highlights.map((item: any, index: number) => (
-                                    <div key={index}>- {item}</div>
-                                )) : ''}
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-4 mt-3">
-                            <div className="col-span-1 text-xl">Description</div>
-                            <div className="col-span-3">
-                                <div>{threadDetail.description}</div>
-                            </div>
-                        </div> */}
+            {/* General */}
+            <div>
+                <div className="grid grid-cols-4 mt-3">
+                    <div className="col-span-1 text-xl">Rating</div>
+                    <div className="col-span-3">
+                        {/* <Rating value={threadDetail.rating} readOnly={true} /> */}
                     </div>
+                </div>
+                <div className="grid grid-cols-4 mt-3">
+                    <div className="col-span-1 text-xl">Location</div>
+                    <div className="col-span-3">
+                        <div>- Good relaxed</div>
+                    </div>
+                </div>
+            </div>
             </div>
         </div>
     )

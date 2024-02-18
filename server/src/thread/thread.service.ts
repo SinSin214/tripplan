@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Thread } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateThreadDto } from './thread.dto';
 
@@ -21,7 +22,7 @@ export class ThreadService {
         return res;
     }
 
-    async getDetail(id: string): Promise<Object> {
+    async getDetail(id: string): Promise<Thread> {
         return await this.prisma.thread.findUnique({
             where: {
                 id: id

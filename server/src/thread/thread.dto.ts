@@ -1,8 +1,12 @@
+import { JsonValue } from "@prisma/client/runtime/library"
 import { IsNotEmpty } from "class-validator"
 
 export class CreateThreadDto {
     @IsNotEmpty()
     title: string
+
+    @IsNotEmpty()
+    description: string
 
     @IsNotEmpty()
     content: string
@@ -30,6 +34,20 @@ export class UpdateThreadDto {
     highlights: string[]
 
     images: string[]
+}
 
-    main_image: string
+export class ThreadDetailDto {
+    id: string
+
+    title: string
+
+    description: string
+
+    content: string
+
+    // highlights: string[]
+
+    // images: string[]
+
+    blocks: any
 }

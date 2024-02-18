@@ -1,10 +1,14 @@
-import React, { createContext } from "react";
+import React, { createContext, useContext } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { ProfileContext } from "./profileContext";
+import Error from "../not-found"
 
 export const AppContext = createContext({
     requestAPI: async (path: string, method: string, data?: Object | null): Promise<any> => {},
-    navigation: (path: string) => {}
+    navigation: (path: string) => {},
+    fileUploader: async (files: File[]): Promise<any> => {}
 });
 
 export default function AppProvider({ children }: any) {
@@ -29,6 +33,32 @@ export default function AppProvider({ children }: any) {
         }
     }
 
+    async function fileUploader(files: File[]) {
+        try {
+            // prepare data
+            let data = new FormData();
+            for(let i = 0; i < files.length; i++) {
+                data.append('files', files[i])
+            }
+            // sending data
+            const requestConfig = {
+                method: 'POST',
+                url: `${process.env.NEXT_PUBLIC_API_ROUTE}/image/upload`,
+                data: data,
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                },
+                // ??? Need to add authen
+            }
+            const res = await axios(requestConfig);
+            return res.data;
+        }
+        catch(err: any) {
+            const res = err.response.data;
+            toast.error(res.message);
+        }
+    }
+
     function getToken(): string {
         let token = '';
         let userInfo = localStorage.getItem("user");
@@ -44,7 +74,8 @@ export default function AppProvider({ children }: any) {
         <AppContext.Provider
             value={{
                 requestAPI,
-                navigation
+                navigation,
+                fileUploader
             }}>
                 {children}
         </AppContext.Provider>

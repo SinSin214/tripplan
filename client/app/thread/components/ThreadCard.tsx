@@ -1,22 +1,22 @@
 import * as React from 'react';
-import { Card, CardContent, CardMedia, Typography, CardActionArea, IconButton } from '@mui/material';
+import { Typography } from '@mui/material';
 import { IThreadOverviewType } from '@/utils/types';
 import { Bookmark } from '@mui/icons-material';
 import Image from 'next/image'
-import { ProfileContext } from '@/app/context/profileContext';
 
 export default function ThreadCard(props: { ThreadOverview: IThreadOverviewType, onCardClick: Function }) {
   let thread = props.ThreadOverview;
 
   return (
     <div className="grid grid-cols-3 h-[200px]">
-      	<Image className="col-span-1 w-full h-full cursor-pointer"
+      	<Image className="col-span-1 w-full cursor-pointer"
           	src="/wallpaper.jpg"
             width={100}
             height={100}
             sizes="100vw"
             style={{ 
-              objectFit: "cover"
+              objectFit: "cover",
+			  height: "inherit"
             }}
           	alt="green iguana"
 			onClick={() => props.onCardClick(thread.id)}
@@ -34,8 +34,8 @@ export default function ThreadCard(props: { ThreadOverview: IThreadOverviewType,
                         onClick={() => { alert('aa')}} />
 				</div>
 			</div>
-			<div className="body row-span-3">
-				<div className="title">
+			<div className="body grid items-center row-span-3">
+				<div className="thread-card-title">
 				<Typography 
                     gutterBottom 
                     variant="h5" 
@@ -53,7 +53,7 @@ export default function ThreadCard(props: { ThreadOverview: IThreadOverviewType,
 				</Typography>
 				</div>
 			</div>
-			<div className="footer row-span-1">
+			<div className="footer flex items-center row-span-1">
                 <div>{thread.author}</div>
 			</div>
       	</div>

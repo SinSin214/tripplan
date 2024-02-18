@@ -56,7 +56,6 @@ export default function Navbar() {
             {profile.isSigned ?
                 <div className="container-navbar-part">
                     <Button className="btn-custom min-w-max"
-                        variant="contained"
                         startIcon={<CreateIcon />}
                         hidden
                         onClick={() => navigation('/thread/write')}>
@@ -67,16 +66,16 @@ export default function Navbar() {
             <div className="container-navbar-part mx-3">
                 {profile.isSigned ?
                     <Fragment>
-                        <Button className="btn-custom" variant="contained">Hi, {profile.username}</Button>
-                        <Button className="btn-custom" variant="contained"
+                        <Button className="btn-custom" >Hi, {profile.username}</Button>
+                        <Button className="btn-custom" 
                             onClick={() => signOut()}>Sign Out</Button>
                     </Fragment>
                     :
                     <Fragment>
                         <Button
-                            className="btn-custom" variant="contained"
+                            className="btn-custom" 
                             onClick={() => navigation('/auth/sign-in')}>Sign In</Button>
-                        <Button variant="contained"
+                        <Button 
                             className="btn-custom"
                             onClick={() => navigation('/auth/sign-up')}>Sign Up</Button>
                     </Fragment>

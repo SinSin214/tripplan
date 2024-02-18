@@ -17,13 +17,17 @@ model User {
 }
 
 model Thread {
-  id          String    @id(map: "Post_pkey") @default(uuid())
-  title       String    @unique(map: "Post_title_key")
-  author      String
-  createdAt   DateTime? @default(now())
-  modifiedAt  DateTime?
-  rating      Int?
-  images      String[]
-  content     Json      @db.Json
-  description String?
+  id             String    @id(map: "Post_pkey") @default(uuid())
+  title          String    @unique(map: "Post_title_key")
+  author         String
+  createdAt      DateTime? @default(now())
+  modifiedAt     DateTime?
+  rating         Int?
+  images         String[]
+  content        Json      @db.Json
+  description    String?
+  countryId      String?
+  cost           Float?    @db.Real
+  duration       String?
+  timeSuggestion Int[]     @db.SmallInt
 }

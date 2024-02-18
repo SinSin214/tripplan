@@ -7,12 +7,9 @@ import LinkTool from '@editorjs/link';
 import Quote from '@editorjs/quote';
 import { useContext, useEffect } from "react";
 import { AppContext } from '../context/appContext';
-import axios from "axios";
-import { toast } from 'react-toastify';
-
-
 
 export default function Editor(props) {
+    const { fileUploader } = useContext(AppContext)
     useEffect(() => {
         function generateEditor() {
             return new EditorJS({
@@ -39,33 +36,16 @@ export default function Editor(props) {
                         class: ImageTool,
                         inlineToolbar: true,
                         config: {
+                            captionPlaceholder: " ",
                             uploader: {
                             async uploadByFile(file){
-                                try {
-                                    // prepare data
-                                    let data = new FormData();
-                                    data.append('file', file)
-                                    // sending data
-                                    const requestConfig = {
-                                        method: 'POST',
-                                        url: `${process.env.NEXT_PUBLIC_API_ROUTE}/image/upload`,
-                                        data: data,
-                                        headers: {
-                                            'Content-Type': 'multipart/form-data'
-                                        }
+                                let data = await fileUploader([file]);
+                                return {
+                                    success: true,
+                                    file: {
+                                        url: data.filesInfo[0].filePath,
+                                        name: data.filesInfo[0].fileName
                                     }
-                                    const res = await axios(requestConfig);
-                                    return {
-                                        success: true,
-                                        file: {
-                                            url: res.data.filePath,
-                                            name: res.data.fileName
-                                        }
-                                    };
-                                }
-                                catch(err) {
-                                    const res = err.response.data;
-                                    toast.error(res.message);
                                 }
                             }
                         }}

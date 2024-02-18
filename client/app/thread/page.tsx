@@ -17,8 +17,7 @@ export default function ListThread() {
 
     async function onCardClick(threadId: string) {
         try {
-            const threadDetail = await requestAPI(`/thread/${threadId}`, 'GET');
-            navigation(`/thread/${threadDetail.id}`);
+            navigation(`/thread/${threadId}`);
         } catch(err: any) {
             toast.error(err.response.data.message);
         }

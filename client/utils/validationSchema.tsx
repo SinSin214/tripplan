@@ -39,3 +39,12 @@ export const changePasswordSchema = yup.object().shape({
     .oneOf([yup.ref("password"), undefined], "Passwords must match")
     .required("Required")
 })
+
+export const newThreadSchema = yup.object().shape({
+  title: yup
+    .string()
+    .required("Required"),
+  description: yup
+    .string()
+    .required("Required")
+})

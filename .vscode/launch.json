@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
       {
-        "name": "NextJS",
+        "name": "Client",
         "type": "node-terminal",
         "request": "launch",
         "command": "npm run start",
@@ -16,7 +16,7 @@
       {
         "type": "node",
         "request": "launch",
-        "name": "NestJS",
+        "name": "Server",
         "runtimeExecutable": "npm",
         "runtimeArgs": [
           "run",
