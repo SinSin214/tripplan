@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignUpUserDto, SignInUserDto, ForgotPasswordDto, ChangePasswordDto, SignOutUserDto, CheckTokenDto } from './auth.dto';
 import * as bcrypt from 'bcrypt';
-import { User as UserModel } from 'prisma/prisma-client';
+import { Prisma } from '@prisma/client'
 import * as jwt from 'jsonwebtoken';
 import { Response } from 'express';
 import * as utils from '../utilities/authentication-utils';
@@ -39,7 +39,7 @@ export class AuthController {
             if (hasError) throw new Error('Create user failed');
 
             let hashedPassword = await bcrypt.hash(password, 10);
-            let createUser: UserModel = {
+            let createUser: Prisma.userCreateInput = {
                 username: username,
                 password: hashedPassword,
                 email: email,
@@ -50,7 +50,7 @@ export class AuthController {
             await this.authService.createUser(createUser);
 
             let activateToken = utils.generateActivateToken(username, email);
-            await utils.sendActiveEmail(createUser, activateToken);
+            await utils.sendActiveEmail(createUser.email, activateToken);
 
             return res.status(200).send({
                 message: 'A verification mail has been sent to your email. Please check.'

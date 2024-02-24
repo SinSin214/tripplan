@@ -3,3 +3,6 @@ npx prisma migrate dev
 
 // Pull change from db into Model
 npx prisma db pull
+
+// After pull changes, generate new Prisma Client
+npx prisma generate

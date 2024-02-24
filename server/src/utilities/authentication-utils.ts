@@ -1,4 +1,3 @@
-import { User } from 'prisma/prisma-client';
 import * as nodemailer from 'nodemailer';
 import * as jwt from 'jsonwebtoken';
 
@@ -10,10 +9,10 @@ const transporter =  nodemailer.createTransport({
     }
 });
 
-export async function sendActiveEmail(user: User, activateToken: string) {
+export async function sendActiveEmail(email: string, activateToken: string) {
     let mainOptions = {
         from: 'TripPlan',
-        to: user.email,
+        to: email,
         subject: 'Activate TripPlan account',
         text: 'This email has been used to register an account on TripPlan. Please click on the following link to activate your account on TripPlan.',
         html: `<a href="http://localhost:${process.env.PORT_CLIENT}/auth/activation/${activateToken}">Click here</a>`

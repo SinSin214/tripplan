@@ -7,27 +7,94 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  email        String    @id
-  username     String    @unique
-  password     String
-  createdAt    DateTime? @default(now())
-  isActive     Boolean   @default(false)
-  refreshToken String[]  @unique
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model comment {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  threadId      String    @db.Uuid
+  content       String?
+  creator       String?
+  createdAt     DateTime? @default(now()) @db.Timestamptz(6)
+  modifiedAt    DateTime? @db.Timestamptz(6)
+  parentId      String?   @db.Uuid
+  upvote        Int?      @default(0)
+  downvote      Int?      @default(0)
+  user          user?     @relation(fields: [creator], references: [username], onDelete: Cascade, map: "public_comment_creator_fkey")
+  comment       comment?  @relation("commentTocomment", fields: [parentId], references: [id], onDelete: Cascade, map: "public_comment_parentId_fkey")
+  other_comment comment[] @relation("commentTocomment")
+  thread        thread    @relation(fields: [threadId], references: [id], onDelete: Cascade, map: "public_comment_threadId_fkey")
 }
 
-model Thread {
-  id             String    @id(map: "Post_pkey") @default(uuid())
-  title          String    @unique(map: "Post_title_key")
-  author         String
-  createdAt      DateTime? @default(now())
-  modifiedAt     DateTime?
-  rating         Int?
-  images         String[]
-  content        Json      @db.Json
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model country {
+  id       String   @id
+  language String
+  text     String?
+  flagUrl  String?
+  thread   thread[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model role {
+  id         String   @id
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  text       String?
+  language   String?
+  user       user[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model tag {
+  id        String  @id
+  language  String
+  text      String?
+  colorCode String?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model thread {
+  id             String        @id(map: "Post_pkey") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title          String        @unique(map: "Post_title_key")
+  creator        String
+  createdAt      DateTime?     @db.Timestamptz(6)
+  modifiedAt     DateTime?     @db.Timestamptz(6)
+  content        Json          @db.Json
   description    String?
   countryId      String?
-  cost           Float?    @db.Real
-  duration       String?
-  timeSuggestion Int[]     @db.SmallInt
+  cost           Int?
+  timeSuggestion Int[]         @db.SmallInt
+  comment        comment[]
+  country        country?      @relation(fields: [countryId], references: [id], onDelete: SetDefault, map: "public_thread_countryId_fkey")
+  user           user          @relation(fields: [creator], references: [username], onDelete: SetDefault, map: "public_thread_creator_fkey")
+  threadExtend   threadExtend?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model threadExtend {
+  threadId        String   @id @db.Uuid
+  upvote          Int      @default(0)
+  downvote        Int?     @default(0)
+  commentQuantity Int?     @default(0)
+  tagsId          String[]
+  imagesUrl       String[]
+  thread          thread   @relation(fields: [threadId], references: [id], onDelete: Cascade, map: "public_threadExtend_threadId_fkey")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model user {
+  email        String
+  username     String    @unique(map: "User_username_key")
+  password     String
+  createdAt    DateTime? @db.Timestamptz(6)
+  isActive     Boolean   @default(false)
+  refreshToken String[]  @unique(map: "User_refreshToken_key")
+  displayName  String?
+  star         Int?      @default(0)
+  roleId       String?   @default("Member")
+  avatarUrl    String?
+  bio          String?
+  comment      comment[]
+  thread       thread[]
+  role         role?     @relation(fields: [roleId], references: [id], onDelete: SetDefault, map: "public_user_roleId_fkey")
+
+  @@id([email, username])
 }

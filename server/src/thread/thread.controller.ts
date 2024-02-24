@@ -2,7 +2,7 @@ import { Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
 import { ThreadService } from './thread.service';
 import { Request, Response } from 'express';
 import { CreateThreadDto, ThreadDetailDto } from './thread.dto';
-import { Thread } from '@prisma/client';
+import { thread } from '@prisma/client';
 
 @Controller('thread')
 export class ThreadController {
@@ -31,7 +31,7 @@ export class ThreadController {
     // always put at bottom
     @Get(':id')
     async getThreadDetail(@Param('id') id: string, @Res() res: Response) {
-        let thread: Thread = await this.threadService.getDetail(id);
+        let thread: thread = await this.threadService.getDetail(id);
         return res.status(200).send({
             threadDetail: thread
         })

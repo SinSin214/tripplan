@@ -12,7 +12,7 @@ export class CreateThreadDto {
     content: string
 
     @IsNotEmpty()
-    author: string
+    creator: string
 
     @IsNotEmpty()
     images: string[]
