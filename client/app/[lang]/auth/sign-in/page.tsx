@@ -1,19 +1,21 @@
 'use client';
-import { AppContext } from '@/app/context/appContext';
-import { AppLoadingContext } from '@/app/context/loadingContext';
-import { ProfileContext } from '@/app/context/profileContext';
+import { AppContext } from '@/app/[lang]/context/appContext';
+import { AppLoadingContext } from '@/app/[lang]/context/loadingContext';
+import { ProfileContext } from '@/app/[lang]/context/profileContext';
 import { signInSchema } from '@/utils/validationSchema';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Button, IconButton, InputAdornment, Link, TextField } from '@mui/material';
 import { useFormik } from 'formik';
-import { useContext, useState } from 'react';
+import { useContext, useState, useTransition } from 'react';
 import { toast } from 'react-toastify';
+import { useTranslations } from 'next-intl';
 
 export default function SignInForm() {
     const { requestAPI, navigation } = useContext(AppContext);
     const { setIsAppLoading } = useContext(AppLoadingContext);
     const { setupUserInfo } = useContext(ProfileContext);
     const [isShowPassword, setIsShowPassword] = useState(false);
+    const t = useTranslations();
 
     const formik = useFormik({
         initialValues: {
@@ -33,7 +35,7 @@ export default function SignInForm() {
             }
             const res = await requestAPI('/auth/signIn', 'POST', oParams);
             setupUserInfo(res.user);
-            toast.success(res.message);
+            toast.success(t(`${res.messageCode}`));
             navigation('/');
         } catch(err: any) {
             let oError = err.response.data;
@@ -56,7 +58,7 @@ export default function SignInForm() {
         <form className="authentication-popup" onSubmit={formik.handleSubmit}>
                 <TextField
                     className="my-2"
-                    label="Username"
+                    label={t("Username")}
                     variant="outlined"
                     type="text"
                     size="small"
@@ -69,7 +71,7 @@ export default function SignInForm() {
                     helperText={formik.touched.username && formik.errors.username} />
                 <TextField
                     className="my-2"
-                    label="Password"
+                    label={t("Password")}
                     variant="outlined"
                     type={isShowPassword ? 'text' : 'password'}
                     size="small"
@@ -98,17 +100,17 @@ export default function SignInForm() {
                 <Button
                     className="w-full mt-2 btn-custom"
                     variant="contained"
-                    type="submit">Sign in</Button>
+                    type="submit">{t('SignIn')}</Button>
 
                 <div className="separate-line"></div>
                 
                 <div className="flex justify-around">
                     <Link href="#"
                         underline="hover"
-                        onClick={() => navigation('/auth/sign-up')}>Create an account</Link>
+                        onClick={() => navigation('/auth/sign-up')}>{t('HadAccount')}</Link>
                     <Link href="#"
                         underline="hover"
-                        onClick={() => navigation('/auth/forgot-password')}>Forgot password ?</Link>
+                        onClick={() => navigation('/auth/forgot-password')}>{t('Forgot')}</Link>
                 </div>
         </form>
     )

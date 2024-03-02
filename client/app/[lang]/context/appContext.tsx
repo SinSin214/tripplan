@@ -1,9 +1,11 @@
+'use client';
 import React, { createContext, useContext } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { ProfileContext } from "./profileContext";
 import Error from "../not-found"
+import { useLocale } from 'next-intl';
 
 export const AppContext = createContext({
     requestAPI: async (path: string, method: string, data?: Object | null): Promise<any> => {},
@@ -13,6 +15,7 @@ export const AppContext = createContext({
 
 export default function AppProvider({ children }: any) {
     const router = useRouter();
+    const locale = useLocale();
 
     async function requestAPI(path: string, method: string, data?: Object | null): Promise<any>  {
         try {
@@ -67,7 +70,7 @@ export default function AppProvider({ children }: any) {
     }
 
     function navigation(path: string): void {
-        router.push(path);
+        router.push(`/${locale}${path}`);
     }
 
     return (

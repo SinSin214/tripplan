@@ -1,3 +1,4 @@
+'use client';
 import { createContext, useContext, useEffect, useState } from "react";
 import { IProfile, IUserInfo } from '@/utils/types';
 import { AppContext } from "./appContext";

@@ -3,17 +3,19 @@ import { signUpSchema } from '@/utils/validationSchema';
 import { Button, IconButton, InputAdornment, Link, TextField } from '@mui/material';
 import { useFormik } from 'formik';
 import { useContext, useState } from 'react';
-import { AppContext } from '@/app/context/appContext';
+import { AppContext } from '@/app/[lang]/context/appContext';
 import { toast } from 'react-toastify';
 import { IResponse } from '@/utils/types';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { AppLoadingContext } from '@/app/context/loadingContext';
+import { AppLoadingContext } from '@/app/[lang]/context/loadingContext';
+import { useTranslations } from 'next-intl';
 
 export default function SignUpForm() {
     const { requestAPI, navigation,  } = useContext(AppContext);
     const { setIsAppLoading } = useContext(AppLoadingContext);
     const [isShowPassword, setIsShowPassword] = useState(false);
-
+    const t = useTranslations();
+    
     const formik = useFormik({
         initialValues: {
             username: "",
@@ -60,7 +62,7 @@ export default function SignUpForm() {
         <form className="authentication-popup" onSubmit={formik.handleSubmit}>
             <TextField
                 className="my-2"
-                label="Username"
+                label={t('Username')}
                 variant="outlined"
                 type="text"
                 size="small"
@@ -73,7 +75,7 @@ export default function SignUpForm() {
                 helperText={formik.touched.username && formik.errors.username} />
             <TextField
                 className="my-2"
-                label="Email"
+                label={t('Email')}
                 variant="outlined"
                 type="email"
                 size="small"
@@ -87,7 +89,7 @@ export default function SignUpForm() {
             <div className="inline">
                 <TextField
                     className="my-2"
-                    label="Password"
+                    label={t('Password')}
                     variant="outlined"
                     type={isShowPassword ? 'text' : 'password'}
                     size="small"
@@ -116,7 +118,7 @@ export default function SignUpForm() {
 
             <TextField
                 className="my-2"
-                label="Confirm password"
+                label={t('ConfirmPassword')}
                 variant="outlined"
                 type={isShowPassword ? 'text' : 'password'}
                 size="small"
@@ -133,7 +135,7 @@ export default function SignUpForm() {
             <Button
                 className="w-full mt-2 btn-custom"
                 variant="contained"
-                type="submit">Sign up
+                type="submit">{t('SignUp')}
             </Button>
 
             <div className="separate-line"></div>
@@ -141,10 +143,10 @@ export default function SignUpForm() {
             <div className="flex justify-around">
                 <Link href="#"
                     underline="hover"
-                    onClick={(e) => navigation('/auth/sign-in')}>Already have account ?</Link>
+                    onClick={(e) => navigation('/auth/sign-in')}>{t('HadAccount')}</Link>
                 <Link href="#"
                     underline="hover"
-                    onClick={(e) => navigation('/auth/forgot-password')}>Forgot password ?</Link>
+                    onClick={(e) => navigation('/auth/forgot-password')}>{t('Forgot')}</Link>
             </div>
         </form>
     )

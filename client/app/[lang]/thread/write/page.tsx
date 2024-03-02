@@ -1,18 +1,18 @@
 'use client';
 import { Button, styled, TextField } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
-import { AppContext } from "@/app/context/appContext";
-import Loading from "@/app/components/AppLoading";
+import { AppContext } from "@/app/[lang]/context/appContext";
+import Loading from "@/app/[lang]/components/AppLoading";
 import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useFormik } from "formik";
 import { newThreadSchema } from "@/utils/validationSchema";
-import { Carousel } from "@/app/components/Carousel/Carousel";
-import { ProfileContext } from "@/app/context/profileContext";
+import { Carousel } from "@/app/[lang]/components/Carousel/Carousel";
+import { ProfileContext } from "@/app/[lang]/context/profileContext";
 import { notFound } from 'next/navigation';
 
-const Editor = dynamic(() => import('@/app/components/Editor'), { ssr: false });
+const Editor = dynamic(() => import('@/app/[lang]/components/Editor'), { ssr: false });
 
 const TitleField = styled(TextField)({
     "& .MuiInputBase-input": {

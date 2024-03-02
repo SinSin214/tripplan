@@ -9,8 +9,7 @@ export class AuthService {
     async getUserByEmail(email: string) {
         let result = await this.prisma.user.findUnique({
             where: {
-                email: email,
-                username: 'ab'
+                email: email
             }
         });
         return result;

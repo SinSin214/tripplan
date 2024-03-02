@@ -1,6 +1,6 @@
 'use client';
-import Loading from '@/app/components/AppLoading';
-import { AppContext } from '@/app/context/appContext';
+import Loading from '@/app/[lang]/components/AppLoading';
+import { AppContext } from '@/app/[lang]/context/appContext';
 import { changePasswordSchema } from '@/utils/validationSchema';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Button, IconButton, InputAdornment, TextField } from '@mui/material';

@@ -1,3 +1,4 @@
+'use client';
 import { usePathname } from "next/navigation";
 import { Fragment, useContext } from 'react';
 import { ProfileContext } from '../context/profileContext';
@@ -7,12 +8,14 @@ import { AppContext } from "../context/appContext";
 import { IUserInfo } from "@/utils/types";
 import { toast } from "react-toastify";
 import { AppLoadingContext } from "../context/loadingContext";
+import { useTranslations } from 'next-intl';
 
 export default function Navbar() {
     const pathName = usePathname();
     const { profile, clearUserInfo } = useContext(ProfileContext);
     const { navigation, requestAPI } = useContext(AppContext);
     const { setIsAppLoading } = useContext(AppLoadingContext);
+    const t = useTranslations();
 
     async function signOut() {
         try {
@@ -42,16 +45,16 @@ export default function Navbar() {
             <div className="container-navbar-part w-full">
                 <Button
                     className={`${pathName === '/' ? 'btn-navbar-active' : ''} btn-navbar`}
-                    onClick={() => navigation('/')}>Home</Button>
+                    onClick={() => navigation('/')}>{t('Home')}</Button>
                 <Button
                     className={`${pathName.includes('/thread') ? 'btn-navbar-active' : ''} btn-navbar`}
-                    onClick={() => navigation('/thread')}>Threads</Button>
+                    onClick={() => navigation('/thread')}>{t('Thread')}</Button>
                 <Button
                     className={`${pathName.includes('/destination') ? 'btn-navbar-active' : ''} btn-navbar`}
-                    onClick={() => navigation('/destination')}>Destination</Button>
+                    onClick={() => navigation('/destination')}>{t('Destination')}</Button>
                 <Button
                     className={`${pathName.includes('/planning') ? 'btn-navbar-active' : ''} btn-navbar`}
-                    onClick={() => navigation('/planning')}>Planning</Button>
+                    onClick={() => navigation('/planning')}>{t('Planning')}</Button>
             </div>
             {profile.isSigned ?
                 <div className="container-navbar-part">
@@ -59,7 +62,7 @@ export default function Navbar() {
                         startIcon={<CreateIcon />}
                         hidden
                         onClick={() => navigation('/thread/write')}>
-                        Write thread
+                        {t('NewThread')}
                     </Button>
                 </div>
                 : ''}
@@ -68,16 +71,16 @@ export default function Navbar() {
                     <Fragment>
                         <Button className="btn-custom" >Hi, {profile.username}</Button>
                         <Button className="btn-custom" 
-                            onClick={() => signOut()}>Sign Out</Button>
+                            onClick={() => signOut()}>{t('SignOut')}</Button>
                     </Fragment>
                     :
                     <Fragment>
                         <Button
                             className="btn-custom" 
-                            onClick={() => navigation('/auth/sign-in')}>Sign In</Button>
+                            onClick={() => navigation('/auth/sign-in')}>{t('SignIn')}</Button>
                         <Button 
                             className="btn-custom"
-                            onClick={() => navigation('/auth/sign-up')}>Sign Up</Button>
+                            onClick={() => navigation('/auth/sign-up')}>{t('SignUp')}</Button>
                     </Fragment>
                 }
             </div>

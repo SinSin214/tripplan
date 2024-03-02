@@ -1,9 +1,9 @@
 'use client';
-import { AppContext } from '@/app/context/appContext';
+import { AppContext } from '@/app/[lang]/context/appContext';
 import Rating from '@mui/material/Rating';
 import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import Loading from '@/app/loading';
+import Loading from '@/app/[lang]/loading';
 import edjsHTML from 'editorjs-html';
 import parse from 'html-react-parser';
 

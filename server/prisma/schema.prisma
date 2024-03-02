@@ -81,7 +81,7 @@ model threadExtend {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model user {
-  email        String
+  email        String    @id
   username     String    @unique(map: "User_username_key")
   password     String
   createdAt    DateTime? @db.Timestamptz(6)
@@ -95,6 +95,4 @@ model user {
   comment      comment[]
   thread       thread[]
   role         role?     @relation(fields: [roleId], references: [id], onDelete: SetDefault, map: "public_user_roleId_fkey")
-
-  @@id([email, username])
 }

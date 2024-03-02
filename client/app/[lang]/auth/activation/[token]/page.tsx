@@ -1,8 +1,8 @@
 'use client';
-import Loading from "@/app/components/AppLoading";
-import { AppContext } from "@/app/context/appContext"
-import { AppLoadingContext } from "@/app/context/loadingContext";
-import { ProfileContext } from "@/app/context/profileContext";
+import Loading from "@/app/[lang]/components/AppLoading";
+import { AppContext } from "@/app/[lang]/context/appContext"
+import { AppLoadingContext } from "@/app/[lang]/context/loadingContext";
+import { ProfileContext } from "@/app/[lang]/context/profileContext";
 import { Fragment, useContext, useEffect, useState } from "react"
 import { toast } from "react-toastify";
 

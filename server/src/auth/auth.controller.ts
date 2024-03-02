@@ -100,7 +100,7 @@ export class AuthController {
                     refreshToken: refreshToken,
                     email: user.email
                 },
-                message: 'Login successfully'
+                messageCode: 'LoginSuccessfully'
             });
         } catch (err) {
             return res.status(500).send({

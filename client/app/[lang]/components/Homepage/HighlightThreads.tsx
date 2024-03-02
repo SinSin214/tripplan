@@ -1,6 +1,6 @@
 'use client';
-import { AppContext } from '@/app/context/appContext';
-import ComponentLoading from '@/app/components/ComponentLoading';
+import { AppContext } from '@/app/[lang]/context/appContext';
+import ComponentLoading from '@/app/[lang]/components/ComponentLoading';
 import { IResponse, ThreadProps } from '@/utils/types';
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material';
 import { Fragment, useContext, useEffect, useState } from 'react';

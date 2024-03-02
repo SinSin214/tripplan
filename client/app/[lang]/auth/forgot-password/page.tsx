@@ -1,15 +1,17 @@
 'use client';
-import Loading from '@/app/components/AppLoading';
-import { AppContext } from '@/app/context/appContext';
+import Loading from '@/app/[lang]/components/AppLoading';
+import { AppContext } from '@/app/[lang]/context/appContext';
 import { forgotPasswordSchema } from '@/utils/validationSchema';
 import { Button, Link, TextField } from '@mui/material';
 import { useFormik } from 'formik';
+import { useTranslations } from 'next-intl';
 import { useContext, useState } from 'react';
 import { toast } from 'react-toastify';
 
 export default function ForgotPasswordForm() {
     const { requestAPI, navigation } = useContext(AppContext);
     const [isLoading, setIsLoading] = useState(false);
+    const t = useTranslations();
     const formik = useFormik({
         initialValues: {
             username: ""
@@ -36,7 +38,7 @@ export default function ForgotPasswordForm() {
         <form className="authentication-popup" onSubmit={formik.handleSubmit}>
             <TextField
                 className="my-2"
-                label="Username"
+                label={t("Username")}
                 variant="outlined"
                 type="text"
                 size="small"
@@ -55,17 +57,17 @@ export default function ForgotPasswordForm() {
                 className="w-full mt-2 btn-custom"
                 variant="contained"
                 type="submit"
-                disabled={isLoading}>Send email</Button>
+                disabled={isLoading}>{t('SendRecoveryEmail')}</Button>
 
             <div className="separate-line"></div>
             
             <div className="flex justify-around">
                 <Link href="#"
                     underline="hover"
-                    onClick={() => navigation('/auth/sign-in')}>Already have account ?</Link>
+                    onClick={() => navigation('/auth/sign-in')}>{t('HadAccount')}</Link>
                 <Link href="#"
                     underline="hover"
-                    onClick={() => navigation('/auth/sign-up')}>Create an account</Link>
+                    onClick={() => navigation('/auth/sign-up')}>{t('SignUp')}</Link>
             </div>
         </form>
     )
