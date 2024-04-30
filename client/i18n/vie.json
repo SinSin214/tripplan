@@ -1,25 +1,72 @@
 {
-    "Home": "Trang chủ",
-    "Thread": "Bài viết",
+    "ActivedAccount": "Đã kích hoạt tài khoản thành công",
+
+
+    "ChangePassword": "Thay đổi mật khẩu",
+    "ConfirmPassword": "Nhập lại mật khẩu",
+    "Cancel": "Hủy",
+    "CostInUsd": "Chi phí chuyến đi (USD)",
+
     "Destination": "Địa điểm",
-    "Planning": "Kế hoạch",
-    "NewThread": "Bài viết mới",
+    "Description": "Mô tả",
+    "DisplayName": "Tên hiển thị",
+
+    "Email": "Email",
+    "EmailExisted": "Email này đã được đăng ký",
+
+
+    "Forgot": "Quên mật khẩu ?",
+
+
     "Greeting": "Xin chào",
+
+
+    "HadAccount": "Đã có tài khoản ?",
+    "Home": "Trang chủ",
+    "Hot": "Nổi bật",
+
+
+    "IncorrectPassword": "Mật khẩu không chính xác",
+
+
+    "LoginSuccessfully": "Đăng nhập thành công",
+
+
+    "NewThread": "Bài viết mới",
+    "Newest": "Mới nhất",
+
+
+    "Password": "Mật khẩu",
+    "Planning": "Kế hoạch",
+    
+
+    "RecoveryEmailSent": "Đã gửi email khôi phục cho tài khoản. Kiểm tra thử đi",
+
+
     "SignIn": "Đăng nhập",
     "SignOut": "Đăng xuất",
     "SignUp": "Đăng ký",
     "SendRecoveryEmail": "Gửi mail khôi phục",
-    "Forgot": "Quên mật khẩu ?",
-    "ChangePassword": "Thay đổi mật khẩu",
-    "Username": "Tên đăng nhập",
-    "Password": "Mật khẩu",
-    "ConfirmPassword": "Nhập lại mật khẩu",
-    "HadAccount": "Đã có tài khoản ?",
-    "LoginSuccessfully": "Đăng nhập thành công",
-    "Newest": "Mới nhất",
-    "Hot": "Nổi bật",
-    "Upload": "Tải lên",
-    "Cancel": "Hủy",
+    "SignInFailed": "Dăng nhập thất bại",
+    "SignOutSuccessfully": "Đăng xuất thành công",
+
+    
+    "Thread": "Bài viết",
     "Title": "Tiêu đề",
-    "Description": "Mô tả"
+    "TokenExpiredError": "Phiên đăng nhập hết hạn rồi. Đăng nhập lại đi",
+
+
+    "UserNotExist": "Tài khoản không tồn tại",
+    "Username": "Tên đăng nhập",
+    "Upload": "Tải lên",
+    "UserInactived": "Tài khoản chưa được kích hoạt",
+    "UsernameExisted": "Tên đăng nhập đã tồn tại",
+    "UserCreationFailed": "Tạo tài khoản đã thất bại",
+    "UpdatedPassword": "Cập nhật mật khẩu thành công",
+
+    "RefreshTokenExpired": "Phiên đăng nhập đã hết hạn",
+
+
+    "VerificationEmailSent": "Đã gửi email xác nhận đến email của bạn. Hãy kiểm tra xem sao"
+
 }

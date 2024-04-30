@@ -1,12 +1,12 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import { PrismaModule } from 'src/prisma/prisma.module';
 import { ThreadController } from './thread.controller';
 import { ThreadService } from './thread.service';
-import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
-  imports: [PrismaModule],
+  providers: [ThreadService],
   controllers: [ThreadController],
-  providers: [ThreadService]
+  imports: [PrismaModule]
 })
 export class ThreadModule {
   public configure(consumer: MiddlewareConsumer) {

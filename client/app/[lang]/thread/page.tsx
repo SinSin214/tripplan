@@ -28,16 +28,11 @@ export default function ListThread() {
     }
 
     async function getListThreads() {
-        try {
-            let paramObject = {
-                sort: tab
-            };
-            const res = await requestAPI(`/thread/all`, 'POST', paramObject);
-            setListThreads(res);
-        }
-        catch(err: any) {
-            toast.error(err.response.data.message);
-        }
+        let paramObject = {
+            sort: tab
+        };
+        const res = await requestAPI(`/thread/all`, 'POST', paramObject);
+        setListThreads(res);
     };
 
     return(
@@ -53,7 +48,7 @@ export default function ListThread() {
             <div role="tabpanel">
                 {/* List thread */}
                 <div className="grid gap-12 py-5">
-                    {listThreads.map((item: IThreadOverviewType) => (
+                    {listThreads.length && listThreads.map((item: IThreadOverviewType) => (
                         <ThreadCard key={item.id} ThreadOverview={item} onCardClick={onCardClick} />
                     ))}
                 </div>

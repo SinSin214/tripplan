@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { SignUpUserDto } from './auth.dto';
 
 @Injectable()
 export class AuthService {
     constructor(private prisma: PrismaService) {}
 
     async getUserByEmail(email: string) {
-        let result = await this.prisma.user.findUnique({
+        const result = await this.prisma.user.findUnique({
             where: {
                 email: email
             }
@@ -16,7 +16,7 @@ export class AuthService {
     }
 
     async getUserByUsername(username: string) {
-        let result = await this.prisma.user.findUnique({
+        const result = await this.prisma.user.findUnique({
             where: {
                 username: username
             }
@@ -24,16 +24,14 @@ export class AuthService {
         return result;
     }
 
-    async getUserByEmailOrUsername(username: string, email: string) {
-        let result = await this.prisma.user.findFirst({
-            where: {OR: [{username},{email}]}
-        })
-        return result;
-    }
-
-    async createUser(user: Prisma.userCreateInput) {
-        let result = await this.prisma.user.create({
-            data: user
+    async createUser(user: SignUpUserDto) {
+        const result = await this.prisma.user.create({
+            data: {
+                username: user.username,
+                email: user.email,
+                displayName: user.displayName,
+                password: user.password
+            }
         });
         return result;
     }
@@ -47,12 +45,10 @@ export class AuthService {
         });
     }
 
-    async updateListRefreshToken(username: string, refreshToken: string) {
+    async updateRefreshToken(username: string, refreshToken: string) {
         await this.prisma.user.update({
             data: {
-                refreshToken: {
-                    push: refreshToken
-                } 
+                refreshToken: refreshToken
             },
             where: {
                 username: username
@@ -64,9 +60,7 @@ export class AuthService {
         await this.prisma.user.update({
             data: {
                 isActive: true,
-                refreshToken: {
-                    push: refreshToken
-                }
+                refreshToken: refreshToken
             },
             where: {
                 username: username
@@ -78,7 +72,7 @@ export class AuthService {
         await this.prisma.user.update({
             data: {
                 password: password,
-                refreshToken: [refreshToken]
+                refreshToken: refreshToken
             },
             where: {
                 username: username
@@ -86,24 +80,13 @@ export class AuthService {
         })
     }
 
-    async clearRefreshToken(username: string, inputRefreshToken: string) {
-        const { refreshToken } = await this.prisma.user.findUnique({
-            where: {
-                username: username
-            },
-            select: {
-                refreshToken: true
-            }
-        });
-
+    async clearRefreshToken(username: string) {
         await this.prisma.user.update({
             where: {
                 username: username
             },
             data: {
-                refreshToken: {
-                    set: refreshToken.filter(token => token !== inputRefreshToken)
-                }
+                refreshToken: null
             }
         })
     }

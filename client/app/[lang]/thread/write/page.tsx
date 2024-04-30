@@ -1,5 +1,5 @@
 'use client';
-import { Button, styled, TextField } from "@mui/material";
+import { Button, MenuItem, Select, styled, TextField } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "@/app/[lang]/context/appContext";
 import Loading from "@/app/[lang]/components/AppLoading";
@@ -9,22 +9,34 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useFormik } from "formik";
 import { newThreadSchema } from "@/utils/validationSchema";
 import { Carousel } from "@/app/[lang]/components/Carousel/Carousel";
-import { ProfileContext } from "@/app/[lang]/context/profileContext";
+import { AuthContext } from "@/app/[lang]/context/authContext";
 import { notFound } from 'next/navigation';
+import { useTranslations } from "next-intl";
 
 const Editor = dynamic(() => import('@/app/[lang]/components/Editor'), { ssr: false });
 
 const TitleField = styled(TextField)({
     "& .MuiInputBase-input": {
-      fontSize: "18px",
-      fontWeight: "bold",
-      padding: "12px 18px"
+        fontSize: "18px",
+        fontWeight: "bold",
+        padding: "12px 18px",
+        height: "25px"
     }
 });
 
-const DescriptionField = styled(TextField)({
+const CustomTextField = styled(TextField)({
+    height: 47,
     "& .MuiInputBase-input": {
-        padding: "12px 18px"
+        padding: "12px 18px",
+        height: "25px"
+    }
+});
+
+const CustomSelectField = styled(Select)({
+    height: 47,
+    "& .MuiInputBase-input": {
+        padding: "12px 18px",
+        height: "25px"
     }
 });
 
@@ -38,19 +50,28 @@ const VisuallyHiddenInput = styled('input')({
     left: 0,
     whiteSpace: 'nowrap',
     width: 1,
-  });
+});
+
+interface ICountry {
+    id: string,
+    text: string
+}
 
 export default function WriteThread() {
     const { requestAPI, fileUploader } = useContext(AppContext);
-    const { profile } = useContext(ProfileContext);
+    const { profile } = useContext(AuthContext);
+    const t = useTranslations();
     // Not showing write page if not signed yet
-    if(!profile.isSigned) {
+    if (!profile.isSigned) {
         return notFound();
     }
     const [threadObject, setThreadObject] = useState({
         title: '',
         content: [],
         description: '',
+        cost: '',
+        countryId: '',
+        tagsId: [],
         images: []
     });
     const [isLoading, setIsLoading] = useState(false);
@@ -71,18 +92,10 @@ export default function WriteThread() {
     });
 
     useEffect(() => {
-        async function sendThread () {
-            try {
-                setIsLoading(true);
-                const res = await requestAPI('/thread', 'POST', threadObject);
-                toast.success(res.message);
-            } catch(err: any) {
-                toast.error(err.response.data.message);
-            } finally {
-                setIsLoading(false);
-            }
+        async function sendThread() {
+            const res = await requestAPI('/thread', 'POST', threadObject);
         }
-        if(threadObject.content.length) sendThread();
+        if (threadObject.content.length) sendThread();
     }, [threadObject.content]);
 
     function handleOnChange(e: any) {
@@ -93,20 +106,13 @@ export default function WriteThread() {
     }
 
     async function onHandleThread() {
-        try {
-            setIsLoading(true);
-            editorInstance.save().then((outputData: any) => {
-                setThreadObject({
-                    ...threadObject,
-                    content: outputData.blocks,
-                    images: imageList.map((file: any) => file.fileName)
-                });
+        editorInstance.save().then((outputData: any) => {
+            setThreadObject({
+                ...threadObject,
+                content: outputData.blocks,
+                images: imageList.map((file: any) => file.fileName)
             });
-        } catch (err: any) {
-            toast.error(err.response.data.message);
-        } finally {
-            setIsLoading(false);
-        }
+        });
     }
 
     async function uploadImage(e: any) {
@@ -120,23 +126,22 @@ export default function WriteThread() {
     return (
         <div className="md-limited-width-layout__content">
             <form onSubmit={formik.handleSubmit}>
-                <div className="grid grid-cols-1 justify-items-center">
+                <div className="grid grid-cols-1 gap-3 py-6 justify-items-center">
                     <TitleField
-                        className="mt-2 font-semibold "
+                        className="font-semibold "
                         variant="outlined"
                         placeholder="Title..."
                         name="title"
                         value={threadObject.title}
                         onChange={(e: any) => handleOnChange(e)}
                         disabled={isLoading}
-                        inputProps={{ 
+                        inputProps={{
                             maxLength: 100
                         }}
                         fullWidth
                         required
                     />
-                    <DescriptionField
-                        className="mt-2"
+                    <CustomTextField
                         variant="outlined"
                         placeholder="Short description..."
                         name="description"
@@ -147,23 +152,47 @@ export default function WriteThread() {
                         fullWidth
                         required
                     />
-                    <div className="mt-2 w-full mb-2">
+
+                    <div className="flex w-full gap-x-4">
+                        <CustomSelectField
+                            className="w-2/3"
+                        >
+                            {/* {countries.map((country: ICountry) => (
+                                <MenuItem
+                                key={country.id}
+                                value={country.text}
+                                >
+                                {country.text}
+                                </MenuItem>
+                            ))} */}
+                        </CustomSelectField>
+
+                        <CustomTextField
+                            className="w-1/3"
+                            type="number"
+                            name="cost"
+                            value={threadObject.cost}
+                            InputProps={{ inputProps: { min: 0 } }}
+                            placeholder={t('CostInUsd')}
+                        />
+                    </div>
+
+                    <div className="w-full mb-2">
                         <Editor
                             editorInstance={editorInstance}
                             setEditorInstance={setEditorInstance} />
                     </div>
-                    {imageList.length ? 
+                    {imageList.length ?
                         <div className="border-slate-300 border-solid border rounded h-[500px] w-full">
                             <Carousel data={imageList} />
                         </div> : ''
                     }
                     <Button
-                        className="mt-2"
-                        component="label" 
-                        variant="contained" 
+                        component="label"
+                        variant="contained"
                         startIcon={<CloudUploadIcon />}>
                         Upload file
-                        <VisuallyHiddenInput 
+                        <VisuallyHiddenInput
                             type="file"
                             accept="image/*"
                             multiple

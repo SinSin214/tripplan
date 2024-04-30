@@ -1,23 +1,47 @@
 'use client';
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { ProfileContext } from "./profileContext";
-import Error from "../not-found"
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import { AppLoadingContext } from "./loadingContext";
+
+type RequestConfig = {
+    path: string,
+    method: string,
+    data?: Object
+  }
 
 export const AppContext = createContext({
-    requestAPI: async (path: string, method: string, data?: Object | null): Promise<any> => {},
+    requestAPI: async (path: string, method: string, data?: Object): Promise<any> => {},
     navigation: (path: string) => {},
-    fileUploader: async (files: File[]): Promise<any> => {}
+    fileUploader: async (files: File[]): Promise<any> => {},
+    isGetNewAccessToken: false,
+    setIsGetNewAccessToken: (value: boolean) => {},
+    isCallRequestAgain: false,
+    setIsCallRequestAgain: (value: boolean) => {}
 });
 
 export default function AppProvider({ children }: any) {
     const router = useRouter();
     const locale = useLocale();
+    const t = useTranslations();
+    const [isGetNewAccessToken, setIsGetNewAccessToken] = useState<boolean>(false);
+    const [isCallRequestAgain, setIsCallRequestAgain] = useState<boolean>(false);
+    const [requestConfig, setRequestConfig] = useState<RequestConfig>({
+        path: '',
+        method: '',
+        data: undefined
+    });
 
-    async function requestAPI(path: string, method: string, data?: Object | null): Promise<any>  {
+    useEffect(() => {
+        if(isCallRequestAgain) {
+            requestAPI(requestConfig.path, requestConfig.method, requestConfig.data);
+            setIsCallRequestAgain(false);
+        }
+    }, [isCallRequestAgain])
+
+    async function requestAPI (path: string, method: string, data?: Object): Promise<any> {
         try {
             const requestConfig = {
                 method: method,
@@ -26,12 +50,21 @@ export default function AppProvider({ children }: any) {
                 data: data
             }
             const res = await axios(requestConfig);
+            if(res.data.messageCode) toast.success(t(res.data.messageCode));
             return res.data;
         } catch(err: any) {
-            if(err.response.data.message === 'jwt expired') {
-                // Request login again
+            const error = err.response.data;
+            if(error.messageCode === 'AccessTokenExpired') {
+                setIsGetNewAccessToken(true);
+                setRequestConfig({
+                    path: path,
+                    method: method,
+                    data: data
+                });
+            } else if(error.messageCode === 'RefreshTokenExpired'){
+                throw Error(error.messageCode);
             } else {
-                throw err;
+                toast.error(t(error.messageCode));
             }
         }
     }
@@ -49,23 +82,25 @@ export default function AppProvider({ children }: any) {
                 url: `${process.env.NEXT_PUBLIC_API_ROUTE}/image/upload`,
                 data: data,
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': 'Bearer ' + getToken()
                 },
-                // ??? Need to add authen
             }
             const res = await axios(requestConfig);
             return res.data;
         }
         catch(err: any) {
-            const res = err.response.data;
-            toast.error(res.message);
+            const error = err.response.data;
+            toast.error(error.messageCode);
         }
     }
 
     function getToken(): string {
         let token = '';
-        let userInfo = localStorage.getItem("user");
-        if (userInfo) token = JSON.parse(userInfo).accessToken;
+        const userInfo = localStorage.getItem("user");
+        if(userInfo) {
+            token = JSON.parse(userInfo).accessToken;
+        }
         return token;
     }
 
@@ -78,7 +113,11 @@ export default function AppProvider({ children }: any) {
             value={{
                 requestAPI,
                 navigation,
-                fileUploader
+                fileUploader,
+                isGetNewAccessToken,
+                setIsGetNewAccessToken,
+                isCallRequestAgain,
+                setIsCallRequestAgain
             }}>
                 {children}
         </AppContext.Provider>

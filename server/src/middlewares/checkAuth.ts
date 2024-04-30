@@ -9,11 +9,11 @@ export class CheckAuthMiddleware implements NestMiddleware {
     const token = authorization.split(' ')[1];
     try {
         const decoded = jwt.verify(token, process.env.SECRECT_ACCESS_TOKEN);
-        req.user = decoded;
+        req.body.user = decoded;
         next();
    } catch (error) {
-        return res.status(200).send({
-            message: `Authorization: ${error.message}`
+        return res.status(500).send({
+            messageCode: error.name === 'TokenExpiredError' ? `AccessTokenExpired` : error.name
         });
    }
   }

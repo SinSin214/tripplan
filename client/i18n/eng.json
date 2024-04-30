@@ -1,25 +1,73 @@
 {
-    "Home": "Home",
-    "Thread": "Thread",
+    "ActivedAccount": "Activate account successfully",
+
+
+    "ChangePassword": "Change password",
+    "ConfirmPassword": "Confirm password",
+    "Cancel": "Cancel",
+    "CostInUsd": "Trip cost (USD)",
+
+
     "Destination": "Destination",
-    "Planning": "Planning",
-    "NewThread": "New thread",
+    "Description": "Description",
+    "DisplayName": "Display name",
+
+    "Email": "Email",
+    "EmailExisted": "Email is already taken",
+
+
+    "Forgot": "Forgot password",
+
+
     "Greeting": "Hi",
+
+
+    "HadAccount": "Already have account",
+    "Home": "Home",
+    "Hot": "Hot",
+
+
+    "IncorrectPassword": "Incorrect password",
+
+
+    "LoginSuccessfully": "Login successfully",
+
+
+    "NewThread": "New thread",
+    "Newest": "Newest",
+
+
+    "Password": "Password",
+    "Planning": "Planning",
+
+
+    "RecoveryEmailSent": "An email to recovery your password has been sent to registered email of this account",
+
+
     "SignIn": "Sign in",
     "SignOut": "Sign out",
     "SignUp": "Sign up",
     "SendRecoveryEmail": "Send recovery email",
-    "Forgot": "Forgot password",
-    "ChangePassword": "Change password",
-    "Username": "Username",
-    "Password": "Password",
-    "ConfirmPassword": "Confirm password",
-    "HadAccount": "Already have account ?",
-    "LoginSuccessfully": "Login successfully",
-    "Newest": "Newest",
-    "Hot": "Hot",
-    "Upload": "Upload",
-    "Cancel": "Cancel",
+    "SignInFailed": "Sign in failed",
+    "SignOutSuccessfully": "Signed out successfully",
+
+    
+    "Thread": "Thread",
     "Title": "Title",
-    "Description": "Description"
+    "TokenExpiredError": "Your session has been expired. Please sign in again",
+
+
+    "UserNotExist": "User does not exist",
+    "Username": "Username",
+    "Upload": "Upload",
+    "UserInactived": "User has not been activated yet",
+    "UsernameExisted": "Username is already existed",
+    "UserCreationFailed": "User creation failed",
+    "UpdatedPassword": "Updated password successfully",
+
+    "RefreshTokenExpired": "The session has been expired",
+
+    "VerificationEmailSent": "A verification mail has been sent to your email. Please check."
+
+
 }

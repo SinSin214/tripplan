@@ -1,16 +1,13 @@
 'use client';
-import Loading from '@/app/[lang]/components/AppLoading';
 import { AppContext } from '@/app/[lang]/context/appContext';
 import { changePasswordSchema } from '@/utils/validationSchema';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Button, IconButton, InputAdornment, TextField } from '@mui/material';
 import { useFormik } from 'formik';
 import { useContext, useState } from 'react';
-import { toast } from 'react-toastify';
 
 export default function ChangePasswordForm({ params }: { params: { token: string } }) {
     const { requestAPI, navigation } = useContext(AppContext);
-    const [isLoading, setIsLoading] = useState(false);
     const [isShowPassword, setIsShowPassword] = useState(false);
 
     const formik = useFormik({
@@ -23,23 +20,9 @@ export default function ChangePasswordForm({ params }: { params: { token: string
     });
 
     async function handleChangePassword() {
-        try {
-            const oParams = {
-                password: formik.values.password
-            }
-            const res = await requestAPI(`/auth/changePassword/${params.token}`, 'POST', oParams);
-            toast.success(res.message);
-            navigation('/');
-        }
-        catch(err: any) {
-            let oError = err.response.data;
-            setIsLoading(false);
-            if(oError.detail) {
-                oError.detail.forEach((detail: any) => {
-                    formik.setFieldError(detail.field, detail.message);
-                })
-            } else toast.error(oError.message);
-        }
+        const oParams = { password: formik.values.password }
+        await requestAPI(`/auth/change_password/${params.token}`, 'POST', oParams);
+        navigation('/');
     }
 
     function showPassword(e: React.MouseEvent<HTMLOrSVGElement>) {
@@ -89,8 +72,6 @@ export default function ChangePasswordForm({ params }: { params: { token: string
                 fullWidth
                 error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
                 helperText={formik.touched.confirmPassword && formik.errors.confirmPassword} />
-
-            {isLoading ? <Loading /> : ''}
 
             <Button
                 className="w-full mt-2 btn-custom"

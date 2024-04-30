@@ -29,6 +29,7 @@
     "eslint-config-next": "13.2.4",
     "formik": "^2.4.5",
     "html-react-parser": "^5.1.0",
+    "moment": "^2.30.1",
     "next": "^13.4.19",
     "next-intl": "^3.9.1",
     "postcss": "^8.4.21",

@@ -1,42 +1,30 @@
 'use client';
 import { usePathname } from "next/navigation";
 import { Fragment, useContext } from 'react';
-import { ProfileContext } from '../context/profileContext';
+import { AuthContext } from '../context/authContext';
 import { Button } from "@mui/material";
 import CreateIcon from '@mui/icons-material/Create';
 import { AppContext } from "../context/appContext";
-import { IUserInfo } from "@/utils/types";
-import { toast } from "react-toastify";
-import { AppLoadingContext } from "../context/loadingContext";
 import { useTranslations } from 'next-intl';
 
 export default function Navbar() {
     const pathName = usePathname();
-    const { profile, clearUserInfo } = useContext(ProfileContext);
+    const { profile, clearUserInfo } = useContext(AuthContext);
     const { navigation, requestAPI } = useContext(AppContext);
-    const { setIsAppLoading } = useContext(AppLoadingContext);
     const t = useTranslations();
 
     async function signOut() {
-        try {
-            setIsAppLoading(true);
-            let sUserInfo = localStorage.getItem("user");
-            if (sUserInfo) {
-                let oUserInfo: IUserInfo = JSON.parse(sUserInfo);
-                let oParams = {
-                    username: oUserInfo.username,
-                    refreshToken: oUserInfo.refreshToken
-                };
+        const sUserInfo = localStorage.getItem("user");
+        if (sUserInfo) {
+            const oUserInfo = JSON.parse(sUserInfo);
+            const oParams = {
+                username: oUserInfo.username,
+                refreshToken: oUserInfo.refreshToken
+            };
 
-                const res = await requestAPI('/auth/signOut', 'POST', oParams);
-                clearUserInfo();
-                toast.success(res.message);
-                navigation('/');
-            }
-        } catch (err: any) {
-            toast.error(err.response.data.message);
-        } finally {
-            setIsAppLoading(false);
+            const res = await requestAPI('/auth/sign_out', 'POST', oParams);
+            clearUserInfo();
+            navigation('/');
         }
     }
 

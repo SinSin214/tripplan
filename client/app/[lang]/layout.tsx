@@ -5,7 +5,7 @@ import Footer from "./components/Footer";
 import AppProvider from './context/appContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ProfileProvider from "./context/profileContext";
+import AuthProvider from "./context/authContext";
 import AppLoadingProvider from "./context/loadingContext";
 import { NextIntlClientProvider, useMessages } from 'next-intl';
 
@@ -24,7 +24,7 @@ export default function RootLayout({
             <body>
                 <NextIntlClientProvider locale={locale} messages={messages}>
                 <AppProvider>
-                    <ProfileProvider>
+                    <AuthProvider>
                     <div className="screen-view">
                         <Header />
                         <AppLoadingProvider>
@@ -35,7 +35,7 @@ export default function RootLayout({
                         </AppLoadingProvider>
                         <ToastContainer />
                     </div>
-                    </ProfileProvider>
+                    </AuthProvider>
                 </AppProvider>
                 </NextIntlClientProvider>
             </body>

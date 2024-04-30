@@ -9,13 +9,13 @@ const transporter =  nodemailer.createTransport({
     }
 });
 
-export async function sendActiveEmail(email: string, activateToken: string) {
+export async function sendActiveEmail(origin: string, email: string, activateToken: string) {
     let mainOptions = {
         from: 'TripPlan',
         to: email,
         subject: 'Activate TripPlan account',
         text: 'This email has been used to register an account on TripPlan. Please click on the following link to activate your account on TripPlan.',
-        html: `<a href="http://localhost:${process.env.PORT_CLIENT}/auth/activation/${activateToken}">Click here</a>`
+        html: `<a href="${origin}/eng/auth/activation/${activateToken}">Click here</a>`
     }
 
     await transporter.sendMail(mainOptions);
@@ -27,7 +27,7 @@ export async function sendEmailChangePassword(email: string, token: string) {
         to: email,
         subject: 'Change password TripPlan account',
         text: 'This email has been used to change your account password on TripPlan. Please click on the following link to change password on TripPlan.',
-        html: `<a href="http://localhost:${process.env.PORT_CLIENT}/auth/change-password/${token}">Click here</a>`
+        html: `<a href="${origin}/eng/auth/change-password/${token}">Click here</a>`
     }
 
     await transporter.sendMail(mainOptions);
@@ -42,7 +42,7 @@ export function generateRefreshToken(username: string, email: string) {
 }
 
 export function generateAccessToken(username: string, email: string) {
-    let accessTokenExpire = 86400;
+    let accessTokenExpire = 60;
     
     return jwt.sign({ username: username, email: email }, process.env.SECRECT_ACCESS_TOKEN, {
         expiresIn: accessTokenExpire

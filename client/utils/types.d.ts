@@ -32,12 +32,7 @@ export interface WriteThreadType {
   images: string[]
 }
 
-export interface IResponse {
-  data?: any[] | Object,
-  message?: string | undefined
-}
-
-export interface IUserInfo {
+export interface ILocalStorageUserInfo {
   username: string,
   email: string,
   accessToken: string,

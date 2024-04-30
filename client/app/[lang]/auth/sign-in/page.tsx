@@ -1,19 +1,16 @@
 'use client';
 import { AppContext } from '@/app/[lang]/context/appContext';
-import { AppLoadingContext } from '@/app/[lang]/context/loadingContext';
-import { ProfileContext } from '@/app/[lang]/context/profileContext';
+import { AuthContext } from '@/app/[lang]/context/authContext';
 import { signInSchema } from '@/utils/validationSchema';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Button, IconButton, InputAdornment, Link, TextField } from '@mui/material';
 import { useFormik } from 'formik';
-import { useContext, useState, useTransition } from 'react';
-import { toast } from 'react-toastify';
+import { useContext, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 export default function SignInForm() {
     const { requestAPI, navigation } = useContext(AppContext);
-    const { setIsAppLoading } = useContext(AppLoadingContext);
-    const { setupUserInfo } = useContext(ProfileContext);
+    const { setupUserInfo } = useContext(AuthContext);
     const [isShowPassword, setIsShowPassword] = useState(false);
     const t = useTranslations();
 
@@ -27,26 +24,13 @@ export default function SignInForm() {
     });
 
     async function handleSignIn() {
-        try {
-            setIsAppLoading(true);
-            const oParams = {
-                username: formik.values.username,
-                password: formik.values.password
-            }
-            const res = await requestAPI('/auth/signIn', 'POST', oParams);
-            setupUserInfo(res.user);
-            toast.success(t(`${res.messageCode}`));
-            navigation('/');
-        } catch(err: any) {
-            let oError = err.response.data;
-            if(oError.detail) {
-                oError.detail.forEach((detail: any) => {
-                    formik.setFieldError(detail.field, detail.message);
-                })
-            } else toast.error(oError.message);
-        } finally {
-            setIsAppLoading(false);
+        const oParams = {
+            username: formik.values.username,
+            password: formik.values.password
         }
+        const res = await requestAPI('/auth/sign_in', 'POST', oParams);
+        setupUserInfo(res.data);
+        navigation('/');
     }
 
     function showPassword(e: React.MouseEvent<HTMLOrSVGElement>) {
