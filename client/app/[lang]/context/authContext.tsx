@@ -34,12 +34,7 @@ export default function AuthProvider({ children }: any) {
 
     // When perform a request need auth
     useEffect(() => {
-        async function handleRequestWithAccessToken() {
-            await getNewAccessToken(true);
-            setIsGetNewAccessToken(false);
-            setIsCallRequestAgain(true);
-        }
-        if(isGetNewAccessToken) handleRequestWithAccessToken();
+        if(isGetNewAccessToken) getNewAccessToken(true);
     }, [isGetNewAccessToken]);
 
     function setupUserInfo(userInfo: ILocalStorageUserInfo) {
@@ -60,10 +55,9 @@ export default function AuthProvider({ children }: any) {
         })
     }
 
-    async function getNewAccessToken(isNavToSignIn: boolean) {
+    async function getNewAccessToken(isNeedTokenToRequest: boolean) {
         try {
             const userInfo = localStorage.getItem("user");
-            
             if (userInfo) {
                 const parsedUserInfo = JSON.parse(userInfo) as ILocalStorageUserInfo;
                 const param = {
@@ -71,13 +65,16 @@ export default function AuthProvider({ children }: any) {
                 }
                 const res = await requestAPI('/auth/new_access_token', 'POST', param);
                 setupUserInfo(res.data);
+                if(isNeedTokenToRequest) setIsCallRequestAgain(true);
             }
         } catch (err: any) {
             clearUserInfo();
-            if (isNavToSignIn) {
+            if (isNeedTokenToRequest) {
                 toast.error(t(err));
                 navigation('/auth/sign-in');
             }
+        } finally {
+            setIsGetNewAccessToken(false);
         }
     }
 

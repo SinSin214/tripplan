@@ -37,7 +37,8 @@ const CustomSelectField = styled(Select)({
     "& .MuiInputBase-input": {
         padding: "12px 18px",
         height: "25px"
-    }
+    },
+    value: ''
 });
 
 const VisuallyHiddenInput = styled('input')({
