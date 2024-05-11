@@ -1,11 +1,12 @@
 {
     "ActivedAccount": "Đã kích hoạt tài khoản thành công",
-
+    "autumn": "Mùa thu",
 
     "ChangePassword": "Thay đổi mật khẩu",
     "ConfirmPassword": "Nhập lại mật khẩu",
     "Cancel": "Hủy",
     "CostInUsd": "Chi phí chuyến đi (USD)",
+    "Country": "Đất nước",
 
     "Destination": "Địa điểm",
     "Description": "Mô tả",
@@ -13,6 +14,7 @@
 
     "Email": "Email",
     "EmailExisted": "Email này đã được đăng ký",
+    "england": "Anh",
 
 
     "Forgot": "Quên mật khẩu ?",
@@ -49,11 +51,14 @@
     "SendRecoveryEmail": "Gửi mail khôi phục",
     "SignInFailed": "Dăng nhập thất bại",
     "SignOutSuccessfully": "Đăng xuất thành công",
+    "spring": "Mùa xuân",
+    "summer": "Mùa hè",
 
     
     "Thread": "Bài viết",
     "Title": "Tiêu đề",
     "TokenExpiredError": "Phiên đăng nhập hết hạn rồi. Đăng nhập lại đi",
+    "Tags": "Tags",
 
 
     "UserNotExist": "Tài khoản không tồn tại",
@@ -67,6 +72,8 @@
     "RefreshTokenExpired": "Phiên đăng nhập đã hết hạn",
 
 
-    "VerificationEmailSent": "Đã gửi email xác nhận đến email của bạn. Hãy kiểm tra xem sao"
+    "VerificationEmailSent": "Đã gửi email xác nhận đến email của bạn. Hãy kiểm tra xem sao",
+    "vietnam": "Việt Nam",
 
+    "winter": "Mùa đông"
 }

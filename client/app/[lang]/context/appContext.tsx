@@ -1,10 +1,9 @@
 'use client';
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useLocale, useTranslations } from 'next-intl';
-import { AppLoadingContext } from "./loadingContext";
 
 type RequestConfig = {
     path: string,
@@ -39,7 +38,7 @@ export default function AppProvider({ children }: any) {
             requestAPI(requestConfig.path, requestConfig.method, requestConfig.data);
             setIsCallRequestAgain(false);
         }
-    }, [isCallRequestAgain])
+    }, [isCallRequestAgain]);
 
     async function requestAPI (path: string, method: string, data?: Object): Promise<any> {
         try {

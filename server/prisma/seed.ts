@@ -15,6 +15,18 @@ async function main() {
         ]
     });
 
+    const tag = await this.prisma.tag.createMany({
+      data: [
+        { id: 'spring', order: 1, colorCode: 'green'},
+        { id: 'summer', order: 2, colorCode: 'yellow'},
+        { id: 'autumn', order: 3, colorCode: 'orange'},
+        { id: 'winter', order: 4, colorCode: 'white'},
+        { id: 'sea', order: 5, colorCode: 'blue'},
+        { id: 'mountain', order: 6, colorCode: 'gray'},
+        { id: 'island', order: 7, colorCode: 'purple'},
+      ]
+    })
+
     console.log({ role, country })
 }
 main()

@@ -1,11 +1,12 @@
 {
     "ActivedAccount": "Activate account successfully",
-
+    "autumn": "Autumn",
 
     "ChangePassword": "Change password",
     "ConfirmPassword": "Confirm password",
     "Cancel": "Cancel",
     "CostInUsd": "Trip cost (USD)",
+    "Country": "Country",
 
 
     "Destination": "Destination",
@@ -14,7 +15,7 @@
 
     "Email": "Email",
     "EmailExisted": "Email is already taken",
-
+    "england": "England",
 
     "Forgot": "Forgot password",
 
@@ -50,11 +51,14 @@
     "SendRecoveryEmail": "Send recovery email",
     "SignInFailed": "Sign in failed",
     "SignOutSuccessfully": "Signed out successfully",
+    "spring": "Spring",
+    "summer": "Summer",
 
     
     "Thread": "Thread",
     "Title": "Title",
     "TokenExpiredError": "Your session has been expired. Please sign in again",
+    "Tags": "Tags",
 
 
     "UserNotExist": "User does not exist",
@@ -67,7 +71,8 @@
 
     "RefreshTokenExpired": "The session has been expired",
 
-    "VerificationEmailSent": "A verification mail has been sent to your email. Please check."
+    "VerificationEmailSent": "A verification mail has been sent to your email. Please check.",
+    "vietnam": "Viet Nam",
 
-
+    "winter": "Winter"
 }

@@ -42,7 +42,7 @@ export function generateRefreshToken(username: string, email: string) {
 }
 
 export function generateAccessToken(username: string, email: string) {
-    let accessTokenExpire = 60;
+    let accessTokenExpire = 86400;
     
     return jwt.sign({ username: username, email: email }, process.env.SECRECT_ACCESS_TOKEN, {
         expiresIn: accessTokenExpire

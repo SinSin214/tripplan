@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Post, Req, Res, UseInterceptors } from '@nestjs/common';
 import { ThreadService } from './thread.service';
 import { WrapAsyncInterceptor } from 'src/middlewares/wrapAsync.interceptor';
+import { CustomRequest } from 'types';
 
 @UseInterceptors(new WrapAsyncInterceptor())
 @Controller('thread')
@@ -33,20 +34,16 @@ export class ThreadController {
     }
 
     @Post('')
-    async createThread(@Body('user') user: object) {
-        console.log(user);
-        // const thread = req.body;
-        // const username = req.user['username'];
-        // const transformedThread = {
-        //     ...thread,
-        //     author: username,
-        //     createdAt: new Date(),
-        //     content: thread.content,
-        // }
-        // await this.threadService.createThread(transformedThread, username);
-        // return {
-        //     messageCode: 'Created thread',
-        // };
+    async createThread(@Req() request: CustomRequest) {
+        const thread = request.body;
+        const username = request.user['username'];
+        const transformedThread = {
+            ...thread,
+            author: username
+        }
+        await this.threadService.createThread(transformedThread, username);
+        return {
+            messageCode: 'Created thread',
+        };
     }
 }
-

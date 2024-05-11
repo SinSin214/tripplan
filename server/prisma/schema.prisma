@@ -20,7 +20,10 @@ model Role {
 
 model Tag {
   id        String @id
+  index     Int
   colorCode String
+
+  threads TagsOnThreads[]
 }
 
 // USER TABLES
@@ -51,7 +54,6 @@ model Thread {
   title       String
   description String
   content     Json      @db.Json
-  tagsId      String[]
   images      String[]
   upvote      Int       @default(0)
   downvote    Int       @default(0)
@@ -62,6 +64,8 @@ model Thread {
 
   country   Country @relation(fields: [countryId], references: [id])
   countryId String
+
+  tagsId TagsOnThreads[]
 
   creator         User   @relation(fields: [creatorUsername], references: [username])
   creatorUsername String
@@ -84,4 +88,13 @@ model Comment {
 
   thread   Thread @relation(fields: [threadId], references: [id])
   threadId String
+}
+
+model TagsOnThreads {
+  thread   Thread @relation(fields: [threadId], references: [id])
+  threadId String
+  tag      Tag    @relation(fields: [tagId], references: [id])
+  tagId    String
+
+  @@id([threadId, tagId])
 }

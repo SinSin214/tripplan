@@ -6,9 +6,10 @@ import { ImageModule } from './image/image.module';
 import { AuthModule } from './auth/auth.module';
 import { CheckAuthMiddleware } from './middlewares/checkAuth';
 import { ThreadController } from './thread/thread.controller';
+import { SelectionModule } from './selection/selection.module';
 
 @Module({
-  imports: [ThreadModule, ImageModule, AuthModule],
+  imports: [ThreadModule, ImageModule, AuthModule, SelectionModule],
   controllers: [AppController],
   providers: [AppService],
 })
