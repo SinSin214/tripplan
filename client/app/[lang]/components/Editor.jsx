@@ -1,4 +1,3 @@
-
 import EditorJS from '@editorjs/editorjs';
 import List from '@editorjs/list';
 import Paragraph from '@editorjs/paragraph';
@@ -9,10 +8,12 @@ import { useContext, useEffect } from "react";
 import { AppContext } from '../context/appContext';
 
 export default function Editor(props) {
-    const { fileUploader } = useContext(AppContext)
+    const { fileUploader } = useContext(AppContext);
+    let editor = { isReady: false };
+
     useEffect(() => {
-        function generateEditor() {
-            return new EditorJS({
+        if(!editor.isReady) {
+            editor = new EditorJS({
                 holder: 'editorjs',     // Id of element that contains Editor
                 placeholder: 'Write thread content...',
                 tools: {                // List available tools
@@ -59,9 +60,10 @@ export default function Editor(props) {
                     var objDiv = document.getElementById("mainLayout");
                     objDiv.scrollTop = objDiv.scrollHeight;
                 }
-            });
+            })
+            props.setEditorInstance(editor)
         }
-        if(!props.editorInstance) props.setEditorInstance(generateEditor());
+
     }, []);
         
     return (
