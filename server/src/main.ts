@@ -16,6 +16,5 @@ async function bootstrap() {
 }
 
 export const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
-// export const sql = postgres(process.env.SUPABASE_URL);
 
 bootstrap();
