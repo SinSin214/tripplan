@@ -5,7 +5,7 @@ export interface ThreadProps {
     description: string,
     highlights: string[],
     title: string,
-    author: string,
+    creatorUsername: string,
     createdAt: Date,
     rating: number
 }

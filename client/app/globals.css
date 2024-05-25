@@ -33,6 +33,7 @@ body {
   height: 3.5rem;
   position: fixed;
   display: flex;
+  z-index: 2;
 }
 
 .main {

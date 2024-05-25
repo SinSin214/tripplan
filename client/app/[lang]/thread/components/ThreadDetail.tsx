@@ -9,14 +9,7 @@ import moment from 'moment';
 export default function ThreadDetail(props: { id: string }) {
     const { requestAPI } = useContext(AppContext);
     const [isLoading, setIsLoading] = useState(false);
-    const [threadDetail, setThreadDetail] = useState<any>({
-        title: '',
-        content: ''
-    });
-    const edjsParser = edjsHTML({
-        image: imageParser,
-        paragraph: paragraphParser
-    });
+    const [threadDetail, setThreadDetail] = useState<any>(undefined);
     const [contentHTML, setContentHTML] = useState<any>();
 
     function imageParser(block: any) {
@@ -36,26 +29,22 @@ export default function ThreadDetail(props: { id: string }) {
 
     useEffect(() => {
         async function getThreadDetailById() {
-            try {
-                setIsLoading(true);
-                const res = await requestAPI(`/thread/${props.id}`, 'GET');
-                const threadDetail = res.threadDetail;
-                threadDetail.createdAt = moment(threadDetail.createdAt).format('MM-DD-YYYY HH:mm:ss');
-                setThreadDetail(threadDetail);
-                let parsed = edjsParser.parse({
-                    blocks: threadDetail.content
-                });
-                setContentHTML(parsed);
-
-            } catch (err: any) {
-                toast.error(err.response.data.messageCode);
-            } finally {
-                setIsLoading(false);
-            }
+            setIsLoading(true);
+            const res = await requestAPI(`/thread/${props.id}`, 'GET');
+            const threadDetail = res.data;
+            setThreadDetail(threadDetail);
+            const edjsParser = edjsHTML({
+                image: imageParser,
+                paragraph: paragraphParser
+            });
+            const parsedContent = edjsParser.parse({
+                blocks: threadDetail.content
+            });
+            setContentHTML(parsedContent);
         };
         getThreadDetailById();
     }, [])
-    if (isLoading) return <Loading />
+    if (!threadDetail) return <Loading />
 
     return (
         <Fragment>
@@ -64,10 +53,10 @@ export default function ThreadDetail(props: { id: string }) {
             <div className="thread-description">{threadDetail.description}</div>
             <div className="thread-creation flex justify-between">
                 <div className="text-lg font-semibold">
-                    {threadDetail.user.displayName}
+                    {threadDetail.creator.displayName}
                 </div>
                 <div className="created-time" >
-                    {threadDetail.createdAt}
+                    {moment(threadDetail.createdAt).format('MM-DD-YYYY HH:mm:ss')}
                 </div>
             </div>
             <div className="thread-content grid gap-5" id="content-container">

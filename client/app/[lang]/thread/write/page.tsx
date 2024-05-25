@@ -1,6 +1,6 @@
 'use client';
 import { Button, Checkbox, Chip, FormControl, InputLabel, ListItem, ListItemText, MenuItem, OutlinedInput, Select, SelectChangeEvent, styled, TextField } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import { ChangeEvent, ChangeEventHandler, useContext, useEffect, useState } from "react";
 import { AppContext } from "@/app/[lang]/context/appContext";
 import Loading from "@/app/[lang]/components/AppLoading";
 import dynamic from "next/dynamic";
@@ -66,7 +66,7 @@ export default function WriteThread() {
         if (threadObject.content.length) sendThread();
     }, [threadObject.content]);
 
-    const onChangeProperty = (e: any) => {
+    const onChangeTextProperty = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setThreadObject({
             ...threadObject,
@@ -74,15 +74,21 @@ export default function WriteThread() {
         })
     }
 
-    const onChangeTags = (e: any) => {
-        const tagObjects = e.target.value;
+    const onChangeTags = (e: SelectChangeEvent<string[]>) => {
         setThreadObject({
             ...threadObject,
-            tagsId: tagObjects
+            tagsId: e.target.value as string[]
         })
     }
 
-    const handleDelete = (e: React.MouseEvent, selectedId: string): ((event: any) => void) | undefined => {
+    const onChangeCountry = (e: SelectChangeEvent<string>) => {
+        setThreadObject({
+            ...threadObject,
+            countryId: e.target.value
+        })
+    }
+
+    const onRemoveTag = (e: React.MouseEvent, selectedId: string): ((event: any) => void) | undefined => {
         e.preventDefault();
         setThreadObject({
             ...threadObject,
@@ -119,7 +125,7 @@ export default function WriteThread() {
                             label="Title"
                             name="title"
                             value={threadObject.title}
-                            onChange={onChangeProperty}
+                            onChange={onChangeTextProperty}
                             disabled={isLoading}
                             inputProps={{
                                 maxLength: 100
@@ -132,7 +138,7 @@ export default function WriteThread() {
                             label="Description"
                             name="description"
                             value={threadObject.description}
-                            onChange={onChangeProperty}
+                            onChange={onChangeTextProperty}
                             disabled={isLoading}
                             inputProps={{ maxLength: 300 }}
                             fullWidth
@@ -146,7 +152,7 @@ export default function WriteThread() {
                                 name="countryId"
                                 label={t("Country")}
                                 value={threadObject.countryId}
-                                onChange={onChangeProperty}
+                                onChange={onChangeCountry}
                                 required>
                                 {selections.countries.length ? selections.countries.map((item: Country) => (
                                     <MenuItem key={item.id} value={item.id}>
@@ -157,7 +163,7 @@ export default function WriteThread() {
                         </FormControl>
                         <FormControl className="w-2/3">
                             <InputLabel required>{t('Tags')}</InputLabel>
-                            <Select 
+                            <Select
                                 name="tagsId"
                                 label={t("Tags")}
                                 multiple
@@ -180,7 +186,7 @@ export default function WriteThread() {
                                                     style={{backgroundColor: `${selectedTag.colorCode}`}}
                                                     className="mx-1 border border-slate-300 border-solid"
                                                     label={t(selectedTag.id)}
-                                                    onDelete={(e) => handleDelete(e, selectedTag.id)}
+                                                    onDelete={(e) => onRemoveTag(e, selectedTag.id)}
                                                     deleteIcon={<CancelIcon onMouseDown={(e) => e.stopPropagation()} />}
                                                 />
                                             ))}
