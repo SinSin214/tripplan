@@ -23,22 +23,22 @@ export default function RootLayout({
         <html lang={locale}>
             <body>
                 <NextIntlClientProvider locale={locale} messages={messages}>
-                <AppProvider>
-                    <AuthProvider>
-                        <SelectionProvider>
-                            <div className="screen-view">
-                                <Header />
+                    <AppProvider>
+                        <AuthProvider>
+                            <SelectionProvider>
                                 <AppLoadingProvider>
-                                <main className="main" id="mainLayout">
-                                    {children}
+
+                                    <Header />
+                                    <main className="main" id="mainLayout">
+                                        {children}
+                                    </main>
                                     <Footer />
-                                </main>
+                                    
                                 </AppLoadingProvider>
                                 <ToastContainer />
-                            </div>
-                        </SelectionProvider>
-                    </AuthProvider>
-                </AppProvider>
+                            </SelectionProvider>
+                        </AuthProvider>
+                    </AppProvider>
                 </NextIntlClientProvider>
             </body>
         </html>

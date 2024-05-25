@@ -29,7 +29,7 @@ export default function Navbar() {
     }
 
     return (
-        <div className="background-color w-full h-14 z-1 flex">
+        <div className="header">
             <div className="container-navbar-part w-full">
                 <Button
                     className={`${pathName === '/' ? 'btn-navbar-active' : ''} btn-navbar`}

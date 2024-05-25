@@ -6,13 +6,17 @@ import { createClient } from '@supabase/supabase-js';
 // import postgres from 'postgres';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe({
-    transform: true
-  }));
-  app.enableCors();
-
-  await app.listen(process.env.PORT_SERVER);
+  try {
+    const app = await NestFactory.create(AppModule);
+    app.useGlobalPipes(new ValidationPipe({
+      transform: true
+    }));
+    app.enableCors();
+  
+    await app.listen(process.env.PORT_SERVER);
+  } catch(err) {
+    console.log(err);
+  }
 }
 
 export const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);

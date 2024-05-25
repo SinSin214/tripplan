@@ -15,8 +15,10 @@
 body {
     color: rgb(var(--foreground-rgb));
     background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
-    overflow: hidden;
     font-family: "Noto Serif",Regular,Times New Roman;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .background-color{
@@ -24,17 +26,32 @@ body {
   color: var(--primary-text-color);
 }
 
-.screen-view{
-    position: fixed;
-    height: 100%;
-    width: 100%;
+.header {
+  background-color: var(--primary-color);
+  color: var(--primary-text-color);
+  width: 100%;
+  height: 3.5rem;
+  position: fixed;
+  display: flex;
 }
 
 .main {
   background-color: white;
   color: black;
   overflow: auto;
-  height: calc(100% - 3.5rem);  /* 3.5rem is header height */
+  flex: 1;
+  margin-top: 3.5rem; /* equal header height */
+  display: flex;
+  flex-direction: column;
+}
+
+.footer {
+  background-color: var(--primary-color);
+  color: var(--primary-text-color);
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+  width: 100%;
+  height: 9rem;
 }
 
 /* responsive layout */
@@ -233,12 +250,8 @@ body {
 
 /* Authentication Popup */
 .authentication-popup {
-  height: 100%;
   width: 350px;
   margin: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 
 .separate-line {

@@ -31,52 +31,54 @@ export default function ChangePasswordForm({ params }: { params: { token: string
     }
 
     return (
-        <form className="authentication-popup" onSubmit={formik.handleSubmit}>
-            <TextField
-                className="my-2"
-                label="New password"
-                variant="outlined"
-                type={isShowPassword ? 'text' : 'password'}
-                size="small"
-                name="password"
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                required
-                fullWidth
-                error={formik.touched.password && Boolean(formik.errors.password)}
-                helperText={formik.touched.password && formik.errors.password}
-                InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={(e) => showPassword(e)}
-                            edge="end"
-                            >
-                            {isShowPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                }} />
+        <div className="authentication-popup">
+            <form onSubmit={formik.handleSubmit}>
+                <TextField
+                    className="my-2"
+                    label="New password"
+                    variant="outlined"
+                    type={isShowPassword ? 'text' : 'password'}
+                    size="small"
+                    name="password"
+                    value={formik.values.password}
+                    onChange={formik.handleChange}
+                    required
+                    fullWidth
+                    error={formik.touched.password && Boolean(formik.errors.password)}
+                    helperText={formik.touched.password && formik.errors.password}
+                    InputProps={{
+                        endAdornment: (
+                        <InputAdornment position="end">
+                            <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={(e) => showPassword(e)}
+                                edge="end"
+                                >
+                                {isShowPassword ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                        </InputAdornment>
+                        ),
+                    }} />
 
-            <TextField
-                className="my-2"
-                label="Confirm password"
-                variant="outlined"
-                type="password"
-                size="small"
-                name="confirmPassword"
-                value={formik.values.confirmPassword}
-                onChange={formik.handleChange}
-                required
-                fullWidth
-                error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
-                helperText={formik.touched.confirmPassword && formik.errors.confirmPassword} />
+                <TextField
+                    className="my-2"
+                    label="Confirm password"
+                    variant="outlined"
+                    type="password"
+                    size="small"
+                    name="confirmPassword"
+                    value={formik.values.confirmPassword}
+                    onChange={formik.handleChange}
+                    required
+                    fullWidth
+                    error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
+                    helperText={formik.touched.confirmPassword && formik.errors.confirmPassword} />
 
-            <Button
-                className="w-full mt-2 btn-custom"
-                variant="contained"
-                type="submit">Update</Button>
-        </form>
+                <Button
+                    className="w-full mt-2 btn-custom"
+                    variant="contained"
+                    type="submit">Update</Button>
+            </form>
+        </div>
     )
 }
