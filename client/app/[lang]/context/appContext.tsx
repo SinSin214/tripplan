@@ -7,7 +7,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { RequestMethod } from "@/types/globalType";
 
 export const AppContext = createContext({
-    requestAPI: async (path: string, method: RequestMethod, data?: Object): Promise<any> => {},
+    requestAPI: async (path: string, method: RequestMethod, data?: Object, loading?: Function): Promise<any> => {},
     navigation: (path: string) => {},
     fileUploader: async (files: File[]): Promise<any> => {},
     checkPermission: () => {}
@@ -18,8 +18,9 @@ export default function AppProvider({ children }: any) {
     const locale = useLocale();
     const t = useTranslations();
 
-    const requestAPI = async (path: string, method: RequestMethod, data?: object): Promise<any> => {
+    const requestAPI = async (path: string, method: RequestMethod, data?: object, loading?: Function): Promise<any> => {
         try {
+            if(loading) loading(true);
             const requestConfig = {
                 method: method,
                 url: `${process.env.NEXT_PUBLIC_API_ROUTE}${path}`,
@@ -34,6 +35,9 @@ export default function AppProvider({ children }: any) {
         } catch(err: any) {
             const error = err.response.data;
             toast.error(t(error.messageCode));
+            throw Error(error);
+        } finally {
+            if(loading) loading(false);
         }
     }
 

@@ -1,7 +1,8 @@
 'use client';
 import { AppContext } from "@/app/[lang]/context/appContext"
 import { RequestMethod } from "@/types/globalType";
-import { useContext, useEffect } from "react"
+import { useContext, useEffect } from "react";
+import { CircularProgress } from '@mui/material';
 
 export default function UserActivation({ params }: { params: { token: string } }) {
     const { requestAPI, navigation } = useContext(AppContext);
@@ -15,9 +16,10 @@ export default function UserActivation({ params }: { params: { token: string } }
     }, []);
 
     return (
-        <div className="md-limited-width-layout__content">
-            <div className="top-[40%] text-center relative">
-                Please wait for account activation
+        <div className="authentication-layout">
+            <div className="text-center flex flex-col">
+                <span>Please wait for account activation</span>
+                <CircularProgress className="mx-auto mt-4" />
             </div>
         </div>
     )

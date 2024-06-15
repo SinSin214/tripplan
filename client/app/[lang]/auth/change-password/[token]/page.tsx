@@ -21,8 +21,8 @@ export default function ChangePasswordForm({ params }: { params: { token: string
     });
 
     async function handleChangePassword() {
-        const oParams = { password: formik.values.password }
-        await requestAPI(`/auth/change_password/${params.token}`, RequestMethod.Post, oParams);
+        const params = { password: formik.values.password }
+        await requestAPI(`/auth/change_password`, RequestMethod.Post, params);
         navigation('/');
     }
 
@@ -32,7 +32,7 @@ export default function ChangePasswordForm({ params }: { params: { token: string
     }
 
     return (
-        <div className="authentication-popup">
+        <div className="authentication-layout">
             <form onSubmit={formik.handleSubmit}>
                 <TextField
                     className="my-2"

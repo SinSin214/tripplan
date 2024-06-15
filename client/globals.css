@@ -58,11 +58,10 @@ body {
 /* responsive layout */
 
 .lg-limited-width-layout__content, .md-limited-width-layout__content {
-  height: fit-content;
   margin-right: auto;
   margin-left: auto;
   box-sizing: border-box;
-  min-height: 100%;
+  min-height: calc(100vh - 12.5rem) /* body - (header + footer) */
 }
 
 @media (min-width: 768px) {
@@ -250,7 +249,7 @@ body {
 }
 
 /* Authentication Popup */
-.authentication-popup {
+.authentication-layout {
   width: 350px;
   margin: auto;
 }

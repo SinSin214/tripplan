@@ -29,7 +29,8 @@
 
 
     "IncorrectPassword": "Mật khẩu không chính xác",
-
+    "invalid signature": "Token không chính xác",
+    "jwt expired": "Token đã quá hạn kích hoạt",
 
     "LoginSuccessfully": "Đăng nhập thành công",
 

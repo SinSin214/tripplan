@@ -18,7 +18,7 @@ export class AuthModule {
         { path: 'auth/sign_out', method: RequestMethod.GET },
         { path: 'auth/forgot_password', method: RequestMethod.POST },
         { path: 'auth/activate/:activeToken', method: RequestMethod.GET },
-        { path: 'auth/change_password/:changePasswordToken', method: RequestMethod.POST },
+        { path: 'auth/change_password', method: RequestMethod.POST },
         { path: 'auth/check_permission', method: RequestMethod.GET }
       )
   }

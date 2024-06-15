@@ -106,7 +106,7 @@ export class AuthController {
 
     @Get('check_permission')
     check_permission(@Req() req: Request) {
-        const session = req.cookies.get('session');
+        const session = req.cookies['session'];
         if(!session) throw Error('RequireLogin')
         return {
             sessionAvailable: true

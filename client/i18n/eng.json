@@ -29,7 +29,8 @@
 
 
     "IncorrectPassword": "Incorrect password",
-
+    "invalid signature": "Invalid token",
+    "jwt expired": "Token is expired",
 
     "LoginSuccessfully": "Login successfully",
 

@@ -7,10 +7,12 @@ import { AppContext } from '@/app/[lang]/context/appContext';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useTranslations } from 'next-intl';
 import { RequestMethod } from '@/types/globalType';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 export default function SignUpForm() {
     const { requestAPI, navigation,  } = useContext(AppContext);
     const [isShowPassword, setIsShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const t = useTranslations();
     
     const formik = useFormik({
@@ -34,7 +36,7 @@ export default function SignUpForm() {
             email: formik.values.email,
             displayName: formik.values.displayName
         }
-        await requestAPI('/auth/sign_up', RequestMethod.Post, data);
+        await requestAPI('/auth/sign_up', RequestMethod.Post, data, setIsLoading);
         resetForm();
     }
 
@@ -44,7 +46,7 @@ export default function SignUpForm() {
     }
 
     return (
-        <div className="authentication-popup">
+        <div className="authentication-layout">
             <form onSubmit={formik.handleSubmit}>
                 <TextField
                     className="my-2"
@@ -53,6 +55,7 @@ export default function SignUpForm() {
                     type="text"
                     size="small"
                     name="username"
+                    disabled={isLoading}
                     value={formik.values.username}
                     onChange={formik.handleChange}
                     required
@@ -66,6 +69,7 @@ export default function SignUpForm() {
                     type="email"
                     size="small"
                     name="email"
+                    disabled={isLoading}
                     value={formik.values.email}
                     onChange={formik.handleChange}
                     required
@@ -79,6 +83,7 @@ export default function SignUpForm() {
                     type="text"
                     size="small"
                     name="displayName"
+                    disabled={isLoading}
                     value={formik.values.displayName}
                     onChange={formik.handleChange}
                     required
@@ -93,6 +98,7 @@ export default function SignUpForm() {
                     type={isShowPassword ? 'text' : 'password'}
                     size="small"
                     name="password"
+                    disabled={isLoading}
                     value={formik.values.password}
                     onChange={formik.handleChange}
                     required
@@ -118,6 +124,7 @@ export default function SignUpForm() {
                     className="my-2"
                     label={t('ConfirmPassword')}
                     variant="outlined"
+                    disabled={isLoading}
                     type={isShowPassword ? 'text' : 'password'}
                     size="small"
                     name="confirmPassword"
@@ -129,11 +136,16 @@ export default function SignUpForm() {
                     helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
                 />
 
-                <Button
-                    className="w-full mt-2 btn-custom"
-                    variant="contained"
-                    type="submit">{t('SignUp')}
-                </Button>
+                {isLoading ? 
+                    <LoadingButton loading className="w-full mt-2 btn-custom" variant="contained">
+                        Submit
+                    </LoadingButton> : 
+                    <Button
+                        className="w-full mt-2 btn-custom"
+                        variant="contained"
+                        type="submit">{t('SignUp')}
+                    </Button>
+                }
 
                 <div className="separate-line"></div>
 

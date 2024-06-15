@@ -1,6 +1,6 @@
 'use client';
-import { Button, Checkbox, Chip, FormControl, InputLabel, ListItem, ListItemText, MenuItem, OutlinedInput, Select, SelectChangeEvent, styled, TextField } from "@mui/material";
-import { ChangeEvent, ChangeEventHandler, useContext, useEffect, useState } from "react";
+import { Button, Checkbox, Chip, FormControl, InputLabel, ListItemText, MenuItem, Select, SelectChangeEvent, styled, TextField } from "@mui/material";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { AppContext } from "@/app/[lang]/context/appContext";
 import Loading from "@/app/[lang]/components/AppLoading";
 import dynamic from "next/dynamic";
@@ -9,7 +9,6 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { useFormik } from "formik";
 import { newThreadSchema } from "@/utils/validationSchema";
 import { Carousel } from "@/app/[lang]/components/Carousel/Carousel";
-import { AuthContext } from "@/app/[lang]/context/authContext";
 import { notFound } from 'next/navigation';
 import { useTranslations } from "next-intl";
 import { SelectionContext } from "../../context/selectionContext";
@@ -32,9 +31,8 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 export default function WriteThread() {
-    const [isAllowed, setIsAllowed] = useState<boolean>(false);
-    if(!isAllowed) return notFound();
-    const initialThread: ThreadDetail = {
+    const [isAllowed, setIsAllowed] = useState<boolean | undefined>(undefined);
+    const initialThread = {
         title: '',
         description: '',
         content: [],
@@ -44,7 +42,7 @@ export default function WriteThread() {
     }
     const { requestAPI, fileUploader, navigation } = useContext(AppContext);
     const { selections } = useContext(SelectionContext);
-    const [threadObject, setThreadObject] = useState(initialThread);
+    const [threadObject, setThreadObject] = useState<ThreadDetail>(initialThread);
     const [isLoading, setIsLoading] = useState(false);
     const [editorInstance, setEditorInstance] = useState<any>();
     const [imageList, setImageList] = useState<any>([]);
@@ -61,15 +59,14 @@ export default function WriteThread() {
     useEffect(() => {
         const checkSession = async () => {
             try { 
-                const result = await requestAPI('/auth/check_permission', RequestMethod.Get);
+                await requestAPI('/auth/check_permission', RequestMethod.Get, undefined, setIsLoading);
                 setIsAllowed(true);
             } catch(err) {
-                navigation
+                setIsAllowed(false);
             }
         }
         checkSession();
-    })
-
+    }, [])
 
     useEffect(() => {
         async function sendThread() {
@@ -125,6 +122,12 @@ export default function WriteThread() {
         let res = await fileUploader(uploadImages);
         setImageList([...imageList, ...res.filesInfo]);
         setIsLoading(false);
+    }
+
+    if(isAllowed === undefined) {
+        return <Loading/>
+    } else if(!isAllowed) {
+        return notFound()
     }
 
     return (

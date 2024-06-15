@@ -4,13 +4,13 @@ const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 // min 8 characters, 1 upper case letter, 1 lower case letter, 1 numeric digit.
 
 export const signUpSchema = yup.object().shape({
-  username: yup.string().min(8, 'At least 8 characters').required("Required"),
+  username: yup.string().min(8, 'Username must be a least 8 characters').required("Required"),
   email: yup.string().email("Invalid email").required("Required"),
   displayName: yup.string().required("Required"),
   password: yup
     .string()
-    .min(8)
-    .matches(passwordRules, { message: "Please create a stronger password" })
+    .min(8, "Password must be at least 8 characters")
+    .matches(passwordRules, { message: "Password must be at least 8 characters included uppercase, lowercase and number" })
     .required("Required"),
   confirmPassword: yup
     .string()
@@ -33,7 +33,7 @@ export const changePasswordSchema = yup.object().shape({
   password: yup
     .string()
     .min(8)
-    .matches(passwordRules, { message: "Please create a stronger password" })
+    .matches(passwordRules, { message: "Password must be at least 8 characters included uppercase, lowercase and number" })
     .required("Required"),
   confirmPassword: yup
     .string()

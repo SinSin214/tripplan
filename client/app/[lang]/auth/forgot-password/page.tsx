@@ -2,14 +2,16 @@
 import { AppContext } from '@/app/[lang]/context/appContext';
 import { RequestMethod } from '@/types/globalType';
 import { forgotPasswordSchema } from '@/utils/validationSchema';
+import { LoadingButton } from '@mui/lab';
 import { Button, Link, TextField } from '@mui/material';
 import { useFormik } from 'formik';
 import { useTranslations } from 'next-intl';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 
 export default function ForgotPasswordForm() {
     const { requestAPI, navigation } = useContext(AppContext);
     const t = useTranslations();
+    const [isLoading, setIsLoading] = useState(false);
     const formik = useFormik({
         initialValues: {
             username: ""
@@ -19,12 +21,12 @@ export default function ForgotPasswordForm() {
     });
 
     async function handleForgotPassword() {
-        const oParams = { username: formik.values.username };
-        await requestAPI('/auth/forgot_password', RequestMethod.Post, oParams);
+        const params = { username: formik.values.username };
+        await requestAPI('/auth/forgot_password', RequestMethod.Post, params, setIsLoading);
     }
 
     return (
-        <div className="authentication-popup">
+        <div className="authentication-layout">
             <form onSubmit={formik.handleSubmit}>
                 <TextField
                     className="my-2"
@@ -33,6 +35,7 @@ export default function ForgotPasswordForm() {
                     type="text"
                     size="small"
                     name="username"
+                    disabled={isLoading}
                     value={formik.values.username}
                     onChange={formik.handleChange}
                     required
@@ -40,11 +43,16 @@ export default function ForgotPasswordForm() {
                     error={formik.touched.username && Boolean(formik.errors.username)}
                     helperText={formik.touched.username && formik.errors.username} />
 
-
-                <Button
-                    className="w-full mt-2 btn-custom"
-                    variant="contained"
-                    type="submit">{t('SendRecoveryEmail')}</Button>
+                {isLoading ? 
+                    <LoadingButton loading className="w-full mt-2 btn-custom" variant="contained">
+                        Submit
+                    </LoadingButton> : 
+                    <Button
+                        className="w-full mt-2 btn-custom"
+                        variant="contained"
+                        type="submit">{t('SendRecoveryEmail')}
+                    </Button>
+                }
 
                 <div className="separate-line"></div>
                 
