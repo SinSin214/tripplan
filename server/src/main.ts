@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import 'dotenv/config';
 import { ValidationPipe } from '@nestjs/common';
 import { createClient } from '@supabase/supabase-js';
-// import postgres from 'postgres';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   try {
@@ -11,7 +11,12 @@ async function bootstrap() {
     app.useGlobalPipes(new ValidationPipe({
       transform: true
     }));
-    app.enableCors();
+    app.enableCors({
+      credentials: true,
+      origin: true,
+  });
+
+    app.use(cookieParser());
   
     await app.listen(process.env.PORT_SERVER);
   } catch(err) {

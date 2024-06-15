@@ -1,4 +1,4 @@
-import "@/app/output.css";
+import "@/output.css";
 import Header from './components/Header';
 import Footer from "./components/Footer";
 import { ToastContainer } from 'react-toastify';
@@ -8,14 +8,10 @@ import AppProvider from './context/appContext';
 import AuthProvider from "./context/authContext";
 import SelectionProvider from "./context/selectionContext";
 import AppLoadingProvider from "./context/loadingContext";
+import { Suspense } from "react";
+import Loading from "./loading";
 
-export default function RootLayout({
-    children,
-    params: {locale}
-  }: {
-    children: React.ReactNode;
-    params: {locale: string};
-  }) {
+export default function RootLayout({ children, params: {locale} }: { children: React.ReactNode; params: {locale: string}}) {
 
     const messages = useMessages();
 
@@ -27,15 +23,15 @@ export default function RootLayout({
                         <AuthProvider>
                             <SelectionProvider>
                                 <AppLoadingProvider>
-
-                                    <Header />
-                                    <main className="main" id="mainLayout">
-                                        {children}
-                                    </main>
-                                    <Footer />
-                                    
+                                    <Header/>
+                                    <Suspense fallback={<Loading />}>
+                                        <main className="main" id="mainLayout">
+                                            {children}
+                                        </main>
+                                    </Suspense>
+                                    <Footer/>
                                 </AppLoadingProvider>
-                                <ToastContainer />
+                                <ToastContainer/>
                             </SelectionProvider>
                         </AuthProvider>
                     </AppProvider>

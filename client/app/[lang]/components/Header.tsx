@@ -6,26 +6,23 @@ import { Button } from "@mui/material";
 import CreateIcon from '@mui/icons-material/Create';
 import { AppContext } from "../context/appContext";
 import { useTranslations } from 'next-intl';
+import { RequestMethod } from "@/types/globalType";
 
 export default function Navbar() {
     const pathName = usePathname();
-    const { profile, clearUserInfo } = useContext(AuthContext);
+    const { profile, setProfile } = useContext(AuthContext);
     const { navigation, requestAPI } = useContext(AppContext);
     const t = useTranslations();
 
     async function signOut() {
-        const sUserInfo = localStorage.getItem("user");
-        if (sUserInfo) {
-            const oUserInfo = JSON.parse(sUserInfo);
-            const oParams = {
-                username: oUserInfo.username,
-                refreshToken: oUserInfo.refreshToken
-            };
-
-            const res = await requestAPI('/auth/sign_out', 'POST', oParams);
-            clearUserInfo();
-            navigation('/');
-        }
+        await requestAPI('/auth/sign_out', RequestMethod.Get);
+        setProfile({
+            username: '',
+            email: '',
+            displayName: '',
+            isSigned: false
+        })
+        navigation('/');
     }
 
     return (

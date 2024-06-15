@@ -1,17 +1,15 @@
 'use client';
 import { AppContext } from "@/app/[lang]/context/appContext"
-import { AuthContext } from "@/app/[lang]/context/authContext";
+import { RequestMethod } from "@/types/globalType";
 import { useContext, useEffect } from "react"
 
 export default function UserActivation({ params }: { params: { token: string } }) {
     const { requestAPI, navigation } = useContext(AppContext);
-    const { setupUserInfo } = useContext(AuthContext);
 
     useEffect(() => {
         async function activateUser() {
-            const res = await requestAPI(`/auth/activate/${params.token}`, 'GET');
-            setupUserInfo(res.data);
-            navigation('/');
+            await requestAPI(`/auth/activate/${params.token}`, RequestMethod.Get);
+            navigation('/auth/sign-in');
         };
         activateUser();
     }, []);

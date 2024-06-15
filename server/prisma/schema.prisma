@@ -36,7 +36,6 @@ model User {
   isActive     Boolean   @default(false)
   avatarUrl    String?
   bio          String?
-  refreshToken String?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime? @updatedAt
 

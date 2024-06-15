@@ -1,89 +1,59 @@
 'use client';
-import { createContext, useContext, useEffect, useState } from "react";
-import { IProfile, ILocalStorageUserInfo } from '@/utils/types';
-import { AppContext } from "./appContext";
-import { toast } from "react-toastify";
+import { createContext, useEffect, useState } from "react";
+import { IProfile } from '@/utils/types';
 import { useTranslations } from "next-intl";
 
 const defaultProfile = {
     username: '',
     email: '',
+    displayName: '',
     isSigned: false
 }
 
 export const AuthContext = createContext({
     profile: defaultProfile,
-    setProfile: (profile: IProfile) => { },
-    setupUserInfo: (userInfo: ILocalStorageUserInfo) => { },
-    clearUserInfo: () => { },
+    setProfile: (profile: IProfile) => { }
 });
 
 export default function AuthProvider({ children }: any) {
     const t = useTranslations();
-    const { requestAPI, 
-            navigation, 
-            isGetNewAccessToken, 
-            setIsGetNewAccessToken,
-            setIsCallRequestAgain } = useContext(AppContext);
     const [profile, setProfile] = useState<IProfile>(defaultProfile);
 
-    // At the first time visit page, check if token available
+    // Check if session not expired yet, set user profile
     useEffect(() => {
-        getNewAccessToken(false);
-    }, [])
-
-    // When perform a request need auth
-    useEffect(() => {
-        if(isGetNewAccessToken) getNewAccessToken(true);
-    }, [isGetNewAccessToken]);
-
-    function setupUserInfo(userInfo: ILocalStorageUserInfo) {
-        localStorage.setItem("user", JSON.stringify(userInfo));
-        setProfile({
-            username: userInfo.username,
-            email: userInfo.email,
-            isSigned: true
-        })
-    }
-
-    function clearUserInfo() {
-        localStorage.clear();
-        setProfile({
-            username: '',
-            email: '',
-            isSigned: false
-        })
-    }
-
-    async function getNewAccessToken(isNeedTokenToRequest: boolean) {
-        try {
-            const userInfo = localStorage.getItem("user");
-            if (userInfo) {
-                const parsedUserInfo = JSON.parse(userInfo) as ILocalStorageUserInfo;
-                const param = {
-                    refreshToken: parsedUserInfo.refreshToken
-                }
-                const res = await requestAPI('/auth/new_access_token', 'POST', param);
-                setupUserInfo(res.data);
-                if(isNeedTokenToRequest) setIsCallRequestAgain(true);
-            }
-        } catch (err: any) {
-            clearUserInfo();
-            if (isNeedTokenToRequest) {
-                toast.error(t(err));
-                navigation('/auth/sign-in');
-            }
-        } finally {
-            setIsGetNewAccessToken(false);
+        // const session = document.cookie;
+        const session = getCookieByName('session');
+        const userInfo = getCookieByName('userInfo');
+        if(userInfo && session) {
+            const parsedUserInfo = JSON.parse(userInfo);
+            setProfile({
+                username: parsedUserInfo.username,
+                email: parsedUserInfo.email,
+                displayName: parsedUserInfo.displayName,
+                isSigned: true
+            })
+        } else {
+            setProfile(defaultProfile);
         }
+    }, []);
+
+    function getCookieByName(cookieName: string): string {
+        const name = cookieName + '=';
+        const decodedCookie = decodeURIComponent(document.cookie);
+        const listCookies = decodedCookie.split('; ');
+        for(let i = 0; i < listCookies.length; i++) {
+            const cookie = listCookies[i];
+            if (cookie.indexOf(name) == 0) {
+                return cookie.substring(name.length, cookie.length);
+            }
+        }
+        return '';
     }
 
     return (
         <AuthContext.Provider value={{
             profile,
-            setProfile,
-            setupUserInfo,
-            clearUserInfo
+            setProfile
         }}>
             {children}
         </AuthContext.Provider>

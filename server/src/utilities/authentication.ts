@@ -1,7 +1,7 @@
 import * as nodemailer from 'nodemailer';
 import * as jwt from 'jsonwebtoken';
 
-const transporter =  nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: process.env.MY_EMAIL,
@@ -9,20 +9,20 @@ const transporter =  nodemailer.createTransport({
     }
 });
 
-export async function sendActiveEmail(origin: string, email: string, activateToken: string) {
-    let mainOptions = {
+export async function sendActiveEmail(origin: string, email: string, token: string) {
+    const mainOptions = {
         from: 'TripPlan',
         to: email,
         subject: 'Activate TripPlan account',
         text: 'This email has been used to register an account on TripPlan. Please click on the following link to activate your account on TripPlan.',
-        html: `<a href="${origin}/eng/auth/activation/${activateToken}">Click here</a>`
+        html: `<a href="${origin}/eng/auth/activation/${token}">Click here</a>`
     }
 
     await transporter.sendMail(mainOptions);
 }
 
 export async function sendEmailChangePassword(email: string, token: string) {
-    let mainOptions = {
+    const mainOptions = {
         from: 'TripPlan',
         to: email,
         subject: 'Change password TripPlan account',
@@ -33,34 +33,16 @@ export async function sendEmailChangePassword(email: string, token: string) {
     await transporter.sendMail(mainOptions);
 }
 
-export function generateRefreshToken(username: string, email: string) {
-    let refreshTokenExpire = 864000;
+export function generateToken(username: string, email: string, secrect: string): string {
+    const encryptedData = jwt.sign({
+        username: username,
+        email: email,
+    }, secrect, { expiresIn: 24 * 60 * 60 });   // 1 day equal session lifetime
 
-    return jwt.sign({ username: username, email: email }, process.env.SECRECT_REFRESH_TOKEN, {
-        expiresIn: refreshTokenExpire
-    });
+    return encryptedData;
 }
 
-export function generateAccessToken(username: string, email: string) {
-    let accessTokenExpire = 86400;
-    
-    return jwt.sign({ username: username, email: email }, process.env.SECRECT_ACCESS_TOKEN, {
-        expiresIn: accessTokenExpire
-    });
-}
-
-export function generateChangePasswordToken(username: string, email: string) {
-    let changePasswordExpire = 86400;
-    
-    return jwt.sign({ username: username, email: email }, process.env.SECRECT_CHANGE_PASSWORD_TOKEN, {
-        expiresIn: changePasswordExpire
-    });
-}
-
-export function generateActivateToken(username: string, email: string) {
-    let activateTokenExpire = 86400;
-    
-    return jwt.sign({ username: username, email: email }, process.env.SECRECT_ACTIVATE_USER_TOKEN, {
-        expiresIn: activateTokenExpire
-    });
+export function decryptToken(token: string, secrect: string): string | jwt.JwtPayload {
+    const decoded = jwt.verify(token, secrect);
+    return decoded;
 }

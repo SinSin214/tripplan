@@ -1,5 +1,6 @@
 'use client';
 import { AppContext } from '@/app/[lang]/context/appContext';
+import { RequestMethod } from '@/types/globalType';
 import { forgotPasswordSchema } from '@/utils/validationSchema';
 import { Button, Link, TextField } from '@mui/material';
 import { useFormik } from 'formik';
@@ -19,7 +20,7 @@ export default function ForgotPasswordForm() {
 
     async function handleForgotPassword() {
         const oParams = { username: formik.values.username };
-        await requestAPI('/auth/forgot_password', 'POST', oParams);
+        await requestAPI('/auth/forgot_password', RequestMethod.Post, oParams);
     }
 
     return (

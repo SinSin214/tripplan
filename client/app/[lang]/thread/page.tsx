@@ -1,4 +1,5 @@
 'use client';
+import { RequestMethod } from "@/types/globalType";
 import { IThreadOverviewType } from "@/utils/types";
 import { Box, Tab, Tabs } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
@@ -31,7 +32,7 @@ export default function ListThread() {
         const paramObject = {
             sort: tab
         };
-        const res = await requestAPI(`/thread/all`, 'POST', paramObject);
+        const res = await requestAPI(`/thread/all`, RequestMethod.Post, paramObject);
         setListThreads(res.data);
     };
 

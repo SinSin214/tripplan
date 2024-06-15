@@ -13,7 +13,7 @@ export class ChangePasswordDto {
 export class ForgotPasswordDto {
     @IsNotEmpty()
     @Transform(({ value }) => value.toLowerCase())
-    username: string
+    email: string
 }
 
 export class SignInUserDto {
@@ -49,17 +49,4 @@ export class SignUpUserDto {
     @IsNotEmpty()
     @MinLength(6)
     displayName: string
-}
-
-export class CheckTokenDto {
-    @IsNotEmpty()
-    username: string
-
-    @IsNotEmpty()
-    @IsEmail()
-    @Transform(({ value }) => value.toLowerCase())
-    email: string
-
-    accessToken: string
-    refreshToken: string
 }

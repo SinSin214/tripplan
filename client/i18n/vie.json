@@ -57,7 +57,6 @@
     
     "Thread": "Bài viết",
     "Title": "Tiêu đề",
-    "TokenExpiredError": "Phiên đăng nhập hết hạn rồi. Đăng nhập lại đi",
     "Tags": "Tags",
 
 
@@ -69,7 +68,6 @@
     "UserCreationFailed": "Tạo tài khoản đã thất bại",
     "UpdatedPassword": "Cập nhật mật khẩu thành công",
 
-    "RefreshTokenExpired": "Phiên đăng nhập đã hết hạn",
 
 
     "VerificationEmailSent": "Đã gửi email xác nhận đến email của bạn. Hãy kiểm tra xem sao",

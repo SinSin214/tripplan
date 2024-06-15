@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { User } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { SignUpUserDto } from './auth.dto';
 
@@ -6,7 +7,7 @@ import { SignUpUserDto } from './auth.dto';
 export class AuthService {
     constructor(private prisma: PrismaService) {}
 
-    async getUserByEmail(email: string) {
+    async getUserByEmail(email: string): Promise<User> {
         const result = await this.prisma.user.findUnique({
             where: {
                 email: email
@@ -24,8 +25,24 @@ export class AuthService {
         return result;
     }
 
-    async createUser(user: SignUpUserDto) {
-        const result = await this.prisma.user.create({
+    async getUserByUsernameOrEmail(username: string, email: string): Promise<User> {
+        const result = await this.prisma.user.findFirst({
+            where: {
+                OR: [
+                    {
+                        username: username
+                    },
+                    {
+                        email: email
+                    }
+                ]
+            }
+        })
+        return result;
+    }
+
+    async createUser(user: SignUpUserDto): Promise<void> {
+        await this.prisma.user.create({
             data: {
                 username: user.username,
                 email: user.email,
@@ -33,7 +50,6 @@ export class AuthService {
                 password: user.password
             }
         });
-        return result;
     }
 
     async deleteUser(email: string, username: string) {
@@ -45,22 +61,10 @@ export class AuthService {
         });
     }
 
-    async updateRefreshToken(username: string, refreshToken: string) {
+    async activateUser(username: string): Promise<void> {
         await this.prisma.user.update({
             data: {
-                refreshToken: refreshToken
-            },
-            where: {
-                username: username
-            }
-        });
-    }
-
-    async activateUser(username: string, refreshToken: string) {
-        await this.prisma.user.update({
-            data: {
-                isActive: true,
-                refreshToken: refreshToken
+                isActive: true
             },
             where: {
                 username: username
@@ -68,25 +72,13 @@ export class AuthService {
         })
     }
 
-    async updatePasswordByUsername(username: string, password: string, refreshToken: string) {
+    async updatePasswordByUsername(username: string, password: string): Promise<void> {
         await this.prisma.user.update({
             data: {
-                password: password,
-                refreshToken: refreshToken
+                password: password
             },
             where: {
                 username: username
-            }
-        })
-    }
-
-    async clearRefreshToken(username: string) {
-        await this.prisma.user.update({
-            where: {
-                username: username
-            },
-            data: {
-                refreshToken: null
             }
         })
     }

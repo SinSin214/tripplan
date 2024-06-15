@@ -5,6 +5,7 @@ import edjsHTML from 'editorjs-html';
 import { AppContext } from '../../context/appContext';
 import parse from 'html-react-parser';
 import moment from 'moment';
+import { RequestMethod } from '@/types/globalType';
 
 export default function ThreadDetail(props: { id: string }) {
     const { requestAPI } = useContext(AppContext);
@@ -30,7 +31,7 @@ export default function ThreadDetail(props: { id: string }) {
     useEffect(() => {
         async function getThreadDetailById() {
             setIsLoading(true);
-            const res = await requestAPI(`/thread/${props.id}`, 'GET');
+            const res = await requestAPI(`/thread/${props.id}`, RequestMethod.Get);
             const threadDetail = res.data;
             setThreadDetail(threadDetail);
             const edjsParser = edjsHTML({

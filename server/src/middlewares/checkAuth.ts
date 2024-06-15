@@ -1,20 +1,21 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Injectable, NestMiddleware, Req, Res } from '@nestjs/common';
 import { Response, NextFunction } from 'express';
-import * as jwt from 'jsonwebtoken';
 import { CustomRequest, UserType } from 'types';
+import * as utils from '../utilities/authentication';
 
 @Injectable()
 export class CheckAuthMiddleware implements NestMiddleware {
-  async use(req: CustomRequest, res: Response, next: NextFunction) {
-    const { authorization } = req.headers;
-    const token = authorization.split(' ')[1];
+  async use(@Req() req: CustomRequest, @Res() res: Response, next: NextFunction) {
     try {
-        const decoded = jwt.verify(token, process.env.SECRECT_ACCESS_TOKEN);
-        req.user = decoded as UserType;
+        const session = req.cookies.get('session');
+        if(!session) throw new Error('RequireLogin');
+        
+        const decryptedData = utils.decryptToken(session, process.env.SECRECT_SESSION_TOKEN);
+        req.user = decryptedData as UserType;
         next();
    } catch (error) {
         return res.status(500).send({
-            messageCode: error.name === 'TokenExpiredError' ? `AccessTokenExpired` : error.name
+            messageCode: error.name
         });
    }
   }

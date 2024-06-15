@@ -7,7 +7,10 @@ export class WrapAsyncInterceptor implements NestInterceptor {
     intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
         return next
             .handle()
-            .pipe(map(data => (data)),
+            .pipe(
+                map((data) => {
+                    return data;
+                }),
             catchError(err => {
                 return throwError(() => new HttpException({messageCode: err.message}, 500))}
             )

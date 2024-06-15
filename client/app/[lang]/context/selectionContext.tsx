@@ -1,8 +1,8 @@
 'use client';
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { RequestMethod } from "@/utils/constants";
 import { AppContext } from "./appContext";
 import { Country, Tag } from "@/utils/selectionType";
+import { RequestMethod } from "@/types/globalType";
 
 type SelectionType = {
     countries: Country[],
@@ -24,7 +24,7 @@ export default function SelectionProvider({ children }: any) {
 
     useEffect(() => {
         async function getSelections() {
-            const res = await requestAPI(`/selections`, RequestMethod.GET);
+            const res = await requestAPI(`/selections`, RequestMethod.Get);
             setSelections(res.data);
         }
         getSelections();

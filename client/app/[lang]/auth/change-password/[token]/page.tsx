@@ -1,5 +1,6 @@
 'use client';
 import { AppContext } from '@/app/[lang]/context/appContext';
+import { RequestMethod } from '@/types/globalType';
 import { changePasswordSchema } from '@/utils/validationSchema';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Button, IconButton, InputAdornment, TextField } from '@mui/material';
@@ -21,7 +22,7 @@ export default function ChangePasswordForm({ params }: { params: { token: string
 
     async function handleChangePassword() {
         const oParams = { password: formik.values.password }
-        await requestAPI(`/auth/change_password/${params.token}`, 'POST', oParams);
+        await requestAPI(`/auth/change_password/${params.token}`, RequestMethod.Post, oParams);
         navigation('/');
     }
 

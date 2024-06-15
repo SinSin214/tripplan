@@ -15,6 +15,7 @@ import { useTranslations } from "next-intl";
 import { SelectionContext } from "../../context/selectionContext";
 import { Country } from "@/utils/selectionType";
 import { ThreadDetail } from "@/utils/threadType";
+import { RequestMethod } from "@/types/globalType";
 
 const Editor = dynamic(() => import('@/app/[lang]/components/Editor'), { ssr: false });
 
@@ -31,10 +32,8 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 export default function WriteThread() {
-    const { profile } = useContext(AuthContext);
-    // Not showing write page if not signed yet
-    if (!profile.isSigned) return notFound();
-
+    const [isAllowed, setIsAllowed] = useState<boolean>(false);
+    if(!isAllowed) return notFound();
     const initialThread: ThreadDetail = {
         title: '',
         description: '',
@@ -43,7 +42,7 @@ export default function WriteThread() {
         tagsId: [],
         images: []
     }
-    const { requestAPI, fileUploader } = useContext(AppContext);
+    const { requestAPI, fileUploader, navigation } = useContext(AppContext);
     const { selections } = useContext(SelectionContext);
     const [threadObject, setThreadObject] = useState(initialThread);
     const [isLoading, setIsLoading] = useState(false);
@@ -60,8 +59,21 @@ export default function WriteThread() {
     });
 
     useEffect(() => {
+        const checkSession = async () => {
+            try { 
+                const result = await requestAPI('/auth/check_permission', RequestMethod.Get);
+                setIsAllowed(true);
+            } catch(err) {
+                navigation
+            }
+        }
+        checkSession();
+    })
+
+
+    useEffect(() => {
         async function sendThread() {
-            const res = await requestAPI('/thread', 'POST', threadObject);
+            const res = await requestAPI('/thread', RequestMethod.Post, threadObject);
         }
         if (threadObject.content.length) sendThread();
     }, [threadObject.content]);

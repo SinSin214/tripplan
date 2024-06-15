@@ -32,15 +32,9 @@ export interface WriteThreadType {
   images: string[]
 }
 
-export interface ILocalStorageUserInfo {
-  username: string,
-  email: string,
-  accessToken: string,
-  refreshToken: string
-}
-
 export interface IProfile {
   username: string,
   email: string,
+  displayName: string,
   isSigned: boolean
 }

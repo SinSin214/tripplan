@@ -12,6 +12,5 @@ import { Request } from 'express';
  export interface UserType {
    username: string,
    email: string,
-   refreshToken: string,
-   accessToken: string
+   displayName: string
 }

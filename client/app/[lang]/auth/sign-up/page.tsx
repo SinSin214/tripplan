@@ -6,6 +6,7 @@ import { useContext, useState } from 'react';
 import { AppContext } from '@/app/[lang]/context/appContext';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useTranslations } from 'next-intl';
+import { RequestMethod } from '@/types/globalType';
 
 export default function SignUpForm() {
     const { requestAPI, navigation,  } = useContext(AppContext);
@@ -33,7 +34,7 @@ export default function SignUpForm() {
             email: formik.values.email,
             displayName: formik.values.displayName
         }
-        await requestAPI('/auth/sign_up', 'POST', data);
+        await requestAPI('/auth/sign_up', RequestMethod.Post, data);
         resetForm();
     }
 

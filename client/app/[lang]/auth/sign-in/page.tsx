@@ -7,11 +7,14 @@ import { Button, IconButton, InputAdornment, Link, TextField } from '@mui/materi
 import { useFormik } from 'formik';
 import { useContext, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { RequestMethod } from '@/types/globalType';
+import Loading from '../../loading';
 
 export default function SignInForm() {
-    const { requestAPI, navigation } = useContext(AppContext);
-    const { setupUserInfo } = useContext(AuthContext);
+    const { navigation, requestAPI } = useContext(AppContext);
+    const { setProfile } = useContext(AuthContext);
     const [isShowPassword, setIsShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const t = useTranslations();
 
     const formik = useFormik({
@@ -20,26 +23,35 @@ export default function SignInForm() {
             password: ""
         },
         validationSchema: signInSchema,
-        onSubmit: handleSignIn
+        onSubmit: async () => {
+            setIsLoading(true);
+            const params = {
+                username: formik.values.username,
+                password: formik.values.password
+            }
+            const res = await requestAPI('/auth/sign_in', RequestMethod.Post, params);
+            const userInfo = res.data;
+            setProfile({
+                username: userInfo.username,
+                email: userInfo.email,
+                displayName: userInfo.displayName,
+                isSigned: true
+            })
+            setIsLoading(false);
+            navigation('/');
+        }
     });
 
-    async function handleSignIn() {
-        const oParams = {
-            username: formik.values.username,
-            password: formik.values.password
-        }
-        const res = await requestAPI('/auth/sign_in', 'POST', oParams);
-        setupUserInfo(res.data);
-        navigation('/');
-    }
-
-    function showPassword(e: React.MouseEvent<HTMLOrSVGElement>) {
+    const showPassword = (e: React.MouseEvent<HTMLOrSVGElement>) => {
         e.preventDefault()
         setIsShowPassword(!isShowPassword);
     }
 
+    if(isLoading) return <Loading />
+
     return (
         <div className="authentication-popup">
+            <Loading />
             <form onSubmit={formik.handleSubmit}>
                     <TextField
                         className="my-2"

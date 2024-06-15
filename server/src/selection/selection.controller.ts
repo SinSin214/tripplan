@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, Res, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, UseInterceptors } from '@nestjs/common';
 import { SelectionService } from './selection.service';
 import { WrapAsyncInterceptor } from 'src/middlewares/wrapAsync.interceptor';
 

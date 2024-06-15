@@ -57,7 +57,6 @@
     
     "Thread": "Thread",
     "Title": "Title",
-    "TokenExpiredError": "Your session has been expired. Please sign in again",
     "Tags": "Tags",
 
 
@@ -69,7 +68,6 @@
     "UserCreationFailed": "User creation failed",
     "UpdatedPassword": "Updated password successfully",
 
-    "RefreshTokenExpired": "The session has been expired",
 
     "VerificationEmailSent": "A verification mail has been sent to your email. Please check.",
     "vietnam": "Viet Nam",
