@@ -3,21 +3,16 @@ import { createContext, useEffect, useState } from "react";
 import { IProfile } from '@/utils/types';
 import { useTranslations } from "next-intl";
 
-const defaultProfile = {
-    username: '',
-    email: '',
-    displayName: '',
-    isSigned: false
+interface ProfileContext {
+    profile: IProfile | null,
+    setProfile: React.Dispatch<React.SetStateAction<IProfile | null>>;
 }
 
-export const AuthContext = createContext({
-    profile: defaultProfile,
-    setProfile: (profile: IProfile) => { }
-});
+export const AuthContext = createContext<ProfileContext>({} as ProfileContext);
 
 export default function AuthProvider({ children }: any) {
     const t = useTranslations();
-    const [profile, setProfile] = useState<IProfile>(defaultProfile);
+    const [profile, setProfile] = useState<IProfile | null>(null);
 
     // Check if session not expired yet, set user profile
     useEffect(() => {
@@ -30,10 +25,12 @@ export default function AuthProvider({ children }: any) {
                 username: parsedUserInfo.username,
                 email: parsedUserInfo.email,
                 displayName: parsedUserInfo.displayName,
-                isSigned: true
+                bio: parsedUserInfo.bio,
+                avatarPath: parsedUserInfo.avatarPath,
+                roleId: parsedUserInfo.roleId
             })
         } else {
-            setProfile(defaultProfile);
+            setProfile(null);
         }
     }, []);
 

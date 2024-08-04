@@ -7,7 +7,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { RequestMethod } from "@/types/globalType";
 
 export const AppContext = createContext({
-    requestAPI: async (path: string, method: RequestMethod, data?: Object, loading?: Function): Promise<any> => {},
+    requestAPI: async (path: string, method: RequestMethod, data?: Object): Promise<any> => {},
     navigation: (path: string) => {},
     fileUploader: async (files: File[]): Promise<any> => {},
     checkPermission: () => {}
@@ -18,9 +18,9 @@ export default function AppProvider({ children }: any) {
     const locale = useLocale();
     const t = useTranslations();
 
-    const requestAPI = async (path: string, method: RequestMethod, data?: object, loading?: Function): Promise<any> => {
+    const requestAPI = async (path: string, method: RequestMethod, data?: object): Promise<any> => {
+        // const { path, method, data } = params;
         try {
-            if(loading) loading(true);
             const requestConfig = {
                 method: method,
                 url: `${process.env.NEXT_PUBLIC_API_ROUTE}${path}`,
@@ -28,16 +28,14 @@ export default function AppProvider({ children }: any) {
                 withCredentials: true
             }
             const res = await axios(requestConfig);
-            if(res.data.messageCode) {
-                toast.success(t(res.data.messageCode));
-            }
+            if(res.data.messageCode) toast.success(t(res.data.messageCode));
+
             return res.data;
         } catch(err: any) {
-            const error = err.response.data;
-            toast.error(t(error.messageCode));
-            throw Error(error);
-        } finally {
-            if(loading) loading(false);
+            // If has response => custom error else network errr
+            const errorObject = err.response ? err.response.data : err;
+            toast.error(t(errorObject.code));
+            throw Error(errorObject);
         }
     }
 
@@ -62,7 +60,7 @@ export default function AppProvider({ children }: any) {
         }
         catch(err: any) {
             const error = err.response.data;
-            toast.error(error.messageCode);
+            toast.error(error.code);
         }
     }
 

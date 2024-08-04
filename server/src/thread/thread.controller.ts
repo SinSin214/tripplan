@@ -2,6 +2,9 @@ import { Body, Controller, Get, Param, Post, Req, Res, UseInterceptors } from '@
 import { ThreadService } from './thread.service';
 import { WrapAsyncInterceptor } from 'src/middlewares/wrapAsync.interceptor';
 import { CustomRequest } from 'types';
+import { addPathToImage } from 'src/utilities/imagePath';
+import { FilesInterceptor } from '@nestjs/platform-express';
+
 
 @UseInterceptors(new WrapAsyncInterceptor())
 @Controller('thread')
@@ -27,23 +30,28 @@ export class ThreadController {
     // always put at bottom
     @Get(':id')
     async getThreadDetail(@Param('id') id: string) {
-        const result = await this.threadService.getDetail(id);
+        const threadDetail = await this.threadService.getDetail(id);
+        threadDetail.creator.avatarPath = addPathToImage(threadDetail.creator.avatarFileName, process.env.AVATAR_FOLDER);
         return {
-            data: result
+            data: threadDetail
         }
     }
 
     @Post('')
+    @UseInterceptors(FilesInterceptor('files'))
     async createThread(@Req() request: CustomRequest) {
-        const thread = request.body;
+        const thread = JSON.parse(request.body.thread);
+        const files = request.files;
+        // Create thread before upload file !!!
         const username = request.user['username'];
         const transformedThread = {
             ...thread,
             author: username
         }
-        await this.threadService.createThread(transformedThread, username);
+        const createdThread = await this.threadService.createThread(transformedThread, username);
         return {
             messageCode: 'Created thread',
+            threadId: createdThread.id
         };
     }
 }

@@ -1,12 +1,17 @@
 {
     "ActivedAccount": "Activate account successfully",
     "autumn": "Autumn",
+    "america": "America",
+
+
+    "beach": "Beach",
 
     "ChangePassword": "Change password",
     "ConfirmPassword": "Confirm password",
     "Cancel": "Cancel",
     "CostInUsd": "Trip cost (USD)",
     "Country": "Country",
+    "china": "China",
 
 
     "Destination": "Destination",
@@ -31,8 +36,17 @@
     "IncorrectPassword": "Incorrect password",
     "invalid signature": "Invalid token",
     "jwt expired": "Token is expired",
+    "japan": "Japan",
+
+
+    "korea": "Korea",
+
 
     "LoginSuccessfully": "Login successfully",
+
+
+    "meadow": "Meadow",
+    "mountain": "Mountain",
 
 
     "NewThread": "New thread",

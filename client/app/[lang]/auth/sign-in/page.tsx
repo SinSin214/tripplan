@@ -24,19 +24,26 @@ export default function SignInForm() {
         },
         validationSchema: signInSchema,
         onSubmit: async () => {
-            const params = {
-                username: formik.values.username,
-                password: formik.values.password
+            try {
+                setIsLoading(true);
+                const params = {
+                    username: formik.values.username,
+                    password: formik.values.password
+                }
+                const res = await requestAPI('/auth/sign_in', RequestMethod.Post, params);
+                const userInfo = res.data;
+                setProfile({
+                    username: userInfo.username,
+                    email: userInfo.email,
+                    displayName: userInfo.displayName,
+                    avatarPath: userInfo.avatarPath,
+                    bio: userInfo.bio,
+                    roleId: userInfo.roleId
+                })
+                navigation('/');
+            } finally {
+                setIsLoading(false);
             }
-            const res = await requestAPI('/auth/sign_in', RequestMethod.Post, params, setIsLoading);
-            const userInfo = res.data;
-            setProfile({
-                username: userInfo.username,
-                email: userInfo.email,
-                displayName: userInfo.displayName,
-                isSigned: true
-            })
-            navigation('/');
         }
     });
 

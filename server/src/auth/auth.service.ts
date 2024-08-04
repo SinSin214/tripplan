@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { SignUpUserDto } from './auth.dto';
 
@@ -16,7 +16,7 @@ export class AuthService {
         return result;
     }
 
-    async getUserByUsername(username: string) {
+    async getUserProfileByUsername(username: string) {
         const result = await this.prisma.user.findUnique({
             where: {
                 username: username
@@ -41,14 +41,9 @@ export class AuthService {
         return result;
     }
 
-    async createUser(user: SignUpUserDto): Promise<void> {
+    async createUser(user: Prisma.UserUncheckedCreateInput): Promise<void> {
         await this.prisma.user.create({
-            data: {
-                username: user.username,
-                email: user.email,
-                displayName: user.displayName,
-                password: user.password
-            }
+            data: user
         });
     }
 

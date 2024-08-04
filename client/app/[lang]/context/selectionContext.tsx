@@ -1,16 +1,14 @@
 'use client';
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { AppContext } from "./appContext";
-import { Country, Tag } from "@/utils/selectionType";
+import { Tag } from "@/utils/selectionType";
 import { RequestMethod } from "@/types/globalType";
 
 type SelectionType = {
-    countries: Country[],
     tags: Tag[]
 }
 
 const initialSelections: SelectionType = {
-    countries: [],
     tags: [] as Tag[]
 }
 

@@ -9,11 +9,9 @@ export class SelectionController {
 
     @Get('')
     async getAllSelections() {
-        const countries = await this.selectionService.getAllCountries();
         const tags = await this.selectionService.getAllTags();
         return {
             data: {
-                countries: countries,
                 tags: tags
             }
         };

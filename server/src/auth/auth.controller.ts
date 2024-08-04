@@ -6,6 +6,8 @@ import * as jwt from 'jsonwebtoken';
 import * as utils from '../utilities/authentication';
 import { WrapAsyncInterceptor } from 'src/middlewares/wrapAsync.interceptor';
 import { Request, Response } from 'express';
+import { avatarFileName } from 'src/utilities/constants';
+import { addPathToImage } from 'src/utilities/imagePath';
 
 @UseInterceptors(new WrapAsyncInterceptor())
 @Controller('auth')
@@ -22,9 +24,14 @@ export class AuthController {
         if (email === existedUser.email) {
             throw new Error('EmailExisted');
         }
+        const hashedPassword = await bcrypt.hash(password, 10); 
+        const newUser = {
+            ...signUpUser,
+            password: hashedPassword,
+            avatarFileName: avatarFileName
+        };
 
-        signUpUser.password = await bcrypt.hash(password, 10);
-        await this.authService.createUser(signUpUser);
+        await this.authService.createUser(newUser);
 
         const activateToken = utils.generateToken(username, email, process.env.SECRECT_ACTIVATE_USER_TOKEN);
         await utils.sendActiveEmail(origin, signUpUser.email, activateToken);
@@ -36,7 +43,7 @@ export class AuthController {
     @Post('sign_in')
     async signIn(@Body() signInUser: SignInUserDto, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
         const { username, password } = signInUser; 
-        const user = await this.authService.getUserByUsername(username);
+        const user = await this.authService.getUserProfileByUsername(username);
         if (!user) throw new Error('UserNotExist');
 
         const matched = await bcrypt.compare(password, user.password);
@@ -46,9 +53,11 @@ export class AuthController {
         const userInfo = {
             username: user.username,
             email: user.email,
-            displayName: user.displayName
+            displayName: user.displayName,
+            avatarPath: addPathToImage(user.avatarFileName, process.env.AVATAR_FOLDER),
+            bio: user.bio,
+            roleId: user.roleId
         }
-        await new Promise(resolve => setTimeout(resolve, 2000));
         res.cookie('session', encryptedData, {maxAge: 24 * 60 * 60 * 1000});   // 1 day life
         res.cookie('userInfo', JSON.stringify(userInfo), {maxAge: 24 * 60 * 60 * 1000})
 

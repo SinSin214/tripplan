@@ -5,11 +5,11 @@ import { Bookmark } from '@mui/icons-material';
 import Image from 'next/image'
 
 export default function ThreadCard(props: { ThreadOverview: IThreadOverviewType, onCardClick: Function }) {
-  let thread = props.ThreadOverview;
+  const thread = props.ThreadOverview;
 
   return (
     <div className="grid grid-cols-3 h-[200px]">
-      	<Image className="col-span-1 w-full cursor-pointer"
+      	<Image className="col-span-1 mr-4 w-full cursor-pointer"
           	src="/wallpaper.jpg"
             width={100}
             height={100}
@@ -21,8 +21,8 @@ export default function ThreadCard(props: { ThreadOverview: IThreadOverviewType,
           	alt="green iguana"
 			onClick={() => props.onCardClick(thread.id)}
         	/>
-      	<div className="col-span-2 grid grid-rows-5 ml-5">
-			<div className="header flex justify-between items-center row-span-1">
+		<div className="col-span-2 grid grid-rows-4 ml-4">
+			<div className="flex justify-between row-span-1">
 				<div className="type">
 					Type
 				</div>
@@ -34,29 +34,29 @@ export default function ThreadCard(props: { ThreadOverview: IThreadOverviewType,
                         onClick={() => { alert('aa')}} />
 				</div>
 			</div>
-			<div className="body grid items-center row-span-3">
-				<div className="thread-card-title">
-				<Typography 
-                    gutterBottom 
-                    variant="h5" 
-                    component="div" 
-                    style={{
-                        cursor: "pointer"
-                    }}
-                    onClick={() => { alert('aa')}}>
-					{thread.title}
-				</Typography>
+
+			<div className="thread-card-title row-span-1">
+					<Typography 
+						gutterBottom 
+						variant="h5" 
+						component="div" 
+						style={{
+							cursor: "pointer"
+						}}
+						onClick={() => { alert('aa')}} >
+						{thread.title}
+					</Typography>
 				</div>
-				<div className="description">
-				<Typography variant="body2" color="text.secondary">
-					{thread.description}
-				</Typography>
+			
+				<div className="description row-span-1">
+					<Typography variant="body2" color="text.secondary">
+						{thread.description}
+					</Typography>
 				</div>
+				<div className="row-span-1">
+                ab
 			</div>
-			<div className="footer flex items-center row-span-1">
-                <div>{thread.author}</div>
 			</div>
-      	</div>
     </div>
   );
 }

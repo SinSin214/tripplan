@@ -1,6 +1,6 @@
 import "@/output.css";
-import Header from './components/Header';
-import Footer from "./components/Footer";
+import Header from './components/App/Header';
+import Footer from "./components/App/Footer";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { NextIntlClientProvider, useMessages } from 'next-intl';

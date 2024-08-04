@@ -7,7 +7,7 @@ import * as utils from '../utilities/authentication';
 export class CheckAuthMiddleware implements NestMiddleware {
   async use(@Req() req: CustomRequest, @Res() res: Response, next: NextFunction) {
     try {
-        const session = req.cookies.get('session');
+        const session = req.cookies.session;
         if(!session) throw new Error('RequireLogin');
         
         const decryptedData = utils.decryptToken(session, process.env.SECRECT_SESSION_TOKEN);
@@ -15,7 +15,7 @@ export class CheckAuthMiddleware implements NestMiddleware {
         next();
    } catch (error) {
         return res.status(500).send({
-            messageCode: error.name
+            code: error.name
         });
    }
   }

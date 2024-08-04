@@ -21,8 +21,13 @@ export default function ForgotPasswordForm() {
     });
 
     async function handleForgotPassword() {
-        const params = { username: formik.values.username };
-        await requestAPI('/auth/forgot_password', RequestMethod.Post, params, setIsLoading);
+        try {
+            setIsLoading(true);
+            const params = { username: formik.values.username };
+            await requestAPI('/auth/forgot_password', RequestMethod.Post, params);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (

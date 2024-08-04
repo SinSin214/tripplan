@@ -8,7 +8,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
     const { profile } = useContext(AuthContext);
 
     useEffect(() => {
-        if(profile.isSigned) {
+        if(profile) {
             navigation('/');
         }
     });

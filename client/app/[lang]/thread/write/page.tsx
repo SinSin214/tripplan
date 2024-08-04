@@ -12,9 +12,10 @@ import { Carousel } from "@/app/[lang]/components/Carousel/Carousel";
 import { notFound } from 'next/navigation';
 import { useTranslations } from "next-intl";
 import { SelectionContext } from "../../context/selectionContext";
-import { Country } from "@/utils/selectionType";
+// import { Country } from "@/utils/selectionType";
 import { ThreadDetail } from "@/utils/threadType";
 import { RequestMethod } from "@/types/globalType";
+import axios from "axios";
 
 const Editor = dynamic(() => import('@/app/[lang]/components/Editor'), { ssr: false });
 
@@ -58,21 +59,47 @@ export default function WriteThread() {
 
     useEffect(() => {
         const checkSession = async () => {
-            try { 
-                await requestAPI('/auth/check_permission', RequestMethod.Get, undefined, setIsLoading);
+            try {
+                setIsLoading(true);
+                await requestAPI('/auth/check_permission', RequestMethod.Get);
                 setIsAllowed(true);
-            } catch(err) {
-                setIsAllowed(false);
+            } finally {
+                setIsLoading(false);
             }
         }
         checkSession();
     }, [])
 
     useEffect(() => {
-        async function sendThread() {
-            const res = await requestAPI('/thread', RequestMethod.Post, threadObject);
+        async function createThread() {
+            // const fileUploadRes = await fileUploader(threadObject.images.map(item => item.fileObject));
+            // const res = await requestAPIThread('/thread', RequestMethod.Post, threadObject);
+            const files = threadObject.images.map(item => item.fileObject);
+
+            const data = new FormData();
+            for(let i = 0; i < files.length; i++) {
+                data.append('files', files[i])
+            }
+            data.append('thread', JSON.stringify(threadObject))
+            // sending data
+            const requestConfig = {
+                method: 'POST',
+                url: `${process.env.NEXT_PUBLIC_API_ROUTE}/thread`,
+                data: data,
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+            const res = await axios(requestConfig);
+
+            // if(fileUploadRes) {
+            //     const res = await requestAPI('/thread', RequestMethod.Post, threadObject);
+            //     setThreadObject(initialThread);
+            //     navigation(`/thread/${res.threadId}`)
+            // }
         }
-        if (threadObject.content.length) sendThread();
+        if (threadObject.content.length) createThread();
     }, [threadObject.content]);
 
     const onChangeTextProperty = (e: ChangeEvent<HTMLInputElement>) => {
@@ -90,12 +117,12 @@ export default function WriteThread() {
         })
     }
 
-    const onChangeCountry = (e: SelectChangeEvent<string>) => {
-        setThreadObject({
-            ...threadObject,
-            countryId: e.target.value
-        })
-    }
+    // const onChangeCountry = (e: SelectChangeEvent<string>) => {
+    //     setThreadObject({
+    //         ...threadObject,
+    //         countryId: e.target.value
+    //     })
+    // }
 
     const onRemoveTag = (e: React.MouseEvent, selectedId: string): ((event: any) => void) | undefined => {
         e.preventDefault();
@@ -111,17 +138,28 @@ export default function WriteThread() {
             setThreadObject({
                 ...threadObject,
                 content: outputData.blocks,
-                images: imageList.map((file: any) => file.fileName)
+                // images: imageList.map((file: any) => file.fileName)
             });
         });
     }
 
-    async function uploadImage(e: any) {
-        let uploadImages = e.target.files;
-        setIsLoading(true);
-        let res = await fileUploader(uploadImages);
-        setImageList([...imageList, ...res.filesInfo]);
-        setIsLoading(false);
+    async function uploadImage(e: React.ChangeEvent<HTMLInputElement>) {
+        const uploadImages = e.target.files;
+        const imageInfo = [];
+        if(uploadImages) {
+            for(let i = 0; i < uploadImages.length; i++) {
+                const image = uploadImages[i];
+                imageInfo.push({
+                    filePath: URL.createObjectURL(image),
+                    fileName: image.name,
+                    fileObject: image
+                })
+            }
+            setThreadObject({
+                ...threadObject,
+                images: threadObject.images.concat(imageInfo)
+            })
+        }
     }
 
     if(isAllowed === undefined) {
@@ -161,7 +199,7 @@ export default function WriteThread() {
                     </FormControl>
 
                     <div className="flex w-full gap-x-4">
-                        <FormControl className="w-1/3">
+                        {/* <FormControl className="w-1/3">
                             <InputLabel required>{t('Country')}</InputLabel>
                             <Select 
                                 name="countryId"
@@ -175,7 +213,7 @@ export default function WriteThread() {
                                     </MenuItem>
                                 )) : ''}
                             </Select>
-                        </FormControl>
+                        </FormControl> */}
                         <FormControl className="w-2/3">
                             <InputLabel required>{t('Tags')}</InputLabel>
                             <Select
@@ -222,9 +260,9 @@ export default function WriteThread() {
                     <div className="w-full mb-2">
                         <Editor editorInstance={editorInstance} setEditorInstance={setEditorInstance} />
                     </div>
-                    {imageList.length ?
+                    {threadObject.images.length ?
                         <div className="border-slate-300 border-solid border rounded h-[500px] w-full">
-                            <Carousel data={imageList} />
+                            <Carousel data={threadObject.images} />
                         </div> : ''
                     }
                     <Button

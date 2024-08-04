@@ -8,13 +8,6 @@ async function main() {
         ]
     });
 
-    const country = await this.prisma.country.createMany({
-        data: [
-            { id: 'vietnam' },
-            { id: 'england' }
-        ]
-    });
-
     const tag = await this.prisma.tag.createMany({
       data: [
         { id: 'spring', order: 1, colorCode: 'green'},
@@ -27,7 +20,7 @@ async function main() {
       ]
     })
 
-    console.log({ role, country })
+    console.log({ role })
 }
 main()
   .then(async () => {

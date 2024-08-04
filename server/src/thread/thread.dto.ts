@@ -1,4 +1,3 @@
-import { JsonValue } from "@prisma/client/runtime/library"
 import { IsNotEmpty } from "class-validator"
 
 export class CreateThreadDto {

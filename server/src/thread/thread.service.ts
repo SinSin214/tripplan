@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Thread } from '@prisma/client';
+import { Prisma, Thread } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateThreadDto } from './thread.dto';
 
 @Injectable()
 export class ThreadService {
@@ -20,19 +19,28 @@ export class ThreadService {
         return res;
     }
 
-    async getDetail(id: string): Promise<Partial<Thread>> {
-        return await this.prisma.thread.findUnique({
-            where: {
-                id: id
-            },
+    async getDetail(id: string): Promise<any> {
+        const result = await this.prisma.thread.findUnique({
             include: {
                 creator: {
                     select: {
-                        displayName: true
+                        displayName: true,
+                        avatarFileName: true
+                    }
+                },
+                tags: {
+                    select: {
+                        tagId: true
                     }
                 }
+            },
+            
+            where: {
+                id: id
             }
         });
+
+        return result;
     }
 
     async createThread(thread: any, username: string): Promise<Thread> {
@@ -41,7 +49,6 @@ export class ThreadService {
                 title: thread.title,
                 description: thread.description,
                 content: thread.content,
-                countryId: thread.countryId,
                 creatorUsername: username
             }
         });

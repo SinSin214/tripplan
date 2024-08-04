@@ -1,12 +1,16 @@
 {
     "ActivedAccount": "Đã kích hoạt tài khoản thành công",
     "autumn": "Mùa thu",
+    "america": "Mỹ",
+
+    "beach": "Bãi biển",
 
     "ChangePassword": "Thay đổi mật khẩu",
     "ConfirmPassword": "Nhập lại mật khẩu",
     "Cancel": "Hủy",
     "CostInUsd": "Chi phí chuyến đi (USD)",
     "Country": "Đất nước",
+    "china": "Trung Quốc",
 
     "Destination": "Địa điểm",
     "Description": "Mô tả",
@@ -31,8 +35,16 @@
     "IncorrectPassword": "Mật khẩu không chính xác",
     "invalid signature": "Token không chính xác",
     "jwt expired": "Token đã quá hạn kích hoạt",
+    "japan": "Nhật Bản",
+
+    "korea": "Hàn Quốc",
+
 
     "LoginSuccessfully": "Đăng nhập thành công",
+
+
+    "meadow": "Thảo nguyên",
+    "mountain": "Đồi núi",
 
 
     "NewThread": "Bài viết mới",

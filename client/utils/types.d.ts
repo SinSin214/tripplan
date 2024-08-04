@@ -16,7 +16,7 @@ export interface IThreadOverviewType {
 	rating: number,
 	imagePath: string,
 	content: string,
-	author: string,
+	creatorUsername: string,
 	createdAt: Date,
   description: string
 }
@@ -36,5 +36,7 @@ export interface IProfile {
   username: string,
   email: string,
   displayName: string,
-  isSigned: boolean
+  bio: string,
+  avatarPath: string,
+  roleId: string
 }

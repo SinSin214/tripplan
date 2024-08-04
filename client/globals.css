@@ -39,7 +39,6 @@ body {
 .main {
   background-color: white;
   color: black;
-  overflow: auto;
   flex: 1;
   margin-top: 3.5rem; /* equal header height */
   display: flex;
@@ -259,4 +258,23 @@ body {
     height: 1px;
     background: gray;
     margin: 15px auto;
+}
+
+/* Thread detail */
+.sticky-bar {
+  display: flex;
+  position: fixed;
+  flex-direction: column;
+  @media (min-width: 768px) {
+    left: calc((100% - 400px)/4);
+  };
+  @media (min-width: 992px) {
+    left: calc((100% - 500px)/4);
+  };
+  @media (min-width: 1200px) {
+    left: calc((100% - 800px)/4);
+  };
+  @media (min-width: 1920px) {
+    left: calc((100% - 1000px)/4);
+  }
 }

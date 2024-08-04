@@ -8,10 +8,6 @@ datasource db {
 }
 
 // ATTRIBUTE TABLES
-model Country {
-  id     String   @id
-  thread Thread[]
-}
 
 model Role {
   id   String @id
@@ -20,8 +16,7 @@ model Role {
 
 model Tag {
   id        String @id
-  index     Int
-  colorCode String
+  type      String
 
   threads TagsOnThreads[]
 }
@@ -34,7 +29,7 @@ model User {
   displayName  String    @unique
   password     String
   isActive     Boolean   @default(false)
-  avatarUrl    String?
+  avatarFileName    String?
   bio          String?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime? @updatedAt
@@ -60,12 +55,7 @@ model Thread {
   updatedAt   DateTime? @updatedAt
 
   comment Comment[]
-
-  country   Country @relation(fields: [countryId], references: [id])
-  countryId String
-
-  tagsId TagsOnThreads[]
-
+  tags TagsOnThreads[]
   creator         User   @relation(fields: [creatorUsername], references: [username])
   creatorUsername String
 }

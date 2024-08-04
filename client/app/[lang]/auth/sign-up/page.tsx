@@ -30,14 +30,19 @@ export default function SignUpForm() {
     });
 
     async function handleSignUp(resetForm: Function) {
-        const data = {
-            username: formik.values.username,
-            password: formik.values.password,
-            email: formik.values.email,
-            displayName: formik.values.displayName
+        try {
+            setIsLoading(true);
+            const data = {
+                username: formik.values.username,
+                password: formik.values.password,
+                email: formik.values.email,
+                displayName: formik.values.displayName
+            }
+            await requestAPI('/auth/sign_up', RequestMethod.Post, data);
+            resetForm();
+        } finally {
+            setIsLoading(false);
         }
-        await requestAPI('/auth/sign_up', RequestMethod.Post, data, setIsLoading);
-        resetForm();
     }
 
     function showPassword(e: React.MouseEvent<HTMLOrSVGElement>) {

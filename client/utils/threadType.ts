@@ -3,6 +3,5 @@ export type ThreadDetail = {
     description: string,
     content: any[],
     images: any[],
-    tagsId: string[],
-    countryId: string
+    tagsId: string[]
 }

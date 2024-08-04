@@ -29,10 +29,10 @@ export default function ListThread() {
     }
 
     async function getListThreads() {
-        const paramObject = {
+        const data = {
             sort: tab
         };
-        const res = await requestAPI(`/thread/all`, RequestMethod.Post, paramObject);
+        const res = await requestAPI(`/thread/all`, RequestMethod.Post, data);
         setListThreads(res.data);
     };
 
