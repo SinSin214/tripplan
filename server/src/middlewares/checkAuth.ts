@@ -15,7 +15,8 @@ export class CheckAuthMiddleware implements NestMiddleware {
         next();
    } catch (error) {
         return res.status(500).send({
-            code: error.name
+            messageCode: error.name,
+            isValidSession: false
         });
    }
   }

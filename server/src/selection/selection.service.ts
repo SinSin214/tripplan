@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Tag } from '@prisma/client';
+import { Country, Tag } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -8,6 +8,11 @@ export class SelectionService {
 
     async getAllTags(): Promise<Tag[]> {
         const res = await this.prisma.tag.findMany();
+        return res;
+    }
+
+    async getAllCountries(): Promise<Country[]> {
+        const res = await this.prisma.country.findMany();
         return res;
     }
 }

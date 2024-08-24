@@ -1,13 +1,13 @@
 export interface ThreadProps {
-    id: string,
-    imagePath: string,
-    content: string,
-    description: string,
-    highlights: string[],
-    title: string,
-    creatorUsername: string,
-    createdAt: Date,
-    rating: number
+  id: string,
+  imagePath: string,
+  content: string,
+  description: string,
+  highlights: string[],
+  title: string,
+  creatorUsername: string,
+  createdAt: Date,
+  rating: number
 }
 
 export interface IThreadOverviewType {
@@ -24,12 +24,6 @@ export interface IThreadOverviewType {
 export interface IUser {
   username: string,
   email: string
-}
-
-export interface WriteThreadType {
-  title: string,
-  content: string,
-  images: string[]
 }
 
 export interface IProfile {

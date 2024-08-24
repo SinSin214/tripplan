@@ -5,7 +5,7 @@ import ImageTool from '@editorjs/image';
 import LinkTool from '@editorjs/link';
 import Quote from '@editorjs/quote';
 import { useContext, useEffect } from "react";
-import { AppContext } from '../context/appContext';
+import { AppContext } from '../../context/appContext';
 
 export default function Editor(props) {
     const { fileUploader } = useContext(AppContext);
@@ -40,7 +40,7 @@ export default function Editor(props) {
                             captionPlaceholder: " ",
                             uploader: {
                             async uploadByFile(file){
-                                let data = await fileUploader([file]);
+                                const data = await fileUploader([file]);
                                 return {
                                     success: true,
                                     file: {

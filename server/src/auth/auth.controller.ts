@@ -54,7 +54,7 @@ export class AuthController {
             username: user.username,
             email: user.email,
             displayName: user.displayName,
-            avatarPath: addPathToImage(user.avatarFileName, process.env.AVATAR_FOLDER),
+            avatarPath: addPathToImage(user.avatarFileName, process.env.AVATAR_FOLDER_NAME),
             bio: user.bio,
             roleId: user.roleId
         }

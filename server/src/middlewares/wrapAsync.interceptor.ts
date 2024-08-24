@@ -10,7 +10,7 @@ export class WrapAsyncInterceptor implements NestInterceptor {
             .pipe(
                 map((data) => { return data }),
                 catchError(err => {
-                    return throwError(() => new HttpException({code: err.message}, 500))}
+                    return throwError(() => new HttpException({messageCode: err.message}, 500))}
                 )
             );
   }

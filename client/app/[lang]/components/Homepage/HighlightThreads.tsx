@@ -13,19 +13,18 @@ export default function HighlightPosts() {
 	let aHighlights: any = [];
 	const t = useTranslations();
 
-	// useEffect(() => {
-	// 	async function getHighlights() {
-	// 		try {
-	// 			setIsLoading(true);
-	// 			const res = await requestAPI('/thread/highlights', RequestMethod.Get);
-	// 			aHighlights = res;
-	// 		} catch(err: any) {
-	// 		} finally {
-	// 			setIsLoading(false);
-	// 		}
-	// 	}
-	// 	getHighlights();
-	// }, []);
+	useEffect(() => {
+		async function getHighlights() {
+			try {
+				setIsLoading(true);
+				const res = await requestAPI('/thread/highlights', RequestMethod.Get);
+				aHighlights = res;
+			} finally {
+				setIsLoading(false);
+			}
+		}
+		getHighlights();
+	}, []);
 
 	return (
 		<div className='min-h-[50px] w-full'>

@@ -1,7 +1,7 @@
 'use client';
 import { usePathname } from "next/navigation";
 import { Fragment, SyntheticEvent, useContext, useRef, useState } from 'react';
-import { AuthContext, defaultProfile } from '../../context/authContext';
+import { AuthContext } from '../../context/authContext';
 import { Avatar, Button, ClickAwayListener, Grow, ListItemIcon, MenuItem, MenuList, Paper, Popper, Stack } from "@mui/material";
 import CreateIcon from '@mui/icons-material/Create';
 import { AppContext } from "../../context/appContext";
@@ -21,7 +21,7 @@ export default function Navbar() {
 
     const signOut = async () => {
         await requestAPI('/auth/sign_out', RequestMethod.Get);
-        setProfile(defaultProfile);
+        setProfile(null);
         navigation('/');
     }
 
@@ -36,7 +36,6 @@ export default function Navbar() {
         ) {
           return;
         }
-    
         setOpen(false);
       };
 

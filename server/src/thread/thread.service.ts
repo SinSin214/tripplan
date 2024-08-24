@@ -43,20 +43,30 @@ export class ThreadService {
         return result;
     }
 
-    async createThread(thread: any, username: string): Promise<Thread> {
+    async createThread(thread: Prisma.ThreadUncheckedCreateInput, username: string): Promise<Thread> {
         return await this.prisma.thread.create({
             data: {
                 title: thread.title,
                 description: thread.description,
                 content: thread.content,
-                creatorUsername: username
+                images: thread.images,
+                country: {
+                    connect: {
+                        id: thread.countryId
+                    }
+                },
+                creator: {
+                    connect: {
+                        username: username
+                    }
+                },
             }
         });
     }
 
     async getHighlights(): Promise<Thread[]> {
         return await this.prisma.thread.findMany({
-            take: 10
+            take: 3
         });
     }
 }

@@ -21,6 +21,13 @@ model Tag {
   threads TagsOnThreads[]
 }
 
+model Country {
+  id        String @id
+  currency  String
+
+  threads   Thread[]
+}
+
 // USER TABLES
 
 model User {
@@ -56,6 +63,8 @@ model Thread {
 
   comment Comment[]
   tags TagsOnThreads[]
+  country   Country   @relation(fields: [countryId], references: [id])
+  countryId   String
   creator         User   @relation(fields: [creatorUsername], references: [username])
   creatorUsername String
 }
@@ -72,17 +81,17 @@ model Comment {
   creatorUsername String
 
   parentCommentId String?
-  parentComment   Comment?  @relation("CommentReplies", fields: [parentCommentId], references: [id])
+  parentComment   Comment?  @relation("CommentReplies", fields: [parentCommentId], references: [id], onDelete: Cascade)
   replies         Comment[] @relation("CommentReplies")
 
-  thread   Thread @relation(fields: [threadId], references: [id])
+  thread   Thread @relation(fields: [threadId], references: [id], onDelete: Cascade)
   threadId String
 }
 
 model TagsOnThreads {
-  thread   Thread @relation(fields: [threadId], references: [id])
+  thread   Thread @relation(fields: [threadId], references: [id], onDelete: Cascade)
   threadId String
-  tag      Tag    @relation(fields: [tagId], references: [id])
+  tag      Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
   tagId    String
 
   @@id([threadId, tagId])

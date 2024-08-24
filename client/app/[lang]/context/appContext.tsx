@@ -19,7 +19,6 @@ export default function AppProvider({ children }: any) {
     const t = useTranslations();
 
     const requestAPI = async (path: string, method: RequestMethod, data?: object): Promise<any> => {
-        // const { path, method, data } = params;
         try {
             const requestConfig = {
                 method: method,
@@ -29,13 +28,12 @@ export default function AppProvider({ children }: any) {
             }
             const res = await axios(requestConfig);
             if(res.data.messageCode) toast.success(t(res.data.messageCode));
-
             return res.data;
         } catch(err: any) {
             // If has response => custom error else network errr
             const errorObject = err.response ? err.response.data : err;
-            toast.error(t(errorObject.code));
-            throw Error(errorObject);
+            toast.error(t(errorObject.messageCode));
+            throw new Error();
         }
     }
 
@@ -60,7 +58,7 @@ export default function AppProvider({ children }: any) {
         }
         catch(err: any) {
             const error = err.response.data;
-            toast.error(error.code);
+            toast.error(error.messageCode);
         }
     }
 

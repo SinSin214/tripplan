@@ -1,4 +1,6 @@
 export const addPathToImage = (imageName: string, folderName: string): string => {
-    const pathToImage = `${process.env.IMAGE_STORAGE_PATH}/${folderName}/${imageName}`
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const imageStorage = process.env.IMAGE_STORAGE;
+    const pathToImage = `${supabaseUrl}/storage/v1/object/public/${imageStorage}/${folderName}/${imageName}`
     return pathToImage
 }

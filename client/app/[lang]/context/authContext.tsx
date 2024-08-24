@@ -1,7 +1,6 @@
 'use client';
 import { createContext, useEffect, useState } from "react";
 import { IProfile } from '@/utils/types';
-import { useTranslations } from "next-intl";
 
 interface ProfileContext {
     profile: IProfile | null,
@@ -11,7 +10,6 @@ interface ProfileContext {
 export const AuthContext = createContext<ProfileContext>({} as ProfileContext);
 
 export default function AuthProvider({ children }: any) {
-    const t = useTranslations();
     const [profile, setProfile] = useState<IProfile | null>(null);
 
     // Check if session not expired yet, set user profile
@@ -34,7 +32,7 @@ export default function AuthProvider({ children }: any) {
         }
     }, []);
 
-    function getCookieByName(cookieName: string): string {
+    function getCookieByName(cookieName: string): string | null {
         const name = cookieName + '=';
         const decodedCookie = decodeURIComponent(document.cookie);
         const listCookies = decodedCookie.split('; ');
@@ -44,7 +42,7 @@ export default function AuthProvider({ children }: any) {
                 return cookie.substring(name.length, cookie.length);
             }
         }
-        return '';
+        return null;
     }
 
     return (

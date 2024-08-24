@@ -25,6 +25,7 @@
     "Forgot": "Forgot password",
 
 
+    "germany": "Germany",
     "Greeting": "Hi",
 
 
@@ -58,6 +59,7 @@
 
 
     "RecoveryEmailSent": "An email to recovery your password has been sent to registered email of this account",
+    "RequireLogin": "Please login to use this feature.",
 
 
     "SignIn": "Sign in",

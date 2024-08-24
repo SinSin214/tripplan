@@ -4,6 +4,7 @@ import { WrapAsyncInterceptor } from 'src/middlewares/wrapAsync.interceptor';
 import { CustomRequest } from 'types';
 import { addPathToImage } from 'src/utilities/imagePath';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { supabase } from 'src/main';
 
 
 @UseInterceptors(new WrapAsyncInterceptor())
@@ -21,17 +22,17 @@ export class ThreadController {
 
     @Get('highlights')
     async getHighlights() {
-            const result = await this.threadService.getHighlights();
-            return {
-                data: result
-            }
+        const result = await this.threadService.getHighlights();
+        return {
+            data: result
+        }
     }
 
     // always put at bottom
     @Get(':id')
     async getThreadDetail(@Param('id') id: string) {
         const threadDetail = await this.threadService.getDetail(id);
-        threadDetail.creator.avatarPath = addPathToImage(threadDetail.creator.avatarFileName, process.env.AVATAR_FOLDER);
+        threadDetail.creator.avatarPath = addPathToImage(threadDetail.creator.avatarFileName, process.env.AVATAR_FOLDER_NAME);
         return {
             data: threadDetail
         }
@@ -39,18 +40,32 @@ export class ThreadController {
 
     @Post('')
     @UseInterceptors(FilesInterceptor('files'))
-    async createThread(@Req() request: CustomRequest) {
-        const thread = JSON.parse(request.body.thread);
-        const files = request.files;
-        // Create thread before upload file !!!
-        const username = request.user['username'];
-        const transformedThread = {
-            ...thread,
-            author: username
-        }
-        const createdThread = await this.threadService.createThread(transformedThread, username);
+    async createThread(@Req() req: CustomRequest) {
+        const thread = JSON.parse(req.body.thread);
+        const files = req.files as Express.Multer.File[];
+        const username = req.user['username'];
+        
+        const fileNames = [];
+        const uploadedTime = (new Date()).getTime();
+        const imageStorage = process.env.IMAGE_STORAGE;
+
+        const allImageNames = thread.allImages;
+        const promises = [];
+
+        for(let i = 0; i < allImageNames.length; i++) {
+            const imageName = allImageNames[i];
+            const fromPath = `${process.env.TEMP_THREAD_IMAGE_FOLDER_NAME}/${imageName}`;
+            const toPath = `${process.env.THREAD_IMAGE_FOLDER_NAME}/${imageName}`;
+
+            promises.push(supabase.storage.from(imageStorage).move(fromPath, toPath));
+        };
+
+        await Promise.all(promises);
+         
+        const createdThread = await this.threadService.createThread(thread, username);
+
         return {
-            messageCode: 'Created thread',
+            messageCode: 'createdThread',
             threadId: createdThread.id
         };
     }

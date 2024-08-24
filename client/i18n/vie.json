@@ -23,7 +23,7 @@
 
     "Forgot": "Quên mật khẩu ?",
 
-
+    "germany": "Đức",
     "Greeting": "Xin chào",
 
 
@@ -56,6 +56,7 @@
     
 
     "RecoveryEmailSent": "Đã gửi email khôi phục cho tài khoản. Kiểm tra thử đi",
+    "RequireLogin": "Hãy đăng nhập để sử dụng chức năng này.",
 
 
     "SignIn": "Đăng nhập",

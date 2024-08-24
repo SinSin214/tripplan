@@ -12,12 +12,17 @@ import { Carousel } from "@/app/[lang]/components/Carousel/Carousel";
 import { notFound } from 'next/navigation';
 import { useTranslations } from "next-intl";
 import { SelectionContext } from "../../context/selectionContext";
-// import { Country } from "@/utils/selectionType";
-import { ThreadDetail } from "@/utils/threadType";
+import { Country } from "@/types/selectionType";
+import { ThreadDetail } from "@/types/threadType";
 import { RequestMethod } from "@/types/globalType";
 import axios from "axios";
 
-const Editor = dynamic(() => import('@/app/[lang]/components/Editor'), { ssr: false });
+const Editor = dynamic(() => import('@/app/[lang]/thread/components/Editor'), { ssr: false });
+
+type FileInfo = {
+    fileName: string,
+    filePath: string
+}
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -32,21 +37,22 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 export default function WriteThread() {
-    const [isAllowed, setIsAllowed] = useState<boolean | undefined>(undefined);
+    const [isAllowed, setIsAllowed] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isLoadingUpload, setIsLoadingUpload] = useState<boolean>(false);
     const initialThread = {
-        title: '',
-        description: '',
+        title: "",
+        description: "",
         content: [],
-        countryId: '',
+        countryId: "",
         tagsId: [],
-        images: []
+        attachedImages: [],
+        allImageNames: []
     }
-    const { requestAPI, fileUploader, navigation } = useContext(AppContext);
+    const { requestAPI, navigation, fileUploader } = useContext(AppContext);
     const { selections } = useContext(SelectionContext);
     const [threadObject, setThreadObject] = useState<ThreadDetail>(initialThread);
-    const [isLoading, setIsLoading] = useState(false);
     const [editorInstance, setEditorInstance] = useState<any>();
-    const [imageList, setImageList] = useState<any>([]);
     const t = useTranslations();
 
     const formik = useFormik({
@@ -61,8 +67,8 @@ export default function WriteThread() {
         const checkSession = async () => {
             try {
                 setIsLoading(true);
-                await requestAPI('/auth/check_permission', RequestMethod.Get);
-                setIsAllowed(true);
+                const isAllowed = await requestAPI('/auth/check_permission', RequestMethod.Get);
+                setIsAllowed(isAllowed);
             } finally {
                 setIsLoading(false);
             }
@@ -72,32 +78,16 @@ export default function WriteThread() {
 
     useEffect(() => {
         async function createThread() {
-            // const fileUploadRes = await fileUploader(threadObject.images.map(item => item.fileObject));
-            // const res = await requestAPIThread('/thread', RequestMethod.Post, threadObject);
-            const files = threadObject.images.map(item => item.fileObject);
-
-            const data = new FormData();
-            for(let i = 0; i < files.length; i++) {
-                data.append('files', files[i])
-            }
-            data.append('thread', JSON.stringify(threadObject))
-            // sending data
             const requestConfig = {
                 method: 'POST',
                 url: `${process.env.NEXT_PUBLIC_API_ROUTE}/thread`,
-                data: data,
+                data: threadObject,
                 withCredentials: true,
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             }
             const res = await axios(requestConfig);
-
-            // if(fileUploadRes) {
-            //     const res = await requestAPI('/thread', RequestMethod.Post, threadObject);
-            //     setThreadObject(initialThread);
-            //     navigation(`/thread/${res.threadId}`)
-            // }
         }
         if (threadObject.content.length) createThread();
     }, [threadObject.content]);
@@ -117,12 +107,12 @@ export default function WriteThread() {
         })
     }
 
-    // const onChangeCountry = (e: SelectChangeEvent<string>) => {
-    //     setThreadObject({
-    //         ...threadObject,
-    //         countryId: e.target.value
-    //     })
-    // }
+    const onChangeCountry = (e: SelectChangeEvent<string>) => {
+        setThreadObject({
+            ...threadObject,
+            countryId: e.target.value
+        })
+    }
 
     const onRemoveTag = (e: React.MouseEvent, selectedId: string): ((event: any) => void) | undefined => {
         e.preventDefault();
@@ -143,28 +133,44 @@ export default function WriteThread() {
         });
     }
 
-    async function uploadImage(e: React.ChangeEvent<HTMLInputElement>) {
-        const uploadImages = e.target.files;
-        const imageInfo = [];
-        if(uploadImages) {
-            for(let i = 0; i < uploadImages.length; i++) {
-                const image = uploadImages[i];
-                imageInfo.push({
-                    filePath: URL.createObjectURL(image),
-                    fileName: image.name,
-                    fileObject: image
-                })
-            }
+    // async function uploadImage(e: React.ChangeEvent<HTMLInputElement>) {
+    //     const uploadImages = e.target.files;
+    //     const imageInfo = [];
+    //     if(uploadImages) {
+    //         for(let i = 0; i < uploadImages.length; i++) {
+    //             const image = uploadImages[i];
+    //             imageInfo.push({
+    //                 filePath: URL.createObjectURL(image),
+    //                 fileName: image.name,
+    //                 fileObject: image
+    //             })
+    //         }
+    //         setThreadObject({
+    //             ...threadObject,
+    //             images: threadObject.images.concat(imageInfo)
+    //         })
+    //     }
+    // }
+
+    async function uploadImage(e: any) {
+        try {
+            setIsLoadingUpload(true);
+            const uploadImages = e.target.files;
+            const res = await fileUploader(uploadImages);
+            const filesInfo: FileInfo[] = res.filesInfo;
             setThreadObject({
                 ...threadObject,
-                images: threadObject.images.concat(imageInfo)
+                attachedImages: threadObject.attachedImages.concat(filesInfo),
+                allImageNames: threadObject.allImageNames.concat(filesInfo.map(item => item.fileName))
             })
+        } finally {
+            setIsLoadingUpload(false);
         }
     }
 
-    if(isAllowed === undefined) {
+    if(isLoading) {
         return <Loading/>
-    } else if(!isAllowed) {
+    } else if(isAllowed === false) {
         return notFound()
     }
 
@@ -199,7 +205,7 @@ export default function WriteThread() {
                     </FormControl>
 
                     <div className="flex w-full gap-x-4">
-                        {/* <FormControl className="w-1/3">
+                        <FormControl className="w-1/3">
                             <InputLabel required>{t('Country')}</InputLabel>
                             <Select 
                                 name="countryId"
@@ -213,7 +219,7 @@ export default function WriteThread() {
                                     </MenuItem>
                                 )) : ''}
                             </Select>
-                        </FormControl> */}
+                        </FormControl>
                         <FormControl className="w-2/3">
                             <InputLabel required>{t('Tags')}</InputLabel>
                             <Select
@@ -260,9 +266,9 @@ export default function WriteThread() {
                     <div className="w-full mb-2">
                         <Editor editorInstance={editorInstance} setEditorInstance={setEditorInstance} />
                     </div>
-                    {threadObject.images.length ?
+                    {threadObject.attachedImages.length ?
                         <div className="border-slate-300 border-solid border rounded h-[500px] w-full">
-                            <Carousel data={threadObject.images} />
+                            <Carousel data={threadObject.attachedImages} />
                         </div> : ''
                     }
                     <Button
@@ -277,7 +283,7 @@ export default function WriteThread() {
                             onChange={(e) => uploadImage(e)} />
                     </Button>
 
-                    {isLoading ? <Loading /> : ''}
+                    {isLoadingUpload ? <Loading /> : ''}
                     <div className="flex justify-center my-5">
                         <Button
                             className="mx-2 w-24"
