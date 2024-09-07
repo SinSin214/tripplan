@@ -6,7 +6,7 @@ import * as jwt from 'jsonwebtoken';
 import * as utils from '../utilities/authentication';
 import { WrapAsyncInterceptor } from 'src/middlewares/wrapAsync.interceptor';
 import { Request, Response } from 'express';
-import { avatarFileName } from 'src/utilities/constants';
+import { avatarFileName, STATUS } from 'src/utilities/constants';
 import { addPathToImage } from 'src/utilities/imagePath';
 
 @UseInterceptors(new WrapAsyncInterceptor())
@@ -18,12 +18,15 @@ export class AuthController {
     async signUp(@Headers('origin') origin: string, @Body() signUpUser: SignUpUserDto) {
         const { username, password, email } = signUpUser;
         const existedUser = await this.authService.getUserByUsernameOrEmail(username, email)
-        if (username === existedUser.username) {
-            throw new Error('UsernameExisted');
+        if(username === existedUser.username || email === existedUser.email) {
+            return {
+                status: STATUS.FAIL,
+                data: {
+
+                }
+            }
         }
-        if (email === existedUser.email) {
-            throw new Error('EmailExisted');
-        }
+
         const hashedPassword = await bcrypt.hash(password, 10); 
         const newUser = {
             ...signUpUser,
@@ -44,11 +47,26 @@ export class AuthController {
     async signIn(@Body() signInUser: SignInUserDto, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
         const { username, password } = signInUser; 
         const user = await this.authService.getUserProfileByUsername(username);
-        if (!user) throw new Error('UserNotExist');
+        if (!user) {
+            return {
+                status: STATUS.FAIL,
+                messageCode: 'UserNotExist'
+            };
+        }
 
         const matched = await bcrypt.compare(password, user.password);
-        if (!matched) throw new Error('IncorrectPassword');
-        if (!user.isActive) throw new Error('UserInactived');
+        if (!matched) {
+            return {
+                status: STATUS.FAIL,
+                messageCode: 'IncorrectPassword'
+            };
+        } else if (!user.isActive) {
+            return {
+                status: STATUS.FAIL,
+                messageCode: 'IncorrectPassword'
+            };
+        }
+
         const encryptedData = utils.generateToken(user.username, user.email, process.env.SECRECT_SESSION_TOKEN);
         const userInfo = {
             username: user.username,
