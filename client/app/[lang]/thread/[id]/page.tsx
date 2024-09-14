@@ -16,7 +16,7 @@ export default function Thread({ params }: { params: { id: string } }) {
             try {
                 setIsLoading(true);
                 const res = await requestAPI(`/thread/${params.id}`, RequestMethod.Get);
-                const threadDetail = res.data;
+                const threadDetail = res;
                 setThreadDetail(threadDetail);
             } finally {
                 setIsLoading(false);

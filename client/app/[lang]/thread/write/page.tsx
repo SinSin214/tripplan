@@ -9,13 +9,12 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { useFormik } from "formik";
 import { newThreadSchema } from "@/utils/validationSchema";
 import { Carousel } from "@/app/[lang]/components/Carousel/Carousel";
-import { notFound } from 'next/navigation';
 import { useTranslations } from "next-intl";
 import { SelectionContext } from "../../context/selectionContext";
 import { Country } from "@/types/selectionType";
 import { ThreadDetail } from "@/types/threadType";
 import { RequestMethod } from "@/types/globalType";
-import axios from "axios";
+import { AppLoadingContext } from "../../context/loadingContext";
 
 const Editor = dynamic(() => import('@/app/[lang]/thread/components/Editor'), { ssr: false });
 
@@ -37,8 +36,7 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 export default function WriteThread() {
-    const [isAllowed, setIsAllowed] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isLoadingUpload, setIsLoadingUpload] = useState<boolean>(false);
     const initialThread = {
         title: "",
@@ -49,8 +47,9 @@ export default function WriteThread() {
         attachedImages: [],
         allImageNames: []
     }
-    const { requestAPI, navigation, fileUploader } = useContext(AppContext);
+    const { requestAPI, fileUploader } = useContext(AppContext);
     const { selections } = useContext(SelectionContext);
+    const { setIsAppLoading } = useContext(AppLoadingContext)
     const [threadObject, setThreadObject] = useState<ThreadDetail>(initialThread);
     const [editorInstance, setEditorInstance] = useState<any>();
     const t = useTranslations();
@@ -64,30 +63,13 @@ export default function WriteThread() {
     });
 
     useEffect(() => {
-        const checkSession = async () => {
-            try {
-                setIsLoading(true);
-                const isAllowed = await requestAPI('/auth/check_permission', RequestMethod.Get);
-                setIsAllowed(isAllowed);
-            } finally {
-                setIsLoading(false);
-            }
-        }
-        checkSession();
-    }, [])
-
-    useEffect(() => {
         async function createThread() {
-            const requestConfig = {
-                method: 'POST',
-                url: `${process.env.NEXT_PUBLIC_API_ROUTE}/thread`,
-                data: threadObject,
-                withCredentials: true,
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+            try {
+                setIsAppLoading(true);
+                const res = await requestAPI('/thread', RequestMethod.Post, threadObject);
+            } finally {
+                setIsAppLoading(false);
             }
-            const res = await axios(requestConfig);
         }
         if (threadObject.content.length) createThread();
     }, [threadObject.content]);
@@ -128,36 +110,16 @@ export default function WriteThread() {
             setThreadObject({
                 ...threadObject,
                 content: outputData.blocks,
-                // images: imageList.map((file: any) => file.fileName)
             });
         });
     }
-
-    // async function uploadImage(e: React.ChangeEvent<HTMLInputElement>) {
-    //     const uploadImages = e.target.files;
-    //     const imageInfo = [];
-    //     if(uploadImages) {
-    //         for(let i = 0; i < uploadImages.length; i++) {
-    //             const image = uploadImages[i];
-    //             imageInfo.push({
-    //                 filePath: URL.createObjectURL(image),
-    //                 fileName: image.name,
-    //                 fileObject: image
-    //             })
-    //         }
-    //         setThreadObject({
-    //             ...threadObject,
-    //             images: threadObject.images.concat(imageInfo)
-    //         })
-    //     }
-    // }
 
     async function uploadImage(e: any) {
         try {
             setIsLoadingUpload(true);
             const uploadImages = e.target.files;
-            const res = await fileUploader(uploadImages);
-            const filesInfo: FileInfo[] = res.filesInfo;
+            const data = await fileUploader(uploadImages);
+            const filesInfo: FileInfo[] = data;
             setThreadObject({
                 ...threadObject,
                 attachedImages: threadObject.attachedImages.concat(filesInfo),
@@ -166,12 +128,6 @@ export default function WriteThread() {
         } finally {
             setIsLoadingUpload(false);
         }
-    }
-
-    if(isLoading) {
-        return <Loading/>
-    } else if(isAllowed === false) {
-        return notFound()
     }
 
     return (

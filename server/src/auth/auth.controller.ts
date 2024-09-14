@@ -6,8 +6,10 @@ import * as jwt from 'jsonwebtoken';
 import * as utils from '../utilities/authentication';
 import { WrapAsyncInterceptor } from 'src/middlewares/wrapAsync.interceptor';
 import { Request, Response } from 'express';
-import { avatarFileName, STATUS } from 'src/utilities/constants';
+import { avatarFileName } from 'src/utilities/constants';
+import { ResponseStatus } from 'types/globalTypes';
 import { addPathToImage } from 'src/utilities/imagePath';
+import { throwCustomError } from 'src/utilities/helpers';
 
 @UseInterceptors(new WrapAsyncInterceptor())
 @Controller('auth')
@@ -17,14 +19,27 @@ export class AuthController {
     @Post('sign_up')
     async signUp(@Headers('origin') origin: string, @Body() signUpUser: SignUpUserDto) {
         const { username, password, email } = signUpUser;
-        const existedUser = await this.authService.getUserByUsernameOrEmail(username, email)
+        const existedUser = await this.authService.getUserByUsernameOrEmail(username, email);
         if(username === existedUser.username || email === existedUser.email) {
-            return {
-                status: STATUS.FAIL,
-                data: {
-
-                }
+            const errors = [];
+            if(username === existedUser.username) {
+                errors.push({
+                    field: 'username',
+                    messageCode: 'UsernameExisted'
+                })
             }
+            if(email === existedUser.email) {
+                errors.push({
+                    field: 'email',
+                    messageCode: 'EmailExisted'
+                })
+            }
+            throwCustomError({
+                status: ResponseStatus.Fail,
+                data: {
+                    errors: errors
+                }
+            });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10); 
@@ -48,23 +63,37 @@ export class AuthController {
         const { username, password } = signInUser; 
         const user = await this.authService.getUserProfileByUsername(username);
         if (!user) {
-            return {
-                status: STATUS.FAIL,
-                messageCode: 'UserNotExist'
-            };
+            throwCustomError({
+                data: {
+                    errors: [{
+                        field: 'username',
+                        messageCode: 'UsernameNotExist'
+                    }]
+                }
+            });
         }
 
         const matched = await bcrypt.compare(password, user.password);
         if (!matched) {
-            return {
-                status: STATUS.FAIL,
-                messageCode: 'IncorrectPassword'
-            };
+            throwCustomError({
+                status: ResponseStatus.Fail,
+                data: {
+                    errors: [{
+                        field: 'password',
+                        messageCode: 'IncorrectPassword'
+                    }]
+                }
+            });
         } else if (!user.isActive) {
-            return {
-                status: STATUS.FAIL,
-                messageCode: 'IncorrectPassword'
-            };
+            throwCustomError({
+                status: ResponseStatus.Fail,
+                data: {
+                    errors: [{
+                        field: 'password',
+                        messageCode: 'UserInactived'
+                    }]
+                }
+            });
         }
 
         const encryptedData = utils.generateToken(user.username, user.email, process.env.SECRECT_SESSION_TOKEN);
@@ -99,7 +128,17 @@ export class AuthController {
     async forgotPassword(@Body() forgotPassword: ForgotPasswordDto) {
         const { email } = forgotPassword;
         const user = await this.authService.getUserByEmail(email);
-        if (!user) throw Error('UserNotExist');
+        if (!user) {
+            throwCustomError({
+                status: ResponseStatus.Fail,
+                data: {
+                    errors: [{
+                        field: 'email',
+                        messageCode: 'EmailNotExist'
+                    }]
+                }
+            });
+        }
 
         const token = utils.generateToken(user.username, user.email, process.env.SECRECT_CHANGE_PASSWORD_TOKEN);
         await utils.sendEmailChangePassword(user.email, token);
@@ -129,14 +168,5 @@ export class AuthController {
         return {
             messageCode: 'SignOutSuccessfully'
         };
-    }
-
-    @Get('check_permission')
-    check_permission(@Req() req: Request) {
-        const session = req.cookies['session'];
-        if(!session) throw Error('RequireLogin')
-        return {
-            sessionAvailable: true
-        }
     }
 }

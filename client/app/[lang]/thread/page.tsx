@@ -33,7 +33,7 @@ export default function ListThread() {
             sort: tab
         };
         const res = await requestAPI(`/thread/all`, RequestMethod.Post, data);
-        setListThreads(res.data);
+        setListThreads(res);
     };
 
     return(

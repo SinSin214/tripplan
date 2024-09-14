@@ -4,13 +4,8 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useLocale, useTranslations } from 'next-intl';
-import { RequestMethod } from "@/types/globalType";
+import { RequestMethod, ResponseStatus } from "@/types/globalType";
 
-const STATUS = {
-    SUCCESS: 'success',
-    FAIL: 'fail',
-    WARNING: 'warning'
-}
 
 export const AppContext = createContext({
     requestAPI: async (path: string, method: RequestMethod, data?: Object): Promise<any> => {},
@@ -34,72 +29,60 @@ export default function AppProvider({ children }: any) {
             }
             const axiosRes = await axios(requestConfig);
             const res = axiosRes.data;
-
-            // Handle response without progress blocking
-            switch(res.status) {
-                case STATUS.SUCCESS:
-                    if(res.messageCode) toast.success(t(res.messageCode));
-                    break;
-                case STATUS.FAIL:
-                    if(res.messageCode) toast.error(t(res.messageCode));
-                    break;
-                case STATUS.WARNING:
-                    if(res.messageCode) toast.warning(t(res.messageCode));
-                    break;
-                default:
-                    toast.error('Unknown status');
-                    break;
-            }
+            if(res.messageCode) toast.success(t(res.messageCode));
             return res.data;
         } catch(err: any) {
-            // Handle error with progress blocking
-            // If has response => custom error else network errr
-            const errorObject = err.response ? err.response.data : err;
-            toast.error(t(errorObject.messageCode));
-            throw new Error();
+            // Error from backend
+            if(err.response.data.message) {
+                const resErr = err.response.data.message;
+                const parsedErr = JSON.parse(resErr);
+                if(parsedErr.messageCode) {
+                    toast.error(t(parsedErr.messageCode));
+                };
+                // Implement if error is require login
+                throw new Error(resErr);
+            } else {
+                toast.error(t('Unknown error'));
+                throw new Error();
+            }
         }
     }
 
     const fileUploader = async (files: File[]) => {
         try {
             // prepare data
-            let data = new FormData();
+            let formData = new FormData();
             for(let i = 0; i < files.length; i++) {
-                data.append('files', files[i])
+                formData.append('files', files[i])
             }
             // sending data
             const requestConfig = {
                 method: 'POST',
                 url: `${process.env.NEXT_PUBLIC_API_ROUTE}/image/upload`,
-                data: data,
+                data: formData,
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             }
             const axiosRes = await axios(requestConfig);
             const res = axiosRes.data;
-
-            // Handle response without progress blocking
-            switch(res.status) {
-                case STATUS.SUCCESS:
-                    if(res.messageCode) toast.success(t(res.messageCode));
-                    break;
-                case STATUS.FAIL:
-                    if(res.messageCode) toast.error(t(res.messageCode));
-                    break;
-                case STATUS.WARNING:
-                    if(res.messageCode) toast.warning(t(res.messageCode));
-                    break;
-                default:
-                    toast.error('Unknown status');
-                    break;
-            }
+            if(res.messageCode) toast.success(t(res.messageCode));
             return res.data;
         }
         catch(err: any) {
-            const errorObject = err.response ? err.response.data : err;
-            toast.error(t(errorObject.messageCode));
-            throw new Error();
+            // Error from backend
+            if(err.response.data.message) {
+                const resErr = err.response.data.message;
+                const parsedErr = JSON.parse(resErr);
+                if(parsedErr.messageCode) {
+                    toast.error(t(parsedErr.messageCode));
+                };
+                // Implement if error is require login
+                throw new Error(resErr);
+            } else {
+                toast.error(t('Unknown error'));
+                throw new Error();
+            }
         }
     }
 

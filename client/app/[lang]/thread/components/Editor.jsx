@@ -44,8 +44,8 @@ export default function Editor(props) {
                                 return {
                                     success: true,
                                     file: {
-                                        url: data.filesInfo[0].filePath,
-                                        name: data.filesInfo[0].fileName
+                                        url: data[0].filePath,
+                                        name: data[0].fileName
                                     }
                                 }
                             }

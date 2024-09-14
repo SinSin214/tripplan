@@ -1,6 +1,6 @@
 'use client';
 import { createContext, useState } from "react";
-import Loading from "../components/AppLoading";
+import LoadingBackdrop from "../components/App/LoadingBackdrop";
 
 export const AppLoadingContext = createContext({
     isAppLoading: false,
@@ -16,7 +16,7 @@ export default function AppLoadingProvider({ children }: any) {
                 isAppLoading,
                 setIsAppLoading
             }}>
-            {isAppLoading ? <Loading /> : ''}
+            <LoadingBackdrop loading={isAppLoading} />
             {children}
         </AppLoadingContext.Provider>
     )

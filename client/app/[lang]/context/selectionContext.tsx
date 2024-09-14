@@ -25,7 +25,7 @@ export default function SelectionProvider({ children }: any) {
     useEffect(() => {
         async function getSelections() {
             const res = await requestAPI(`/selections`, RequestMethod.Get);
-            setSelections(res.data);
+            setSelections(res);
         }
         getSelections();
     }, [])

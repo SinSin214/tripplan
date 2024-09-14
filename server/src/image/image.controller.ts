@@ -4,6 +4,7 @@ import { diskStorage } from 'multer';
 import { Response } from 'express';
 import { supabase } from '../main';
 import { WrapAsyncInterceptor } from 'src/middlewares/wrapAsync.interceptor';
+import { throwCustomError } from 'src/utilities/helpers';
 
 @UseInterceptors(new WrapAsyncInterceptor())
 @Controller('image')
@@ -25,7 +26,8 @@ export class ImageController {
                 .from(`${imageStorage}`)
                 .upload(`${tempThreadImage}/${fileName}`, file.buffer);
             if(error) {
-                throw new Error(`Supabase: ${error.message}`)
+                console.log(`Supabase: ${error.message}`);
+                throw new Error();
             } else {
                 const filePath = data.path;
                 const retriveResponse = await supabase.storage
@@ -38,7 +40,7 @@ export class ImageController {
             }
         }
         return {
-            filesInfo: retriveFiles
+            data: retriveFiles
         }
     }
 

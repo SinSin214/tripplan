@@ -1,7 +1,7 @@
 import { CallHandler, ExecutionContext, HttpException, Injectable, NestInterceptor } from '@nestjs/common';
 import { catchError, map } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
-import { STATUS } from 'src/utilities/constants';
+import { ResponseStatus } from 'types/globalTypes';
 
 @Injectable()
 export class WrapAsyncInterceptor implements NestInterceptor {
@@ -10,21 +10,16 @@ export class WrapAsyncInterceptor implements NestInterceptor {
             .handle()
             .pipe(
                 map(data => {
-                    if(!data.status) data.status = STATUS.SUCCESS;
+                    if(!data.status) data.status = ResponseStatus.Success;
                     return data
                 }),
                 catchError(err => {
-                    const customErr = {
-                        messageCode: 'Unknown'
-                    };
-                    
                     if (err.name === 'PrismaClientKnownRequestError') {
                         // To do something
-                    } else {
-                        customErr.messageCode = err.message;
                     }
+                    console.log(err);
 
-                    return throwError(() => new HttpException(customErr, 500))
+                    return throwError(() => new HttpException(err.message, 500))
                 })
             );
   }

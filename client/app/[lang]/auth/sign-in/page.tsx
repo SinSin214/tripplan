@@ -7,7 +7,7 @@ import { Button, IconButton, InputAdornment, Link, TextField } from '@mui/materi
 import { useFormik } from 'formik';
 import { useContext, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { RequestMethod } from '@/types/globalType';
+import { RequestMethod, ResponseStatus } from '@/types/globalType';
 import { LoadingButton } from '@mui/lab';
 
 export default function SignInForm() {
@@ -31,16 +31,20 @@ export default function SignInForm() {
                     password: formik.values.password
                 }
                 const res = await requestAPI('/auth/sign_in', RequestMethod.Post, params);
-                const userInfo = res.data;
                 setProfile({
-                    username: userInfo.username,
-                    email: userInfo.email,
-                    displayName: userInfo.displayName,
-                    avatarPath: userInfo.avatarPath,
-                    bio: userInfo.bio,
-                    roleId: userInfo.roleId
+                    username: res.username,
+                    email: res.email,
+                    displayName: res.displayName,
+                    avatarPath: res.avatarPath,
+                    bio: res.bio,
+                    roleId: res.roleId
                 })
                 navigation('/');
+            } catch(err: any) {
+                const parsedError = JSON.parse(err.message);
+                parsedError.data.errors.forEach((item: { field: string, messageCode: string}) => {
+                    formik.setFieldError(item.field, t(item.messageCode));
+                })
             } finally {
                 setIsLoading(false);
             }

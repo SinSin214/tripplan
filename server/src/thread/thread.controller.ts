@@ -41,7 +41,7 @@ export class ThreadController {
     @Post('')
     @UseInterceptors(FilesInterceptor('files'))
     async createThread(@Req() req: CustomRequest) {
-        const thread = JSON.parse(req.body.thread);
+        const thread = req.body;
         const files = req.files as Express.Multer.File[];
         const username = req.user['username'];
         
@@ -49,7 +49,7 @@ export class ThreadController {
         const uploadedTime = (new Date()).getTime();
         const imageStorage = process.env.IMAGE_STORAGE;
 
-        const allImageNames = thread.allImages;
+        const allImageNames = thread.allImageNames;
         const promises = [];
 
         for(let i = 0; i < allImageNames.length; i++) {
@@ -62,11 +62,13 @@ export class ThreadController {
 
         await Promise.all(promises);
          
-        const createdThread = await this.threadService.createThread(thread, username);
+        // const createdThread = await this.threadService.createThread(thread, username);
 
         return {
             messageCode: 'createdThread',
-            threadId: createdThread.id
+            data: {
+                threadId: 'ok'
+            }
         };
     }
 }

@@ -20,6 +20,7 @@
 
     "Email": "Email",
     "EmailExisted": "Email is already taken",
+    "EmailNotExist": "Email does not exist",
     "england": "England",
 
     "Forgot": "Forgot password",
@@ -77,7 +78,7 @@
     "Tags": "Tags",
 
 
-    "UserNotExist": "User does not exist",
+    "UsernameNotExist": "Username does not exist",
     "Username": "Username",
     "Upload": "Upload",
     "UserInactived": "User has not been activated yet",

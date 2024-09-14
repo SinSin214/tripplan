@@ -4,3 +4,9 @@ export enum RequestMethod {
     Put = 'PUT',
     Delete = 'DELETE'
 }
+
+export enum ResponseStatus {
+    Success = 'SUCCESS',
+    Fail = 'FAIL',
+    Warning = 'WARNING'
+}

@@ -10,6 +10,7 @@ import SelectionProvider from "./context/selectionContext";
 import AppLoadingProvider from "./context/loadingContext";
 import { Suspense } from "react";
 import Loading from "./loading";
+import LoadingBackdrop from "./components/App/LoadingBackdrop";
 
 export default function RootLayout({ children, params: {locale} }: { children: React.ReactNode; params: {locale: string}}) {
 
