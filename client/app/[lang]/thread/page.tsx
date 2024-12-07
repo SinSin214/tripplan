@@ -16,7 +16,7 @@ export default function ListThread() {
         getListThreads();
     }, [tab]);
 
-    async function onCardClick(threadId: string) {
+    const onCardClick = (threadId: string) => {
         try {
             navigation(`/thread/${threadId}`);
         } catch(err: any) {
@@ -24,14 +24,16 @@ export default function ListThread() {
         }
     }
 
-    async function onTabChange(e: React.SyntheticEvent, newValue: string) {
+    const onBookMarkClick = async (threadId: string) => {
+        await requestAPI(`/thread/${threadId}/bookmark`, RequestMethod.Get);
+    }
+
+    const onTabChange = (e: React.SyntheticEvent, newValue: string) => {
         setTab(newValue);
     }
 
-    async function getListThreads() {
-        const data = {
-            sort: tab
-        };
+    const getListThreads = async () => {
+        const data = { sort: tab };
         const res = await requestAPI(`/thread/all`, RequestMethod.Post, data);
         setListThreads(res);
     };
@@ -48,9 +50,13 @@ export default function ListThread() {
             </Box>
             <div role="tabpanel">
                 {/* List thread */}
-                <div className="grid gap-12 py-5">
+                <div className="grid gap-10 py-5">
                     {listThreads.length && listThreads.map((item: IThreadOverviewType) => (
-                        <ThreadCard key={item.id} ThreadOverview={item} onCardClick={onCardClick} />
+                        <ThreadCard 
+                            key={item.id} 
+                            ThreadOverview={item} 
+                            onCardClick={onCardClick} 
+                            onBookMarkClick={onBookMarkClick} />
                     ))}
                 </div>
             </div>

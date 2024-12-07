@@ -11,9 +11,15 @@ export class ThreadService {
             select: {
                 id: true,
                 title: true,
-                creator: true,
                 createdAt: true,
-                description: true
+                description: true,
+                upvote: true,
+                downvote: true,
+                creator: {
+                    select: {
+                        displayName: true
+                    }
+                }
             }
         });
         return res;

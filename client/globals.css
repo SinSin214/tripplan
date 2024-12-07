@@ -86,7 +86,7 @@ body {
     width: 1000px;
   }
   .md-limited-width-layout__content {
-    width: 800px;
+    width: 750px;
   }
 }
 
@@ -111,14 +111,7 @@ body {
   text-overflow: ellipsis;
 }
 
-.clickable-thread {
-  background-color: rgb(239, 239, 239);
-}
 
-.clickable-thread:hover {
-  border: gray 1px solid;
-  cursor: pointer;
-}
 
 .btn-navbar {
   height: 100%;
@@ -236,15 +229,50 @@ body {
 }
     
 /* Thread Card */
-.threadcard-toolbar {
-  border-bottom: 1px solid rgb(203 213 225);
+.thread-card-container {
+  border: rgb(183, 183, 183) 1px solid;
+  border-radius: 0.5rem;
+  padding: 0.7rem;
+}
+
+.thread-card-container:hover {
+  cursor: pointer;
+  background: rgb(239, 239, 239);
+}
+
+.thread-card-image {
+  width: 35%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0.3rem;
+}
+
+.thread-card-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  margin-left: 1.5rem;
 }
 
 .thread-card-title {
   overflow: hidden;
-   display: -webkit-box;
-   -webkit-line-clamp: 2; /* number of lines to show */
-   -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* number of lines to show */
+  -webkit-box-orient: vertical;
+}
+
+.thread-card-description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* number of lines to show */
+  -webkit-box-orient: vertical;
+}
+
+.thread-card-creator {
+  font-weight: bold;
 }
 
 /* Authentication Popup */
@@ -272,7 +300,7 @@ body {
     left: calc((100% - 500px)/4);
   };
   @media (min-width: 1200px) {
-    left: calc((100% - 800px)/4);
+    left: calc((100% - 750px)/4);
   };
   @media (min-width: 1920px) {
     left: calc((100% - 1000px)/4);

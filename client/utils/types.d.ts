@@ -13,12 +13,15 @@ export interface ThreadProps {
 export interface IThreadOverviewType {
 	id: string,
 	title: string,
-	rating: number,
+	upvote: number,
+  downvote: number,
 	imagePath: string,
-	content: string,
-	creatorUsername: string,
+	creator: {
+    displayName: string
+  },
 	createdAt: Date,
-  description: string
+  description: string,
+  bookmarked: boolean
 }
 
 export interface IUser {

@@ -29,6 +29,12 @@
         "sourceMaps": true,
         "stopOnEntry": false,
         "console": "integratedTerminal",
+      },
+      {
+        "name": "test",
+        "type": "node",
+        "request": "launch",
+        "program": "test.js"
       }
     ]
 }
